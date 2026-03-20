@@ -11,6 +11,7 @@ import logging
 from mcp.server.fastmcp import FastMCP
 
 from sap_bridge import bridge
+from sap_executor import execute_function
 
 logging.basicConfig(
     level=logging.INFO,
@@ -63,6 +64,31 @@ def get_model_info() -> dict:
     Use this to verify state before or after running scripts.
     """
     return bridge.get_model_info()
+
+
+@mcp.tool()
+def execute_sap_function(
+    function_path: str,
+    args: list | None = None,
+    description: str = "",
+) -> dict:
+    """Execute any SAP2000 API function by its dot-path.
+
+    function_path: Dot-separated path like "SapModel.FrameObj.AddByCoord"
+                   or "SapModel.File.New2DFrame".
+    args: List of positional arguments for the function.
+    description: Human-readable note about what this call does.
+
+    Returns: {success, return_value, output_params (if any), description, error}
+
+    SAP2000 convention: return_value 0 = success, nonzero = error.
+    When the function has ByRef (output) parameters, they appear in output_params.
+    """
+    return execute_function(
+        function_path=function_path,
+        args=args or [],
+        description=description,
+    )
 
 
 # ── Run ──────────────────────────────────────────────────────────────────

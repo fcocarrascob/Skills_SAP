@@ -1,17 +1,3 @@
-# Step 2: Generic Function Executor
-
-## Goal
-Implement `execute_sap_function` — a tool that receives an API path (e.g. `"SapModel.FrameObj.AddByCoord"`), navigates the COM object hierarchy, executes the function with the given arguments, and returns the result.
-
-## Prerequisites
-Step 1 must be committed. The MCP server and COM bridge must be in place.
-
-### Step-by-Step Instructions
-
-#### Step 2.1: Create the SAP Executor module
-- [x] Copy and paste code below into `mcp_server/sap_executor.py`:
-
-```python
 """
 SAP2000 Function Executor — Generic execution of any SAP2000 API function.
 
@@ -126,48 +112,3 @@ def execute_function(function_path: str, args: list, description: str = "") -> d
         success,
     )
     return response
-```
-
-#### Step 2.2: Register the tool in server.py
-- [x] Add the import and tool definition. Open `mcp_server/server.py` and add the following import near the top, after the existing imports:
-
-```python
-from sap_executor import execute_function
-```
-
-- [x] Add the following tool function at the end of the `# ── Tools` section (before the `# ── Run` section):
-
-```python
-@mcp.tool()
-def execute_sap_function(
-    function_path: str,
-    args: list | None = None,
-    description: str = "",
-) -> dict:
-    """Execute any SAP2000 API function by its dot-path.
-
-    function_path: Dot-separated path like "SapModel.FrameObj.AddByCoord"
-                   or "SapModel.File.New2DFrame".
-    args: List of positional arguments for the function.
-    description: Human-readable note about what this call does.
-
-    Returns: {success, return_value, output_params (if any), description, error}
-
-    SAP2000 convention: return_value 0 = success, nonzero = error.
-    When the function has ByRef (output) parameters, they appear in output_params.
-    """
-    return execute_function(
-        function_path=function_path,
-        args=args or [],
-        description=description,
-    )
-```
-
-##### Step 2 Verification Checklist
-- [x] `mcp_server/sap_executor.py` exists and has no syntax errors
-- [x] `python -c "import mcp_server.sap_executor"` runs without import errors (from workspace root)
-- [x] `server.py` now has 4 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`
-- [x] No lint errors
-
-#### Step 2 STOP & COMMIT
-**STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
