@@ -14,6 +14,7 @@ from sap_bridge import bridge
 from sap_executor import execute_function, run_script
 from script_library import list_scripts as _list_scripts, load_script as _load_script
 from doc_search import doc_index
+from function_registry import registry
 
 logging.basicConfig(
     level=logging.INFO,
@@ -184,6 +185,98 @@ def list_api_categories() -> list[dict]:
     are documented per category. Use this to explore the API.
     """
     return doc_index.list_categories()
+
+
+@mcp.tool()
+def query_function_registry(
+    function_path: str | None = None,
+    category: str | None = None,
+    verified_only: bool = False,
+    query: str | None = None,
+) -> dict:
+    """Query the registry of verified SAP2000 API functions.
+
+    Use this BEFORE generating a script to check if a function has already
+    been verified and has a wrapper script available.
+
+    Modes:
+      - No arguments: returns registry summary (total registered, verified, categories)
+      - function_path: returns full detail of that specific function
+      - category / query / verified_only: returns filtered list of functions
+
+    Returns: {summary} or {function detail} or {functions: [...]}
+    """
+    if function_path:
+        return registry.get_function(function_path)
+
+    if category or query or verified_only:
+        functions = registry.list_functions(
+            category=category,
+            verified_only=verified_only,
+            query=query,
+        )
+        return {"count": len(functions), "functions": functions}
+
+    return registry.get_summary()
+
+
+@mcp.tool()
+def register_verified_function(
+    function_path: str,
+    category: str,
+    description: str = "",
+    wrapper_script: str = "",
+    parameter_notes: str = "",
+    notes: str = "",
+) -> dict:
+    """Register or update a verified SAP2000 API function in the registry.
+
+    Call this after successfully running a script that uses a new API function.
+    If wrapper_script is provided, it links the function to its wrapper in
+    scripts/wrappers/.
+
+    function_path: Dot-path like "SapModel.FrameObj.AddByCoord"
+    category: API category (e.g. "Object_Model", "Properties", "Analyze")
+    description: What the function does
+    wrapper_script: Name of wrapper script (without .py) in scripts/wrappers/
+    parameter_notes: Brief parameter documentation
+    notes: Extra notes (e.g. ByRef output layout)
+
+    Returns: {registered, function_path, is_new}
+    """
+    result = registry.register_function(
+        function_path=function_path,
+        category=category,
+        description=description,
+        wrapper_script=wrapper_script,
+        parameter_notes=parameter_notes,
+        notes=notes,
+    )
+    # Also mark as verified since this tool is for verified functions
+    registry.mark_verified(function_path)
+    return result
+
+
+@mcp.tool()
+def list_registry_categories() -> list[dict]:
+    """List API categories with counts of registered vs verified functions.
+
+    Use this to see coverage of the function registry — which categories
+    have been explored and which still need work.
+
+    Returns: [{category, registered, verified}]
+    """
+    summary = registry.get_summary()
+    categories = summary.get("categories", {})
+
+    return [
+        {
+            "category": cat,
+            "registered": counts["registered"],
+            "verified": counts["verified"],
+        }
+        for cat, counts in sorted(categories.items())
+    ]
 
 
 # ── Run ──────────────────────────────────────────────────────────────────

@@ -877,13 +877,13 @@ result["status"] = "verified"
 
 #### Step 3: MCP Tools for the Registry
 
-- [ ] Edit `mcp_server/server.py` to add the import for the registry. Add the following line after the existing imports (after `from doc_search import doc_index`):
+- [x] Edit `mcp_server/server.py` to add the import for the registry. Add the following line after the existing imports (after `from doc_search import doc_index`):
 
 ```python
 from function_registry import registry
 ```
 
-- [ ] Add 3 new MCP tool functions to `mcp_server/server.py`. Insert them **before** the `# ── Run ──` section at the bottom of the file, after the `list_api_categories` tool:
+- [x] Add 3 new MCP tool functions to `mcp_server/server.py`. Insert them **before** the `# ── Run ──` section at the bottom of the file, after the `list_api_categories` tool:
 
 ```python
 @mcp.tool()
@@ -978,7 +978,7 @@ def list_registry_categories() -> list[dict]:
     ]
 ```
 
-- [ ] Update `mcp_server/tests/test_bridge.py` to add tests for the new MCP tools. Append the following test class at the end of the file:
+- [x] Update `mcp_server/tests/test_bridge.py` to add tests for the new MCP tools. Append the following test class at the end of the file:
 
 ```python
 class TestFunctionRegistryTools:
@@ -1029,12 +1029,12 @@ from function_registry import FunctionRegistry
 ```
 
 ##### Step 3 Verification Checklist
-- [ ] `mcp_server/server.py` imports `registry` from `function_registry`
-- [ ] Three new tools exist: `query_function_registry`, `register_verified_function`, `list_registry_categories`
-- [ ] New test class `TestFunctionRegistryTools` exists in test_bridge.py
-- [ ] Run tests: `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "TestFunctionRegistryTools or TestDocSearch or TestScriptLibrary"`
-- [ ] All tests pass with no errors
-- [ ] No build/import errors in `server.py`
+- [x] `mcp_server/server.py` imports `registry` from `function_registry`
+- [x] Three new tools exist: `query_function_registry`, `register_verified_function`, `list_registry_categories`
+- [x] New test class `TestFunctionRegistryTools` exists in test_bridge.py
+- [x] Run tests: `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "TestFunctionRegistryTools or TestDocSearch or TestScriptLibrary"`
+- [x] All tests pass with no errors
+- [x] No build/import errors in `server.py`
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
