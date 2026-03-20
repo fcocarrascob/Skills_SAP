@@ -9,10 +9,10 @@ Steps 1–7 must be committed. The full system (MCP server, SKILL.md, VS Code co
 ### Step-by-Step Instructions
 
 #### Step 8.1: Create the examples directory
-- [ ] Create the `examples/` directory in the workspace root.
+- [x] Create the `examples/` directory in the workspace root.
 
 #### Step 8.2: Create the Example 1-001 verification script
-- [ ] Copy and paste code below into `examples/example_1001_verification.py`:
+- [x] Copy and paste code below into `examples/example_1001_verification.py`:
 
 ```python
 """
@@ -221,7 +221,7 @@ print(f"\nAll within 1%: {result['all_pass']}")
 ```
 
 #### Step 8.3: Create a simple beam example
-- [ ] Copy and paste code below into `examples/simple_beam.py`:
+- [x] Copy and paste code below into `examples/simple_beam.py`:
 
 ```python
 """
@@ -306,14 +306,14 @@ print(f"Frames: {result['num_frames']}, Points: {result['num_points']}")
 ```
 
 #### Step 8.4: Create basic integration tests
-- [ ] Create the `mcp_server/tests/` directory.
-- [ ] Copy and paste code below into `mcp_server/tests/__init__.py`:
+- [x] Create the `mcp_server/tests/` directory.
+- [x] Copy and paste code below into `mcp_server/tests/__init__.py`:
 
 ```python
 """Tests for the SAP2000 MCP Server."""
 ```
 
-- [ ] Copy and paste code below into `mcp_server/tests/test_bridge.py`:
+- [x] Copy and paste code below into `mcp_server/tests/test_bridge.py`:
 
 ```python
 """
@@ -505,12 +505,12 @@ class TestScriptLibrary:
 ```
 
 ##### Step 8 Verification Checklist
-- [ ] `examples/example_1001_verification.py` exists
-- [ ] `examples/simple_beam.py` exists
-- [ ] `mcp_server/tests/test_bridge.py` exists
-- [ ] Unit tests pass (no SAP2000 needed): `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "not Integration"`
-- [ ] Doc search tests find `AddByCoord` and `RunAnalysis`
-- [ ] Script library tests pass (save, load, list, query)
+- [x] `examples/example_1001_verification.py` exists
+- [x] `examples/simple_beam.py` exists
+- [x] `mcp_server/tests/test_bridge.py` exists
+- [x] Unit tests pass (no SAP2000 needed): `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "not Integration"`
+- [x] Doc search tests find `AddByCoord` and `RunAnalysis`
+- [x] Script library tests pass (save, load, list, query)
 - [ ] If SAP2000 is available: integration tests pass with `python -m pytest tests/test_bridge.py -v`
 
 #### Step 8 STOP & COMMIT
