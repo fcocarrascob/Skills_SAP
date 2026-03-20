@@ -1043,13 +1043,13 @@ from function_registry import FunctionRegistry
 
 #### Step 4: Auto-Registration on Successful Script Execution
 
-- [ ] Edit `mcp_server/sap_executor.py` to add the import for the registry. Add after the existing `from script_library import save_script` line:
+- [x] Edit `mcp_server/sap_executor.py` to add the import for the registry. Add after the existing `from script_library import save_script` line:
 
 ```python
 from function_registry import registry as function_registry
 ```
 
-- [ ] Add the API function extraction helper to `mcp_server/sap_executor.py`. Insert this function **before** the `run_script` function definition:
+- [x] Add the API function extraction helper to `mcp_server/sap_executor.py`. Insert this function **before** the `run_script` function definition:
 
 ```python
 # Regex to detect SAP2000 API calls: SapModel.Something.Something(...) or SapObject.Something(...)
@@ -1080,13 +1080,13 @@ def _extract_api_functions(script: str) -> list[str]:
     return unique
 ```
 
-- [ ] Add the `import re` to the imports at the top of `sap_executor.py` (it is not currently imported). Add it after the `import logging` line:
+- [x] Add the `import re` to the imports at the top of `sap_executor.py` (it is not currently imported). Add it after the `import logging` line:
 
 ```python
 import re
 ```
 
-- [ ] Modify the `run_script` function in `mcp_server/sap_executor.py` to auto-register functions on success. Replace the section at the end of `run_script` that handles saving (the `# Save to library on success if name provided` block) with the following expanded version:
+- [x] Modify the `run_script` function in `mcp_server/sap_executor.py` to auto-register functions on success. Replace the section at the end of `run_script` that handles saving (the `# Save to library on success if name provided` block) with the following expanded version:
 
 Find this block near the end of `run_script`:
 ```python
@@ -1134,7 +1134,7 @@ Replace it with:
     return response
 ```
 
-- [ ] Add unit tests for the extraction function. Append this class to `mcp_server/tests/test_bridge.py`:
+- [x] Add unit tests for the extraction function. Append this class to `mcp_server/tests/test_bridge.py`:
 
 ```python
 class TestAutoRegistration:
@@ -1182,13 +1182,13 @@ raw2 = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 10, "", "R1", "")
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] `sap_executor.py` imports `re` and `function_registry`
-- [ ] `_extract_api_functions()` function exists and returns unique API function paths
-- [ ] `run_script()` calls `function_registry.mark_verified()` for each detected function on success
-- [ ] `run_script()` adds `registered_functions` key to the response on success
-- [ ] Auto-registration failure does not break script execution (wrapped in try/except)
-- [ ] Run tests: `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "TestAutoRegistration"`
-- [ ] All tests pass with no errors
+- [x] `sap_executor.py` imports `re` and `function_registry`
+- [x] `_extract_api_functions()` function exists and returns unique API function paths
+- [x] `run_script()` calls `function_registry.mark_verified()` for each detected function on success
+- [x] `run_script()` adds `registered_functions` key to the response on success
+- [x] Auto-registration failure does not break script execution (wrapped in try/except)
+- [x] Run tests: `cd mcp_server && python -m pytest tests/test_bridge.py -v -k "TestAutoRegistration"`
+- [x] All tests pass with no errors
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

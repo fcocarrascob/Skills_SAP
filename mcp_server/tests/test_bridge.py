@@ -226,3 +226,47 @@ class TestFunctionRegistryTools:
         summary = registry.get_summary()
         assert summary["categories"]["Cat1"]["verified"] == 1
         assert summary["categories"]["Cat2"]["verified"] == 0
+
+
+class TestAutoRegistration:
+    """Tests for auto-registration of API functions from scripts."""
+
+    def test_extract_api_functions(self):
+        """_extract_api_functions finds SapModel and SapObject calls."""
+        from sap_executor import _extract_api_functions
+
+        script = """
+SapModel.InitializeNewModel()
+SapModel.File.NewBlank()
+ret = SapModel.SetPresentUnits(6)
+ret = SapModel.PropMaterial.SetMaterial("CONC", 2)
+raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 5, 0, 0, "", "R1", "")
+count = SapModel.FrameObj.Count()
+# Duplicate call should not produce duplicate entry
+raw2 = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 10, "", "R1", "")
+"""
+        funcs = _extract_api_functions(script)
+        assert "SapModel.InitializeNewModel" in funcs
+        assert "SapModel.File.NewBlank" in funcs
+        assert "SapModel.SetPresentUnits" in funcs
+        assert "SapModel.PropMaterial.SetMaterial" in funcs
+        assert "SapModel.FrameObj.AddByCoord" in funcs
+        assert "SapModel.FrameObj.Count" in funcs
+        # Should be deduplicated
+        assert funcs.count("SapModel.FrameObj.AddByCoord") == 1
+
+    def test_extract_no_matches(self):
+        """_extract_api_functions returns empty for non-SAP code."""
+        from sap_executor import _extract_api_functions
+
+        script = "x = 1\ny = x + 2\nresult['value'] = y"
+        funcs = _extract_api_functions(script)
+        assert funcs == []
+
+    def test_extract_sap_object_calls(self):
+        """_extract_api_functions finds SapObject calls too."""
+        from sap_executor import _extract_api_functions
+
+        script = "SapObject.ApplicationExit(False)"
+        funcs = _extract_api_functions(script)
+        assert "SapObject.ApplicationExit" in funcs
