@@ -56,11 +56,67 @@
       "parameter_notes": "Name: str (existing material); MyType: int (1=weight per unit volume [F/L^3], 2=mass per unit volume [M/L^3]); Value: float; Temp: float (default=0)",
       "known_errors": [],
       "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success). Call twice — once for weight (MyType=1) and once for mass (MyType=2)."
+    },
+    "SapModel.PropFrame.SetRectangle": {
+      "category": "PropFrame",
+      "description": "Define a rectangular (solid) frame section",
+      "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropFrame_SetRectangle",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for concrete beams and columns."
+    },
+    "SapModel.PropFrame.SetCircle": {
+      "category": "PropFrame",
+      "description": "Define a solid circular frame section",
+      "signature": "(Name, MatProp, T3, Color, Notes, GUID) → ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropFrame_SetCircle",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (diameter [L]); Color: int (-1=default); Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for piles, drilled shafts, and circular columns."
+    },
+    "SapModel.PropFrame.SetISection": {
+      "category": "PropFrame",
+      "description": "Define a general I-section (W-shape / H-beam)",
+      "signature": "(Name, MatProp, T3, T2, TF, TW, T2B, TFB, Color, Notes, GUID) → ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropFrame_SetISection",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (overall depth); T2: float (top flange width); TF: float (top flange thickness); TW: float (web thickness); T2B: float (bottom flange width); TFB: float (bottom flange thickness); Color: int; Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Supports asymmetric I-sections (different top/bottom flanges). For symmetric use equal T2=T2B and TF=TFB."
+    },
+    "SapModel.PropFrame.SetTube": {
+      "category": "PropFrame",
+      "description": "Define a rectangular tube (HSS) frame section",
+      "signature": "(Name, MatProp, T3, T2, TF, TW, Color, Notes, GUID) → ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropFrame_SetTube",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (outer depth [L]); T2: float (outer width [L]); TF: float (flange/top+bottom wall thickness [L]); TW: float (web/left+right wall thickness [L]); Color: int; Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for HSS braces, columns, and truss elements."
     }
   },
   "summary": {
-    "total_registered": 4,
-    "total_verified": 4,
+    "total_registered": 8,
+    "total_verified": 8,
     "last_updated": "2026-03-20T00:00:00+00:00"
   }
 }
