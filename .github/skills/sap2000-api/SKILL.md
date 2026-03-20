@@ -21,17 +21,27 @@ execute, and verify scripts that automate SAP2000 operations via the local COM b
 
 1. **Check connection** — Call `get_model_info` to verify SAP2000 is connected.
    If not connected, call `connect_sap2000` first.
-2. **Search for existing scripts** — Call `list_scripts` with a relevant query.
-   If a matching script exists, use `load_script` to load it as a starting point.
-3. **Search API docs** — Call `search_api_docs` to find the correct functions,
+2. **Check function registry** — Call `query_function_registry` with the function
+   name or a keyword query to see if the needed functions have already been
+   verified. If a wrapper script exists, use `load_script` to load it as a
+   reference for correct usage patterns.
+3. **Search for existing scripts** — Call `list_scripts` with a relevant query.
+   If a matching full script exists, use `load_script` to load it as a starting point.
+4. **Search API docs** — Call `search_api_docs` to find the correct functions,
    parameter order, and return value conventions before writing any code.
-4. **Generate the script** — Write a complete Python script following the
-   patterns described below.
-5. **Execute** — Call `run_sap_script` with the script.
-6. **Verify** — Read the returned `result`, `stdout`, and `return_value`.
+5. **Generate the script** — Write a complete Python script following the
+   patterns described below. Use verified wrapper scripts as building blocks
+   when available.
+6. **Execute** — Call `run_sap_script` with the script. On success, any new
+   API functions used are automatically registered in the function registry.
+7. **Verify** — Read the returned `result`, `stdout`, and `return_value`.
    If `success` is `false`, analyze the error, fix the script, and re-execute.
-7. **Save** — When the script succeeds, re-run with `save_as` to store it
+8. **Save** — When the script succeeds, re-run with `save_as` to store it
    in the script library for future reuse.
+9. **Register new functions** — For any new API functions not yet in the
+   registry, call `register_verified_function` to add full metadata
+   (category, description, parameter notes). Auto-registration captures
+   the function path, but manual registration adds richer documentation.
 
 ## Script Patterns
 
@@ -89,6 +99,52 @@ raw = SapModel.Results.JointDispl(
 ret_code = raw[-1]
 result["displacement_U3"] = raw[8][0] if ret_code == 0 and len(raw[8]) > 0 else None
 ```
+
+## Function Registry
+
+The function registry (`scripts/registry.json`) tracks which API functions
+have been successfully tested. Use it to avoid re-discovering function
+signatures and ByRef conventions from scratch.
+
+### Querying the Registry
+
+```python
+# Check if a specific function has been verified:
+query_function_registry(function_path="SapModel.FrameObj.AddByCoord")
+# → {function_path, category, description, verified, wrapper_script, ...}
+
+# Search by keyword:
+query_function_registry(query="frame")
+# → {count, functions: [{function_path, category, verified, ...}, ...]}
+
+# List verified functions only:
+query_function_registry(verified_only=True)
+
+# Get registry summary:
+query_function_registry()
+# → {total_registered, total_verified, categories: {...}}
+```
+
+### Wrapper Scripts
+
+Verified functions have wrapper scripts in `scripts/wrappers/` that demonstrate
+correct usage. Each wrapper:
+- Targets a single API function
+- Is self-contained (initializes a fresh model)
+- Documents the ByRef output layout
+- Asserts success and writes to `result`
+
+To use a wrapper as reference:
+```
+load_script("func_FrameObj_AddByCoord")
+```
+
+### Auto-Registration
+
+When a script executes successfully via `run_sap_script`, all SAP2000 API
+functions called in the script are automatically detected and registered
+as verified in the registry. The response includes a `registered_functions`
+list showing what was captured.
 
 ## SAP2000 API Conventions
 

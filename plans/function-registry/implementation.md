@@ -1197,7 +1197,7 @@ raw2 = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 10, "", "R1", "")
 
 #### Step 5: Update SKILL.md, Copilot Instructions, and Documentation
 
-- [ ] Edit `.github/skills/sap2000-api/SKILL.md` to update the **Mandatory Workflow** section. Replace the existing 7-step workflow with this expanded version:
+- [x] Edit `.github/skills/sap2000-api/SKILL.md` to update the **Mandatory Workflow** section. Replace the existing 7-step workflow with this expanded version:
 
 Find this block:
 ```markdown
@@ -1251,7 +1251,7 @@ Replace with:
    the function path, but manual registration adds richer documentation.
 ```
 
-- [ ] Add a new section to `.github/skills/sap2000-api/SKILL.md` about the function registry. Insert this block **after** the `## Script Patterns` section and **before** the `## SAP2000 API Conventions` section:
+- [x] Add a new section to `.github/skills/sap2000-api/SKILL.md` about the function registry. Insert this block **after** the `## Script Patterns` section and **before** the `## SAP2000 API Conventions` section:
 
 ```markdown
 ## Function Registry
@@ -1301,7 +1301,7 @@ as verified in the registry. The response includes a `registered_functions`
 list showing what was captured.
 ```
 
-- [ ] Update `.github/copilot-instructions.md` to add the 3 new tools to the table. Replace the existing tool table:
+- [x] Update `.github/copilot-instructions.md` to add the 3 new tools to the table. Replace the existing tool table:
 
 Find:
 ```markdown
@@ -1336,7 +1336,7 @@ Replace with:
 | `list_registry_categories` | List categories with registered/verified counts |
 ```
 
-- [ ] Update `scripts/README.md` to mention wrappers. Replace the entire file with:
+- [x] Update `scripts/README.md` to mention wrappers. Replace the entire file with:
 
 ```markdown
 # SAP2000 Script Library
@@ -1364,13 +1364,13 @@ Query it via the `query_function_registry` MCP tool, or inspect the JSON directl
 ```
 
 ##### Step 5 Verification Checklist
-- [ ] SKILL.md workflow has 9 steps (added steps 2 and 9)
-- [ ] SKILL.md has a new "Function Registry" section with query examples, wrapper docs, and auto-registration info
-- [ ] `copilot-instructions.md` tool table has 12 rows (3 new tools)
-- [ ] `scripts/README.md` mentions wrappers and registry
-- [ ] No markdown formatting errors in any edited file
-- [ ] Run all tests to verify nothing is broken: `cd mcp_server && python -m pytest tests/ -v`
-- [ ] All tests pass with no errors
+- [x] SKILL.md workflow has 9 steps (added steps 2 and 9)
+- [x] SKILL.md has a new "Function Registry" section with query examples, wrapper docs, and auto-registration info
+- [x] `copilot-instructions.md` tool table has 12 rows (3 new tools)
+- [x] `scripts/README.md` mentions wrappers and registry
+- [x] No markdown formatting errors in any edited file
+- [x] Run all tests to verify nothing is broken: `cd mcp_server && python -m pytest tests/ -v`
+- [x] All tests pass with no errors
 
 #### Step 5 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
