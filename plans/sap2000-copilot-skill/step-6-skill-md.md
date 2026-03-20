@@ -9,12 +9,12 @@ Steps 1–5 must be committed. All MCP tools must be in place.
 ### Step-by-Step Instructions
 
 #### Step 6.1: Create the skill directory structure
-- [ ] Create the following directories:
+- [x] Create the following directories:
   - `.github/skills/sap2000-api/`
   - `.github/skills/sap2000-api/references/`
 
 #### Step 6.2: Create the SKILL.md
-- [ ] Copy and paste code below into `.github/skills/sap2000-api/SKILL.md`:
+- [x] Copy and paste code below into `.github/skills/sap2000-api/SKILL.md`:
 
 ```markdown
 ---
@@ -250,7 +250,7 @@ For detailed information, load these reference files on demand:
 ```
 
 #### Step 6.3: Create the API Patterns reference
-- [ ] Copy and paste code below into `.github/skills/sap2000-api/references/api-patterns.md`:
+- [x] Copy and paste code below into `.github/skills/sap2000-api/references/api-patterns.md`:
 
 ```markdown
 # SAP2000 API Patterns
@@ -359,7 +359,7 @@ ret = SapModel.AreaObj.AddByCoord(4, x, y, z, "", "Default", "", "Global")
 ```
 
 #### Step 6.4: Create the Common Workflows reference
-- [ ] Copy and paste code below into `.github/skills/sap2000-api/references/common-workflows.md`:
+- [x] Copy and paste code below into `.github/skills/sap2000-api/references/common-workflows.md`:
 
 ```markdown
 # Common SAP2000 Workflows
@@ -423,7 +423,7 @@ This is the standard SAP2000 verification problem:
 ```
 
 #### Step 6.5: Create the Enum Reference
-- [ ] Copy and paste code below into `.github/skills/sap2000-api/references/enum-reference.md`:
+- [x] Copy and paste code below into `.github/skills/sap2000-api/references/enum-reference.md`:
 
 ```markdown
 # SAP2000 Enumeration Reference
@@ -541,13 +541,13 @@ This is the standard SAP2000 verification problem:
 ```
 
 ##### Step 6 Verification Checklist
-- [ ] `.github/skills/sap2000-api/SKILL.md` exists with valid YAML frontmatter
-- [ ] `.github/skills/sap2000-api/references/api-patterns.md` exists
-- [ ] `.github/skills/sap2000-api/references/common-workflows.md` exists
-- [ ] `.github/skills/sap2000-api/references/enum-reference.md` exists
-- [ ] The SKILL.md `name` field matches the folder name: `sap2000-api`
-- [ ] The `description` field contains trigger keywords for discoverability
-- [ ] File is under 500 lines (progressive loading compliant)
+- [x] `.github/skills/sap2000-api/SKILL.md` exists with valid YAML frontmatter
+- [x] `.github/skills/sap2000-api/references/api-patterns.md` exists
+- [x] `.github/skills/sap2000-api/references/common-workflows.md` exists
+- [x] `.github/skills/sap2000-api/references/enum-reference.md` exists
+- [x] The SKILL.md `name` field matches the folder name: `sap2000-api`
+- [x] The `description` field contains trigger keywords for discoverability
+- [x] File is under 500 lines (progressive loading compliant)
 
 #### Step 6 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
