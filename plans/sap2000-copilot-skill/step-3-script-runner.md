@@ -9,7 +9,7 @@ Steps 1–2 must be committed. The MCP server, COM bridge, and function executor
 ### Step-by-Step Instructions
 
 #### Step 3.1: Add the script runner to sap_executor.py
-- [ ] Open `mcp_server/sap_executor.py` and add the following imports at the top of the file, after the existing imports:
+- [x] Open `mcp_server/sap_executor.py` and add the following imports at the top of the file, after the existing imports:
 
 ```python
 import io
@@ -26,7 +26,7 @@ import functools
 import threading
 ```
 
-- [ ] Add the following constants and functions at the **end** of `mcp_server/sap_executor.py`:
+- [x] Add the following constants and functions at the **end** of `mcp_server/sap_executor.py`:
 
 ```python
 # ── Sandbox configuration ────────────────────────────────────────────────
@@ -182,7 +182,7 @@ def run_script(script: str, description: str = "") -> dict:
 ```
 
 #### Step 3.2: Register the run_sap_script tool in server.py
-- [ ] Add the import in `mcp_server/server.py`. Update the existing import line from `sap_executor`:
+- [x] Add the import in `mcp_server/server.py`. Update the existing import line from `sap_executor`:
 
 Change:
 ```python
@@ -193,7 +193,7 @@ To:
 from sap_executor import execute_function, run_script
 ```
 
-- [ ] Add the following tool function at the end of the `# ── Tools` section (before the `# ── Run` section):
+- [x] Add the following tool function at the end of the `# ── Tools` section (before the `# ── Run` section):
 
 ```python
 @mcp.tool()
@@ -224,10 +224,10 @@ def run_sap_script(
 ```
 
 ##### Step 3 Verification Checklist
-- [ ] `sap_executor.py` has both `execute_function` and `run_script` functions
-- [ ] `server.py` now has 5 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`, `run_sap_script`
-- [ ] Running `python mcp_server/server.py` starts without import errors
-- [ ] No lint errors
+- [x] `sap_executor.py` has both `execute_function` and `run_script` functions
+- [x] `server.py` now has 5 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`, `run_sap_script`
+- [x] Running `python mcp_server/server.py` starts without import errors
+- [x] No lint errors
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

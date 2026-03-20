@@ -6,6 +6,18 @@ target function with the provided arguments, and returns the result
 including any ByRef output parameters.
 """
 
+import io
+import sys
+import time
+import math
+import json
+import datetime
+import decimal
+import fractions
+import collections
+import itertools
+import functools
+import threading
 import logging
 
 from sap_bridge import bridge
@@ -112,3 +124,155 @@ def execute_function(function_path: str, args: list, description: str = "") -> d
         success,
     )
     return response
+
+
+# ── Sandbox configuration ────────────────────────────────────────────────
+
+ALLOWED_MODULES = frozenset({
+    "math", "json", "datetime", "decimal", "fractions",
+    "collections", "itertools", "functools", "typing",
+})
+
+BLOCKED_MODULES = frozenset({
+    "os", "subprocess", "sys", "shutil", "pathlib",
+    "socket", "http", "urllib", "importlib", "ctypes",
+    "pickle", "shelve", "tempfile", "glob", "signal",
+    "multiprocessing", "threading", "webbrowser",
+})
+
+SCRIPT_TIMEOUT_S = 120
+
+
+def _safe_import(name, globals_=None, locals_=None, fromlist=(), level=0):
+    """Restricted __import__ that only allows ALLOWED_MODULES."""
+    top_level = name.split(".")[0]
+    if top_level in BLOCKED_MODULES:
+        raise ImportError(
+            f"Module '{name}' is blocked in the SAP2000 script sandbox."
+        )
+    if top_level not in ALLOWED_MODULES:
+        raise ImportError(
+            f"Module '{name}' is not available in the SAP2000 script sandbox. "
+            f"Allowed: {', '.join(sorted(ALLOWED_MODULES))}"
+        )
+    return __builtins__.__import__(name, globals_, locals_, fromlist, level)
+
+
+def _safe_open(*args, **kwargs):
+    """Block all file I/O inside scripts."""
+    raise PermissionError("File I/O is not allowed in the SAP2000 script sandbox.")
+
+
+def _build_sandbox_globals() -> dict:
+    """
+    Build the globals dict for script execution.
+
+    Pre-injects SapModel, SapObject, result dict, safe builtins,
+    and allowed modules.
+    """
+    safe_builtins = dict(__builtins__.__dict__) if hasattr(__builtins__, '__dict__') else dict(__builtins__)
+    safe_builtins["__import__"] = _safe_import
+    safe_builtins["open"] = _safe_open
+
+    sandbox = {
+        "__builtins__": safe_builtins,
+        # Pre-injected SAP2000 references
+        "SapModel": bridge.sap_model,
+        "SapObject": bridge.sap_object,
+        # Output dict — scripts write results here
+        "result": {},
+        # Pre-imported allowed modules for convenience
+        "math": math,
+        "json": json,
+        "datetime": datetime,
+        "decimal": decimal,
+        "fractions": fractions,
+        "collections": collections,
+        "itertools": itertools,
+        "functools": functools,
+    }
+    return sandbox
+
+
+def run_script(script: str, description: str = "") -> dict:
+    """
+    Execute a Python script string in the SAP2000 sandbox.
+
+    The script receives pre-injected variables:
+      - SapModel   : COM reference to the active model
+      - SapObject  : COM reference to the SAP2000 application
+      - result     : dict — write output values here
+
+    Sandbox restrictions:
+      - Only allowed modules can be imported
+      - No file I/O (open is blocked)
+      - Blocked dangerous modules (os, subprocess, etc.)
+      - Timeout: 120 seconds
+
+    Returns
+    -------
+    dict with keys:
+      success, stdout, stderr, result, execution_time_s, error
+    """
+    if not bridge.is_connected:
+        return {
+            "success": False,
+            "error": "Not connected to SAP2000. Call connect_sap2000 first.",
+        }
+
+    sandbox_globals = _build_sandbox_globals()
+    captured_stdout = io.StringIO()
+    captured_stderr = io.StringIO()
+
+    exec_error = [None]
+    start_time = time.perf_counter()
+
+    def _run():
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        try:
+            sys.stdout = captured_stdout
+            sys.stderr = captured_stderr
+            exec(compile(script, "<sap_script>", "exec"), sandbox_globals)
+        except Exception as exc:
+            exec_error[0] = exc
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+
+    thread = threading.Thread(target=_run, daemon=True)
+    thread.start()
+    thread.join(timeout=SCRIPT_TIMEOUT_S)
+
+    elapsed = time.perf_counter() - start_time
+
+    if thread.is_alive():
+        return {
+            "success": False,
+            "error": f"Script timed out after {SCRIPT_TIMEOUT_S}s.",
+            "stdout": captured_stdout.getvalue(),
+            "stderr": captured_stderr.getvalue(),
+            "result": sandbox_globals.get("result", {}),
+            "execution_time_s": round(elapsed, 3),
+            "description": description,
+        }
+
+    if exec_error[0] is not None:
+        return {
+            "success": False,
+            "error": str(exec_error[0]),
+            "stdout": captured_stdout.getvalue(),
+            "stderr": captured_stderr.getvalue(),
+            "result": sandbox_globals.get("result", {}),
+            "execution_time_s": round(elapsed, 3),
+            "description": description,
+        }
+
+    return {
+        "success": True,
+        "stdout": captured_stdout.getvalue(),
+        "stderr": captured_stderr.getvalue(),
+        "result": sandbox_globals.get("result", {}),
+        "execution_time_s": round(elapsed, 3),
+        "description": description,
+    }

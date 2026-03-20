@@ -11,7 +11,7 @@ import logging
 from mcp.server.fastmcp import FastMCP
 
 from sap_bridge import bridge
-from sap_executor import execute_function
+from sap_executor import execute_function, run_script
 
 logging.basicConfig(
     level=logging.INFO,
@@ -89,6 +89,33 @@ def execute_sap_function(
         args=args or [],
         description=description,
     )
+
+
+@mcp.tool()
+def run_sap_script(
+    script: str,
+    description: str = "",
+) -> dict:
+    """Execute a Python script against the connected SAP2000 instance.
+
+    The script runs in a sandbox with pre-injected variables:
+      - SapModel: COM reference to the active model
+      - SapObject: COM reference to the SAP2000 application
+      - result: dict — write output values here for the agent to read
+
+    Sandbox restrictions:
+      - Only safe modules allowed (math, json, datetime, decimal, etc.)
+      - No file I/O, no os/subprocess/sys access
+      - 120 second timeout
+
+    Returns: {success, stdout, stderr, result, execution_time_s, error}
+
+    Workflow:
+      1. Agent generates script based on API docs
+      2. This tool executes it
+      3. Agent reads result to verify or correct
+    """
+    return run_script(script=script, description=description)
 
 
 # ── Run ──────────────────────────────────────────────────────────────────
