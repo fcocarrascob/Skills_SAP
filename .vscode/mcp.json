@@ -2,7 +2,7 @@
   "servers": {
     "sap2000": {
       "type": "stdio",
-      "command": "python",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
       "args": [
         "${workspaceFolder}/mcp_server/server.py"
       ],

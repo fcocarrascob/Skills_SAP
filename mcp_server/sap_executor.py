@@ -7,6 +7,7 @@ including any ByRef output parameters.
 """
 
 import io
+import re
 import sys
 import time
 import math
@@ -22,6 +23,7 @@ import logging
 
 from sap_bridge import bridge
 from script_library import save_script
+from function_registry import registry as function_registry
 
 logger = logging.getLogger(__name__)
 
@@ -195,6 +197,34 @@ def _build_sandbox_globals() -> dict:
     return sandbox
 
 
+# Regex to detect SAP2000 API calls: SapModel.Something.Something(...) or SapObject.Something(...)
+_API_CALL_PATTERN = re.compile(
+    r"\b((?:SapModel|SapObject)(?:\.\w+)+)\s*\(",
+)
+
+
+def _extract_api_functions(script: str) -> list[str]:
+    """
+    Extract SAP2000 API function paths from a script's source code.
+
+    Finds all occurrences of SapModel.X.Y(...) and SapObject.X.Y(...)
+    and returns unique function paths.
+
+    Example:
+        "SapModel.FrameObj.AddByCoord(0,0,0,...)"
+        → ["SapModel.FrameObj.AddByCoord"]
+    """
+    matches = _API_CALL_PATTERN.findall(script)
+    # Deduplicate while preserving order
+    seen = set()
+    unique = []
+    for match in matches:
+        if match not in seen:
+            seen.add(match)
+            unique.append(match)
+    return unique
+
+
 def run_script(script: str, description: str = "", save_as: str | None = None) -> dict:
     """
     Execute a Python script string in the SAP2000 sandbox.
@@ -287,5 +317,21 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
             result=sandbox_globals.get("result", {}),
         )
         response["saved_path"] = save_result.get("path")
+
+    # Auto-register API functions used in this successful script
+    try:
+        api_functions = _extract_api_functions(script)
+        script_label = save_as or ""
+        for func_path in api_functions:
+            function_registry.mark_verified(func_path, script_label)
+        if api_functions:
+            response["registered_functions"] = api_functions
+            logger.info(
+                "Auto-registered %d API functions from script: %s",
+                len(api_functions),
+                api_functions,
+            )
+    except Exception as exc:
+        logger.warning("Auto-registration failed (non-fatal): %s", exc)
 
     return response

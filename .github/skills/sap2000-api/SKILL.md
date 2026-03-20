@@ -21,17 +21,40 @@ execute, and verify scripts that automate SAP2000 operations via the local COM b
 
 1. **Check connection** — Call `get_model_info` to verify SAP2000 is connected.
    If not connected, call `connect_sap2000` first.
-2. **Search for existing scripts** — Call `list_scripts` with a relevant query.
-   If a matching script exists, use `load_script` to load it as a starting point.
-3. **Search API docs** — Call `search_api_docs` to find the correct functions,
-   parameter order, and return value conventions before writing any code.
-4. **Generate the script** — Write a complete Python script following the
-   patterns described below.
-5. **Execute** — Call `run_sap_script` with the script.
-6. **Verify** — Read the returned `result`, `stdout`, and `return_value`.
+2. **Check function registry** — Call `query_function_registry` with the function
+   name or a keyword query to see if the needed functions have already been
+   verified.
+3. **Load wrapper scripts** — If a `wrapper_script` field exists in the registry
+   entry, call `load_script("func_...")` and **copy the exact call signature,
+   argument order, and ByRef pattern from the wrapper**. The wrapper is the
+   authoritative source of truth — it has been tested against the live COM bridge.
+4. **Search for existing full scripts** — Call `list_scripts` with a relevant
+   query. If a matching script exists, use `load_script` to load it as a starting point.
+5. **Search API docs (FALLBACK ONLY)** — Call `search_api_docs` ONLY for
+   functions that have **no wrapper script** and are **not in the registry**.
+   API documentation describes the VBA interface and may differ from the
+   Python COM bridge behaviour (argument count, order, ByRef layout).
+   **Never override a verified wrapper with an API doc signature.**
+6. **Generate the script** — Write a complete Python script following the
+   patterns described below. For every function that has a wrapper, copy the
+   call exactly from the wrapper — do not invent or reorder arguments.
+
+> ⚠️ **WRAPPER PRIORITY RULE — NON-NEGOTIABLE:**
+> When a verified wrapper exists for a function, it is the ONLY valid
+> reference for that function's argument list, order, and return-value layout.
+> API documentation is a secondary fallback used exclusively for functions
+> with no wrapper. Mixing API doc signatures with wrapper-verified calls
+> will introduce argument-count or ordering bugs that are hard to diagnose.
+6. **Execute** — Call `run_sap_script` with the script. On success, any new
+   API functions used are automatically registered in the function registry.
+7. **Verify** — Read the returned `result`, `stdout`, and `return_value`.
    If `success` is `false`, analyze the error, fix the script, and re-execute.
-7. **Save** — When the script succeeds, re-run with `save_as` to store it
+8. **Save** — When the script succeeds, re-run with `save_as` to store it
    in the script library for future reuse.
+9. **Register new functions** — For any new API functions not yet in the
+   registry, call `register_verified_function` to add full metadata
+   (category, description, parameter notes). Auto-registration captures
+   the function path, but manual registration adds richer documentation.
 
 ## Script Patterns
 
@@ -89,6 +112,64 @@ raw = SapModel.Results.JointDispl(
 ret_code = raw[-1]
 result["displacement_U3"] = raw[8][0] if ret_code == 0 and len(raw[8]) > 0 else None
 ```
+
+## Function Registry
+
+The function registry (`scripts/registry.json`) tracks which API functions
+have been successfully tested. Use it to avoid re-discovering function
+signatures and ByRef conventions from scratch.
+
+### Querying the Registry
+
+```python
+# Check if a specific function has been verified:
+query_function_registry(function_path="SapModel.FrameObj.AddByCoord")
+# → {function_path, category, description, verified, wrapper_script, ...}
+
+# Search by keyword:
+query_function_registry(query="frame")
+# → {count, functions: [{function_path, category, verified, ...}, ...]}
+
+# List verified functions only:
+query_function_registry(verified_only=True)
+
+# Get registry summary:
+query_function_registry()
+# → {total_registered, total_verified, categories: {...}}
+```
+
+### Wrapper Scripts
+
+Verified functions have wrapper scripts in `scripts/wrappers/` that demonstrate
+correct usage. Each wrapper:
+- Targets a single API function
+- Is self-contained (initializes a fresh model)
+- Documents the ByRef output layout
+- Asserts success and writes to `result`
+
+> **The wrapper is the single source of truth for that function.**
+> The argument count, argument order, and return-value layout shown in the
+> wrapper have been verified against the live SAP2000 COM bridge.
+> API documentation describes the VBA interface and can differ — e.g.,
+> `GetTCLimits` takes 5 args in Python (no `ItemType`), `EditArea.Divide`
+> takes 18 args (no trailing `SubMesh`/`SubMeshSize`), and
+> `SelectObj.CoordinateRange` takes coordinates first and `CSys` last.
+
+**Workflow for using a wrapper:**
+1. Call `query_function_registry(function_path="SapModel.X.Y")` — check `wrapper_script`.
+2. If wrapper exists: call `load_script("func_X_Y")` and copy the call verbatim.
+3. Only if no wrapper: consult `search_api_docs` and mark as unverified.
+
+```
+load_script("func_FrameObj_AddByCoord")
+```
+
+### Auto-Registration
+
+When a script executes successfully via `run_sap_script`, all SAP2000 API
+functions called in the script are automatically detected and registered
+as verified in the registry. The response includes a `registered_functions`
+list showing what was captured.
 
 ## SAP2000 API Conventions
 

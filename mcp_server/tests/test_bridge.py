@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pytest
 from sap_bridge import SapBridge
+from function_registry import FunctionRegistry
 
 
 class TestSapBridgeUnit:
@@ -184,3 +185,88 @@ class TestScriptLibrary:
 
         loaded = script_library.load_script("nonexistent")
         assert "error" in loaded
+
+
+class TestFunctionRegistryTools:
+    """Tests for the registry MCP tools (no SAP2000 needed)."""
+
+    @pytest.fixture(autouse=True)
+    def setup_registry(self, tmp_path, monkeypatch):
+        """Point the registry at a temporary file."""
+        import function_registry
+        test_path = tmp_path / "registry.json"
+        monkeypatch.setattr(function_registry, "REGISTRY_PATH", test_path)
+        # Reset the singleton to use the new path
+        function_registry.registry = FunctionRegistry(registry_path=test_path)
+
+    def test_query_empty_summary(self):
+        """query_function_registry with no args returns empty summary."""
+        from function_registry import registry
+        summary = registry.get_summary()
+        assert summary["total_registered"] == 0
+
+    def test_register_and_query(self):
+        """register_verified_function then query it back."""
+        from function_registry import registry
+        registry.register_function(
+            "SapModel.FrameObj.AddByCoord",
+            "Object_Model",
+            "Add frame by coords",
+        )
+        registry.mark_verified("SapModel.FrameObj.AddByCoord", "test")
+        entry = registry.get_function("SapModel.FrameObj.AddByCoord")
+        assert entry["verified"] is True
+
+    def test_list_registry_categories(self):
+        """list_registry_categories returns category counts."""
+        from function_registry import registry
+        registry.register_function("SapModel.A.B", "Cat1")
+        registry.register_function("SapModel.C.D", "Cat2")
+        registry.mark_verified("SapModel.A.B")
+        summary = registry.get_summary()
+        assert summary["categories"]["Cat1"]["verified"] == 1
+        assert summary["categories"]["Cat2"]["verified"] == 0
+
+
+class TestAutoRegistration:
+    """Tests for auto-registration of API functions from scripts."""
+
+    def test_extract_api_functions(self):
+        """_extract_api_functions finds SapModel and SapObject calls."""
+        from sap_executor import _extract_api_functions
+
+        script = """
+SapModel.InitializeNewModel()
+SapModel.File.NewBlank()
+ret = SapModel.SetPresentUnits(6)
+ret = SapModel.PropMaterial.SetMaterial("CONC", 2)
+raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 5, 0, 0, "", "R1", "")
+count = SapModel.FrameObj.Count()
+# Duplicate call should not produce duplicate entry
+raw2 = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 10, "", "R1", "")
+"""
+        funcs = _extract_api_functions(script)
+        assert "SapModel.InitializeNewModel" in funcs
+        assert "SapModel.File.NewBlank" in funcs
+        assert "SapModel.SetPresentUnits" in funcs
+        assert "SapModel.PropMaterial.SetMaterial" in funcs
+        assert "SapModel.FrameObj.AddByCoord" in funcs
+        assert "SapModel.FrameObj.Count" in funcs
+        # Should be deduplicated
+        assert funcs.count("SapModel.FrameObj.AddByCoord") == 1
+
+    def test_extract_no_matches(self):
+        """_extract_api_functions returns empty for non-SAP code."""
+        from sap_executor import _extract_api_functions
+
+        script = "x = 1\ny = x + 2\nresult['value'] = y"
+        funcs = _extract_api_functions(script)
+        assert funcs == []
+
+    def test_extract_sap_object_calls(self):
+        """_extract_api_functions finds SapObject calls too."""
+        from sap_executor import _extract_api_functions
+
+        script = "SapObject.ApplicationExit(False)"
+        funcs = _extract_api_functions(script)
+        assert "SapObject.ApplicationExit" in funcs

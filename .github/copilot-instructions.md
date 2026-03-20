@@ -30,6 +30,9 @@ The `sap2000` MCP server provides these tools:
 | `load_script` | Load a saved script for modification |
 | `search_api_docs` | Search API documentation for functions |
 | `list_api_categories` | List API documentation categories |
+| `query_function_registry` | Query verified functions by path, category, or keyword |
+| `register_verified_function` | Register or update a verified API function |
+| `list_registry_categories` | List categories with registered/verified counts |
 
 ### Requirements
 
