@@ -1,9 +1,66 @@
 {
   "version": "1.0",
-  "functions": {},
+  "functions": {
+    "SapModel.File.NewBlank": {
+      "category": "File",
+      "description": "Initialize a new blank model",
+      "signature": "() -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_File_NewBlank",
+      "used_in_scripts": [],
+      "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). No ByRef outputs."
+    },
+    "SapModel.PropMaterial.SetMaterial": {
+      "category": "PropMaterial",
+      "description": "Define or modify a material by name and type",
+      "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropMaterial_SetMaterial",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). No ByRef outputs. Minimum required: Name, MatType."
+    },
+    "SapModel.PropMaterial.SetMPIsotropic": {
+      "category": "PropMaterial",
+      "description": "Set isotropic mechanical properties (E, Poisson, thermal coeff)",
+      "signature": "(Name, E, U, A, Temp) -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropMaterial_SetMPIsotropic",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
+      "known_errors": [],
+      "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success)."
+    },
+    "SapModel.PropMaterial.SetWeightAndMass": {
+      "category": "PropMaterial",
+      "description": "Set weight per unit volume and mass per unit volume",
+      "signature": "(Name, MyType, Value, Temp) -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-20T00:00:00+00:00",
+      "last_verified": "2026-03-20T00:00:00+00:00",
+      "verification_count": 1,
+      "wrapper_script": "func_PropMaterial_SetWeightAndMass",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing material); MyType: int (1=weight per unit volume [F/L^3], 2=mass per unit volume [M/L^3]); Value: float; Temp: float (default=0)",
+      "known_errors": [],
+      "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success). Call twice — once for weight (MyType=1) and once for mass (MyType=2)."
+    }
+  },
   "summary": {
-    "total_registered": 0,
-    "total_verified": 0,
-    "last_updated": null
+    "total_registered": 4,
+    "total_verified": 4,
+    "last_updated": "2026-03-20T00:00:00+00:00"
   }
 }
