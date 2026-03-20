@@ -13,6 +13,7 @@ from mcp.server.fastmcp import FastMCP
 from sap_bridge import bridge
 from sap_executor import execute_function, run_script
 from script_library import list_scripts as _list_scripts, load_script as _load_script
+from doc_search import doc_index
 
 logging.basicConfig(
     level=logging.INFO,
@@ -152,6 +153,37 @@ def load_script(name: str) -> dict:
     Use this to retrieve an existing script, modify it, and re-execute.
     """
     return _load_script(name=name)
+
+
+@mcp.tool()
+def search_api_docs(
+    query: str,
+    category: str | None = None,
+) -> list[dict]:
+    """Search SAP2000 API documentation for functions matching a query.
+
+    query: Keywords describing what you need (e.g. "add frame by coordinates",
+           "run analysis", "get joint displacement results").
+    category: Optional — restrict to a category like "File", "Object_Model",
+              "Analyze", "Load_Patterns", "Properties", etc.
+
+    Returns: List of {file, category, function_name, syntax, signature,
+             parameters, remarks, example_snippet}.
+
+    Always use this before writing SAP2000 scripts to find the correct
+    function names, parameter order, and conventions.
+    """
+    return doc_index.search(query=query, category=category)
+
+
+@mcp.tool()
+def list_api_categories() -> list[dict]:
+    """List all available SAP2000 API documentation categories.
+
+    Returns: List of {category, sections} showing how many functions
+    are documented per category. Use this to explore the API.
+    """
+    return doc_index.list_categories()
 
 
 # ── Run ──────────────────────────────────────────────────────────────────

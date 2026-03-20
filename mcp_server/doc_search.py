@@ -1,17 +1,3 @@
-# Step 5: API Documentation Search Tool
-
-## Goal
-Implement `search_api_docs` — a tool that searches the markdown files in `API/` by keyword, category, or functionality description, returning relevant function signatures, parameters, and example snippets so the agent can find the right API function before generating code.
-
-## Prerequisites
-Steps 1–4 must be committed. The MCP server with all previous tools must be in place.
-
-### Step-by-Step Instructions
-
-#### Step 5.1: Create the Documentation Search module
-- [x] Copy and paste code below into `mcp_server/doc_search.py`:
-
-```python
 """
 SAP2000 API Documentation Search — Keyword search across API/*.md files.
 
@@ -241,54 +227,3 @@ class DocIndex:
 
 # Module-level singleton
 doc_index = DocIndex()
-```
-
-#### Step 5.2: Register the search tool in server.py
-- [x] Add the import in `mcp_server/server.py`, after the existing imports:
-
-```python
-from doc_search import doc_index
-```
-
-- [x] Add the following tool functions at the end of the `# ── Tools` section (before `# ── Run`):
-
-```python
-@mcp.tool()
-def search_api_docs(
-    query: str,
-    category: str | None = None,
-) -> list[dict]:
-    """Search SAP2000 API documentation for functions matching a query.
-
-    query: Keywords describing what you need (e.g. "add frame by coordinates",
-           "run analysis", "get joint displacement results").
-    category: Optional — restrict to a category like "File", "Object_Model",
-              "Analyze", "Load_Patterns", "Properties", etc.
-
-    Returns: List of {file, category, function_name, syntax, signature,
-             parameters, remarks, example_snippet}.
-
-    Always use this before writing SAP2000 scripts to find the correct
-    function names, parameter order, and conventions.
-    """
-    return doc_index.search(query=query, category=category)
-
-
-@mcp.tool()
-def list_api_categories() -> list[dict]:
-    """List all available SAP2000 API documentation categories.
-
-    Returns: List of {category, sections} showing how many functions
-    are documented per category. Use this to explore the API.
-    """
-    return doc_index.list_categories()
-```
-
-##### Step 5 Verification Checklist
-- [x] `mcp_server/doc_search.py` exists with the `DocIndex` class
-- [x] `server.py` now has 9 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`, `run_sap_script`, `list_scripts`, `load_script`, `search_api_docs`, `list_api_categories`
-- [x] Running `python mcp_server/server.py` starts without import errors
-- [x] No lint errors
-
-#### Step 5 STOP & COMMIT
-**STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
