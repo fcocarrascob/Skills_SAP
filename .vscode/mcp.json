@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "sap2000": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "${workspaceFolder}/mcp_server/server.py"
+      ],
+      "env": {}
+    }
+  }
+}

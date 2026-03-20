@@ -9,8 +9,8 @@ Steps 1–6 must be committed. The MCP server and SKILL.md must be in place.
 ### Step-by-Step Instructions
 
 #### Step 7.1: Create the VS Code MCP configuration
-- [ ] Create the `.vscode/` directory if it doesn't exist.
-- [ ] Copy and paste code below into `.vscode/mcp.json`:
+- [x] Create the `.vscode/` directory if it doesn't exist.
+- [x] Copy and paste code below into `.vscode/mcp.json`:
 
 ```json
 {
@@ -28,7 +28,7 @@ Steps 1–6 must be committed. The MCP server and SKILL.md must be in place.
 ```
 
 #### Step 7.2: Create global Copilot instructions
-- [ ] Copy and paste code below into `.github/copilot-instructions.md`:
+- [x] Copy and paste code below into `.github/copilot-instructions.md`:
 
 ```markdown
 # Copilot Instructions
@@ -73,7 +73,7 @@ The `sap2000` MCP server provides these tools:
 ```
 
 #### Step 7.3: Create the MCP server README
-- [ ] Copy and paste code below into `mcp_server/README.md`:
+- [x] Copy and paste code below into `mcp_server/README.md`:
 
 ```markdown
 # SAP2000 MCP Server
@@ -160,11 +160,11 @@ Use `list_scripts` to browse and `load_script` to reload any saved script.
 ```
 
 ##### Step 7 Verification Checklist
-- [ ] `.vscode/mcp.json` exists with the `sap2000` server configuration
-- [ ] `.github/copilot-instructions.md` exists and lists all 9 tools
-- [ ] `mcp_server/README.md` exists with installation and architecture docs
-- [ ] The command path in `mcp.json` correctly references `server.py`
-- [ ] No JSON syntax errors in `mcp.json`
+- [x] `.vscode/mcp.json` exists with the `sap2000` server configuration
+- [x] `.github/copilot-instructions.md` exists and lists all 9 tools
+- [x] `mcp_server/README.md` exists with installation and architecture docs
+- [x] The command path in `mcp.json` correctly references `server.py`
+- [x] No JSON syntax errors in `mcp.json`
 
 #### Step 7 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
