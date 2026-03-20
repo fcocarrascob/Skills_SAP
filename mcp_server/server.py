@@ -12,6 +12,7 @@ from mcp.server.fastmcp import FastMCP
 
 from sap_bridge import bridge
 from sap_executor import execute_function, run_script
+from script_library import list_scripts as _list_scripts, load_script as _load_script
 
 logging.basicConfig(
     level=logging.INFO,
@@ -95,6 +96,7 @@ def execute_sap_function(
 def run_sap_script(
     script: str,
     description: str = "",
+    save_as: str | None = None,
 ) -> dict:
     """Execute a Python script against the connected SAP2000 instance.
 
@@ -108,14 +110,48 @@ def run_sap_script(
       - No file I/O, no os/subprocess/sys access
       - 120 second timeout
 
-    Returns: {success, stdout, stderr, result, execution_time_s, error}
+    save_as: If provided and script succeeds, saves to scripts/{save_as}.py
+             for future reuse via list_scripts / load_script.
+
+    Returns: {success, stdout, stderr, result, execution_time_s, saved_path, error}
 
     Workflow:
       1. Agent generates script based on API docs
       2. This tool executes it
       3. Agent reads result to verify or correct
+      4. If successful, saves for reuse
     """
-    return run_script(script=script, description=description)
+    return run_script(script=script, description=description, save_as=save_as)
+
+
+@mcp.tool()
+def list_scripts(
+    query: str | None = None,
+    tag: str | None = None,
+) -> list[dict]:
+    """List saved SAP2000 scripts in the library.
+
+    query: Search by name or description keyword (case-insensitive).
+    tag: Filter by tag (e.g. "loads", "analysis", "results").
+
+    Returns: List of {name, description, created, status, tags, path}.
+
+    Use this to find existing scripts before generating a new one.
+    """
+    return _list_scripts(query=query, tag=tag)
+
+
+@mcp.tool()
+def load_script(name: str) -> dict:
+    """Load a saved script by name from the library.
+
+    name: Script name without .py extension.
+
+    Returns: {name, description, script_code, metadata}
+
+    Use this to retrieve an existing script, modify it, and re-execute.
+    """
+    return _load_script(name=name)
 
 
 # ── Run ──────────────────────────────────────────────────────────────────

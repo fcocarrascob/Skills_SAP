@@ -9,8 +9,8 @@ Steps 1–3 must be committed. The MCP server, COM bridge, and script runner mus
 ### Step-by-Step Instructions
 
 #### Step 4.1: Create the Script Library module
-- [ ] Create the `scripts/` directory in the workspace root.
-- [ ] Copy and paste code below into `scripts/README.md`:
+- [x] Create the `scripts/` directory in the workspace root.
+- [x] Copy and paste code below into `scripts/README.md`:
 
 ```markdown
 # SAP2000 Script Library
@@ -26,7 +26,7 @@ Scripts are designed to be executed via the `run_sap_script` MCP tool.
 They expect `SapModel`, `SapObject`, and `result` to be pre-injected.
 ```
 
-- [ ] Copy and paste code below into `mcp_server/script_library.py`:
+- [x] Copy and paste code below into `mcp_server/script_library.py`:
 
 ```python
 """
@@ -245,13 +245,13 @@ def _parse_header(file_path: Path) -> dict | None:
 ```
 
 #### Step 4.2: Add save_as parameter to run_sap_script
-- [ ] Open `mcp_server/sap_executor.py`. Add the following import at the top, after the existing imports:
+- [x] Open `mcp_server/sap_executor.py`. Add the following import at the top, after the existing imports:
 
 ```python
 from script_library import save_script
 ```
 
-- [ ] In `mcp_server/sap_executor.py`, update the `run_script` function signature and add save logic. Replace the function signature:
+- [x] In `mcp_server/sap_executor.py`, update the `run_script` function signature and add save logic. Replace the function signature:
 
 Change:
 ```python
@@ -262,7 +262,7 @@ To:
 def run_script(script: str, description: str = "", save_as: str | None = None) -> dict:
 ```
 
-- [ ] At the end of `run_script`, just before the final `return` statement (the success case), add the save logic. Replace:
+- [x] At the end of `run_script`, just before the final `return` statement (the success case), add the save logic. Replace:
 
 ```python
     return {
@@ -301,13 +301,13 @@ With:
 ```
 
 #### Step 4.3: Register library tools in server.py
-- [ ] Add the import in `mcp_server/server.py`. Add after the existing sap_executor import:
+- [x] Add the import in `mcp_server/server.py`. Add after the existing sap_executor import:
 
 ```python
 from script_library import list_scripts as _list_scripts, load_script as _load_script
 ```
 
-- [ ] Update the existing `run_sap_script` tool to include `save_as`. Replace:
+- [x] Update the existing `run_sap_script` tool to include `save_as`. Replace:
 
 ```python
 @mcp.tool()
@@ -372,7 +372,7 @@ def run_sap_script(
     return run_script(script=script, description=description, save_as=save_as)
 ```
 
-- [ ] Add the two library tools at the end of the `# ── Tools` section:
+- [x] Add the two library tools at the end of the `# ── Tools` section:
 
 ```python
 @mcp.tool()
@@ -406,12 +406,12 @@ def load_script(name: str) -> dict:
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] `mcp_server/script_library.py` exists with `save_script`, `list_scripts`, `load_script` functions
-- [ ] `scripts/README.md` exists
-- [ ] `server.py` now has 7 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`, `run_sap_script`, `list_scripts`, `load_script`
-- [ ] `run_sap_script` accepts `save_as` parameter
-- [ ] Running `python mcp_server/server.py` starts without import errors
-- [ ] No lint errors
+- [x] `mcp_server/script_library.py` exists with `save_script`, `list_scripts`, `load_script` functions
+- [x] `scripts/README.md` exists
+- [x] `server.py` now has 7 tools: `connect_sap2000`, `disconnect_sap2000`, `get_model_info`, `execute_sap_function`, `run_sap_script`, `list_scripts`, `load_script`
+- [x] `run_sap_script` accepts `save_as` parameter
+- [x] Running `python mcp_server/server.py` starts without import errors
+- [x] No lint errors
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

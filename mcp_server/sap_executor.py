@@ -21,6 +21,7 @@ import threading
 import logging
 
 from sap_bridge import bridge
+from script_library import save_script
 
 logger = logging.getLogger(__name__)
 
@@ -194,7 +195,7 @@ def _build_sandbox_globals() -> dict:
     return sandbox
 
 
-def run_script(script: str, description: str = "") -> dict:
+def run_script(script: str, description: str = "", save_as: str | None = None) -> dict:
     """
     Execute a Python script string in the SAP2000 sandbox.
 
@@ -268,7 +269,7 @@ def run_script(script: str, description: str = "") -> dict:
             "description": description,
         }
 
-    return {
+    response = {
         "success": True,
         "stdout": captured_stdout.getvalue(),
         "stderr": captured_stderr.getvalue(),
@@ -276,3 +277,15 @@ def run_script(script: str, description: str = "") -> dict:
         "execution_time_s": round(elapsed, 3),
         "description": description,
     }
+
+    # Save to library on success if name provided
+    if save_as:
+        save_result = save_script(
+            name=save_as,
+            script=script,
+            description=description,
+            result=sandbox_globals.get("result", {}),
+        )
+        response["saved_path"] = save_result.get("path")
+
+    return response
