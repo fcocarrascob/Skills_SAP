@@ -624,7 +624,7 @@ class TestPersistence:
 
 #### Step 2: Wrapper Scripts Format and Initial Wrappers
 
-- [ ] Create the wrappers directory README at `scripts/wrappers/README.md`:
+- [x] Create the wrappers directory README at `scripts/wrappers/README.md`:
 
 ```markdown
 # SAP2000 Function Wrappers
@@ -664,7 +664,7 @@ to be self-contained — each one initializes a fresh model.
 ```
 ```
 
-- [ ] Create wrapper script `scripts/wrappers/func_FrameObj_AddByCoord.py`:
+- [x] Create wrapper script `scripts/wrappers/func_FrameObj_AddByCoord.py`:
 
 ```python
 # ============================================================
@@ -726,7 +726,7 @@ result["frame_count"] = count
 result["status"] = "verified"
 ```
 
-- [ ] Create wrapper script `scripts/wrappers/func_PointObj_SetRestraint.py`:
+- [x] Create wrapper script `scripts/wrappers/func_PointObj_SetRestraint.py`:
 
 ```python
 # ============================================================
@@ -796,7 +796,7 @@ result["point_count"] = point_count
 result["status"] = "verified"
 ```
 
-- [ ] Create wrapper script `scripts/wrappers/func_LoadPatterns_Add.py`:
+- [x] Create wrapper script `scripts/wrappers/func_LoadPatterns_Add.py`:
 
 ```python
 # ============================================================
@@ -864,11 +864,11 @@ result["status"] = "verified"
 ```
 
 ##### Step 2 Verification Checklist
-- [ ] Directory `scripts/wrappers/` exists with `README.md` and 3 `.py` files
-- [ ] Each wrapper has the standard header comment block
-- [ ] Each wrapper is self-contained (initializes a fresh model)
-- [ ] Each wrapper writes to `result["status"] = "verified"` on success
-- [ ] (Optional, requires SAP2000) Execute each wrapper via `run_sap_script` and confirm `result["status"] == "verified"`
+- [x] Directory `scripts/wrappers/` exists with `README.md` and 3 `.py` files
+- [x] Each wrapper has the standard header comment block
+- [x] Each wrapper is self-contained (initializes a fresh model)
+- [x] Each wrapper writes to `result["status"] = "verified"` on success
+- [x] (Optional, requires SAP2000) Execute each wrapper via `run_sap_script` and confirm `result["status"] == "verified"`
 
 #### Step 2 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
