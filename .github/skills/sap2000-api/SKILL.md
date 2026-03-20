@@ -60,10 +60,13 @@ ret = SapModel.PropMaterial.SetMPIsotropic("CONC", 3600, 0.2, 0.0000055)
 ret = SapModel.PropFrame.SetRectangle("R1", "CONC", 12, 12)
 
 # Create geometry
-ret = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 120, "", "R1", "1")
+# AddByCoord returns [Name_out, ret_code] — Name is raw[0], ret_code is raw[-1]
+raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 120, "", "R1", "1")
+frame_name = raw[0]
+assert raw[-1] == 0, f"AddByCoord failed: {raw[-1]}"
 
 # Write results for verification
-result["return_code"] = ret
+result["frame_name"] = frame_name
 result["num_frames"] = SapModel.FrameObj.Count()
 ```
 
@@ -74,14 +77,17 @@ result["num_frames"] = SapModel.FrameObj.Count()
 ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
 ret = SapModel.Results.Setup.SetCaseSelectedForOutput("DEAD")
 
-# Get joint displacements — ByRef params returned as tuple
-ret = SapModel.Results.JointDispl(
+# Get joint displacements — ByRef params come first, ret_code is LAST
+raw = SapModel.Results.JointDispl(
     "1",      # Joint name
     0,        # eItemTypeElm_ObjectElm
     0, [], [], [], [], [], [], [], [], [], []
 )
-# ret is a tuple: (return_code, NumberResults, Obj[], Elm[], LoadCase[], ...)
-result["displacement_U3"] = ret[8][0] if ret[0] == 0 else None
+# raw layout: [NumberResults, Obj[], Elm[], LoadCase[], StepType[], StepNum[],
+#              U1[], U2[], U3[], R1[], R2[], R3[], ret_code]
+# ret_code is always raw[-1]
+ret_code = raw[-1]
+result["displacement_U3"] = raw[8][0] if ret_code == 0 and len(raw[8]) > 0 else None
 ```
 
 ## SAP2000 API Conventions
@@ -92,9 +98,38 @@ result["displacement_U3"] = ret[8][0] if ret[0] == 0 else None
 
 ### ByRef Parameters
 SAP2000 uses ByRef (output) parameters extensively. In Python via COM:
-- Functions return a **tuple**: `(return_code, param1, param2, ...)`
-- The first element is always the return code
-- Subsequent elements are the ByRef output parameters
+- Functions return a **list**: `[byref_output1, byref_output2, ..., return_code]`
+- The **last element `[-1]` is ALWAYS the return code** (Long)
+- All ByRef output parameters come **before** the return code
+
+> **CRITICAL:** This is the opposite of what the VBA signature suggests.
+> The COM bridge in Python always places the `Long` return code at the end.
+
+```python
+# Example: AddCartesian returns [Name_out, ret_code]
+raw = SapModel.PointObj.AddCartesian(5, 3, 2, "", "PT1")
+point_name = raw[0]   # ByRef Name output (first)
+ret_code   = raw[-1]  # return code (last)
+assert ret_code == 0, f"AddCartesian failed: {ret_code}"
+
+# Example: GetCoordCartesian returns [x, y, z, ret_code]
+coord = SapModel.PointObj.GetCoordCartesian(point_name, 0, 0, 0)
+x, y, z = coord[0], coord[1], coord[2]
+ret_code = coord[-1]
+
+# Example: FrameObj.GetPoints returns [pt_i, pt_j, ret_code]
+raw = SapModel.FrameObj.GetPoints(frame_name, "", "")
+pt_i = raw[0]
+pt_j = raw[1]
+ret_code = raw[-1]
+```
+
+**Safe pattern to always use:**
+```python
+raw = SapModel.SomeObj.SomeFunction(...)
+ret_code = raw[-1] if isinstance(raw, (list, tuple)) else raw
+assert ret_code == 0, f"SomeFunction failed: {ret_code}"
+```
 
 ### Unit System
 Set units BEFORE creating geometry:
@@ -188,7 +223,7 @@ SapObject (cOAPI)
     │   └── SetModifiers(name, value_array)
     ├── FrameObj
     │   ├── AddByCoord(x1,y1,z1, x2,y2,z2, name, section, group)
-    │   ├── GetPoints(name) → (ret, point1, point2)
+    │   ├── GetPoints(name) → [point1, point2, ret_code]
     │   ├── Count() → int
     │   ├── SetLoadDistributed(name, pattern, type, dir, dist1, dist2, val1, val2)
     │   └── SetLoadPoint(name, pattern, type, dir, dist, val)
@@ -214,7 +249,7 @@ SapObject (cOAPI)
     │   ├── Setup
     │   │   ├── DeselectAllCasesAndCombosForOutput()
     │   │   └── SetCaseSelectedForOutput(name)
-    │   └── JointDispl(name, itemType, ...) → tuple
+    │   └── JointDispl(name, itemType, ...) → [NRes, Obj[], Elm[], LC[], StType[], StNum[], U1[], U2[], U3[], R1[], R2[], R3[], ret_code]
     ├── View
     │   └── RefreshView(window, zoom)
     └── SelectObj

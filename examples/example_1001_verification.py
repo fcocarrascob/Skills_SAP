@@ -43,28 +43,28 @@ assert ret == 0, f"SetPresentUnits failed: {ret}"
 
 # Frame 1: Column (0,0,0) → (0,0,10)
 ret1 = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 10, "", "R1", "1")
-FrameName0 = ret1[1] if isinstance(ret1, tuple) else ""
+FrameName0 = ret1[0] if isinstance(ret1, (list, tuple)) else ""
 
 # Frame 2: Inclined beam (0,0,10) → (8,0,16)
 ret2 = SapModel.FrameObj.AddByCoord(0, 0, 10, 8, 0, 16, "", "R1", "2")
-FrameName1 = ret2[1] if isinstance(ret2, tuple) else ""
+FrameName1 = ret2[0] if isinstance(ret2, (list, tuple)) else ""
 
 # Frame 3: Cantilever (-4,0,10) → (0,0,10)
 ret3 = SapModel.FrameObj.AddByCoord(-4, 0, 10, 0, 0, 10, "", "R1", "3")
-FrameName2 = ret3[1] if isinstance(ret3, tuple) else ""
+FrameName2 = ret3[0] if isinstance(ret3, (list, tuple)) else ""
 
 # ── Step 6: Set restraints ────────────────────────────────────────────
 
 # Base of column: fixed (Ux, Uy, Uz, Rx free Ry, Rz)
-ret = SapModel.FrameObj.GetPoints(FrameName0, "", "")
-BasePt = ret[1]
+raw = SapModel.FrameObj.GetPoints(FrameName0, "", "")
+BasePt = raw[0]  # ByRef pt_i is raw[0], ret_code is raw[-1]
 Restraint_base = [True, True, True, True, False, False]
 ret = SapModel.PointObj.SetRestraint(BasePt, Restraint_base)
 assert ret == 0, f"SetRestraint(base) failed: {ret}"
 
 # Top of inclined beam: roller (Ux, Uy)
-ret = SapModel.FrameObj.GetPoints(FrameName1, "", "")
-TopPt = ret[2]
+raw = SapModel.FrameObj.GetPoints(FrameName1, "", "")
+TopPt = raw[1]  # ByRef pt_j is raw[1], ret_code is raw[-1]
 Restraint_top = [True, True, False, False, False, False]
 ret = SapModel.PointObj.SetRestraint(TopPt, Restraint_top)
 assert ret == 0, f"SetRestraint(top) failed: {ret}"
@@ -86,15 +86,15 @@ ret = SapModel.LoadPatterns.Add("7", 8)
 # ── Step 9: Assign loads ──────────────────────────────────────────────
 
 # Load pattern 2: point load + distributed load on cantilever
-ret = SapModel.FrameObj.GetPoints(FrameName2, "", "")
-CantPt_i = ret[1]
+raw = SapModel.FrameObj.GetPoints(FrameName2, "", "")
+CantPt_i = raw[0]  # pt_i
 PointLoadValue_2 = [0, 0, -10, 0, 0, 0]
 ret = SapModel.PointObj.SetLoadForce(CantPt_i, "2", PointLoadValue_2)
 ret = SapModel.FrameObj.SetLoadDistributed(FrameName2, "2", 1, 10, 0, 1, 1.8, 1.8)
 
 # Load pattern 3: point load at end of inclined beam
-ret = SapModel.FrameObj.GetPoints(FrameName2, "", "")
-CantPt_j = ret[2]  # This is the junction point
+raw = SapModel.FrameObj.GetPoints(FrameName2, "", "")
+CantPt_j = raw[1]  # pt_j is raw[1]
 PointLoadValue_3 = [0, 0, -17.2, 0, -54.4, 0]
 ret = SapModel.PointObj.SetLoadForce(CantPt_j, "3", PointLoadValue_3)
 
@@ -128,12 +128,12 @@ assert ret == 0, f"RunAnalysis failed: {ret}"
 # ── Step 12: Extract results ──────────────────────────────────────────
 
 # Get endpoint of inclined beam for vertical displacement results
-ret = SapModel.FrameObj.GetPoints(FrameName1, "", "")
-ResultPt_beam = ret[2]
+raw = SapModel.FrameObj.GetPoints(FrameName1, "", "")
+ResultPt_beam = raw[1]  # pt_j
 
 # Get I-end of column for horizontal displacement results
-ret = SapModel.FrameObj.GetPoints(FrameName0, "", "")
-ResultPt_col = ret[1]
+raw = SapModel.FrameObj.GetPoints(FrameName0, "", "")
+ResultPt_col = raw[0]  # pt_i
 
 SapResult = []
 for i in range(7):
@@ -142,22 +142,23 @@ for i in range(7):
 
     if i <= 3:
         # Vertical displacement at beam end
-        ret = SapModel.Results.JointDispl(
+        raw = SapModel.Results.JointDispl(
             ResultPt_beam, 0,
             0, [], [], [], [], [], [], [], [], [], []
         )
-        if ret[0] == 0 and len(ret[9]) > 0:
-            SapResult.append(ret[9][0])  # U3
+        # raw layout: [NRes, Obj[], Elm[], LC[], StType[], StNum[], U1[], U2[], U3[], R1[], R2[], R3[], ret_code]
+        if raw[-1] == 0 and len(raw[8]) > 0:
+            SapResult.append(raw[8][0])  # U3 is raw[8]
         else:
             SapResult.append(None)
     else:
         # Horizontal displacement at column base
-        ret = SapModel.Results.JointDispl(
+        raw = SapModel.Results.JointDispl(
             ResultPt_col, 0,
             0, [], [], [], [], [], [], [], [], [], []
         )
-        if ret[0] == 0 and len(ret[7]) > 0:
-            SapResult.append(ret[7][0])  # U1
+        if raw[-1] == 0 and len(raw[6]) > 0:
+            SapResult.append(raw[6][0])  # U1 is raw[6]
         else:
             SapResult.append(None)
 

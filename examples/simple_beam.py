@@ -28,14 +28,15 @@ ret = SapModel.PropFrame.SetRectangle("BEAM_SECT", "STEEL", 0.302, 0.203)
 # ── Create beam: 6m span along X ─────────────────────────────────────
 
 ret = SapModel.FrameObj.AddByCoord(0, 0, 0, 6, 0, 0, "", "BEAM_SECT", "1")
-beam_name = ret[1] if isinstance(ret, tuple) else "1"
+beam_name = ret[0] if isinstance(ret, (list, tuple)) else "1"  # ByRef Name is raw[0]
 
 # ── Supports ──────────────────────────────────────────────────────────
 
 # Get end points
-ret = SapModel.FrameObj.GetPoints(beam_name, "", "")
-pt_i = ret[1]
-pt_j = ret[2]
+raw = SapModel.FrameObj.GetPoints(beam_name, "", "")
+pt_i = raw[0]  # pt_i is raw[0]
+pt_j = raw[1]  # pt_j is raw[1]
+# raw[-1] is ret_code
 
 # Pin at left end (all translations fixed)
 ret = SapModel.PointObj.SetRestraint(pt_i, [True, True, True, False, False, False])
@@ -62,12 +63,13 @@ ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
 ret = SapModel.Results.Setup.SetCaseSelectedForOutput("LIVE")
 
 # Get displacement at both joints to check
+# JointDispl: raw[-1]=ret_code, raw[8]=U3[]
 for pt_name, label in [(pt_i, "left"), (pt_j, "right")]:
-    ret = SapModel.Results.JointDispl(
+    raw = SapModel.Results.JointDispl(
         pt_name, 0, 0, [], [], [], [], [], [], [], [], [], []
     )
-    if ret[0] == 0 and len(ret[9]) > 0:
-        result[f"U3_{label}"] = ret[9][0]
+    if raw[-1] == 0 and len(raw[8]) > 0:
+        result[f"U3_{label}"] = raw[8][0]
 
 result["beam_name"] = beam_name
 result["span_m"] = 6.0
