@@ -2,7 +2,7 @@
 # Wrapper: SapModel.File.NewWall
 # Category: File
 # Description: Create a shear wall template
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Connected to SAP2000
 # ============================================================
 """

@@ -2,7 +2,7 @@
 # Wrapper: SapModel.File.OpenFile
 # Category: File
 # Description: Open an existing .sdb model file by path
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Connected to SAP2000, valid .sdb file path
 # ============================================================
 """

@@ -2,7 +2,7 @@
 # Wrapper: SapModel.File.New2DFrame
 # Category: File
 # Description: Create a 2D portal/braced frame from template
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Connected to SAP2000
 # ============================================================
 """
