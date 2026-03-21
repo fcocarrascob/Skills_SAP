@@ -2,7 +2,7 @@
 # Wrapper: SapModel.FrameObj.SetLoadTemperature
 # Category: Load_Assignment
 # Description: Apply thermal loads on frame elements
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, frame exists, load pattern defined
 # ============================================================
 """

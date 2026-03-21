@@ -2,7 +2,7 @@
 # Wrapper: SapModel.AreaObj.SetLoadGravity
 # Category: Load_Assignment
 # Description: Apply gravity multiplier on area self-weight
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, area exists, load pattern defined
 # ============================================================
 """

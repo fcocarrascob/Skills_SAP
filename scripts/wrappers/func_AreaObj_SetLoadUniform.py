@@ -2,7 +2,7 @@
 # Wrapper: SapModel.AreaObj.SetLoadUniform
 # Category: Load_Assignment
 # Description: Apply uniform pressure on area elements (slab loads)
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, area exists, load pattern defined
 # ============================================================
 """

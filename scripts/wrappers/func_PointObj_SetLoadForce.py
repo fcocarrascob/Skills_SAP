@@ -2,7 +2,7 @@
 # Wrapper: SapModel.PointObj.SetLoadForce
 # Category: Load_Assignment
 # Description: Apply forces/moments at a joint (6 DOF)
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, point exists, load pattern defined
 # ============================================================
 """

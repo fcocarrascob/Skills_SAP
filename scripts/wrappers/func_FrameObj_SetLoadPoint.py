@@ -2,7 +2,7 @@
 # Wrapper: SapModel.FrameObj.SetLoadPoint
 # Category: Load_Assignment
 # Description: Apply a concentrated point load along a frame element
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, frame exists, load pattern defined
 # ============================================================
 """

@@ -2,7 +2,7 @@
 # Wrapper: SapModel.FrameObj.SetLoadDistributed
 # Category: Load_Assignment
 # Description: Apply uniform/trapezoidal distributed loads on frames
-# Verified: pending
+# Verified: 2026-03-21
 # Prerequisites: Model open, frame exists, load pattern defined
 # ============================================================
 """
