@@ -7,10 +7,12 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-20T16:26:25.582204+00:00",
-      "verification_count": 22,
+      "last_verified": "2026-03-21T13:29:10.270107+00:00",
+      "verification_count": 23,
       "wrapper_script": "func_File_NewBlank",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs."
@@ -21,10 +23,12 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-20T16:26:25.589769+00:00",
-      "verification_count": 15,
+      "last_verified": "2026-03-21T13:29:10.280319+00:00",
+      "verification_count": 16,
       "wrapper_script": "func_PropMaterial_SetMaterial",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs. Minimum required: Name, MatType."
@@ -63,10 +67,12 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-20T16:26:25.600725+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-03-21T13:29:10.293392+00:00",
+      "verification_count": 11,
       "wrapper_script": "func_PropFrame_SetRectangle",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). Common for concrete beams and columns."
@@ -119,10 +125,16 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-20T16:26:25.575790+00:00",
-      "verification_count": 21,
+      "last_verified": "2026-03-21T13:30:30.861013+00:00",
+      "verification_count": 26,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile",
+        "func_File_New2DFrame",
+        "func_File_New3DFrame",
+        "func_File_NewBeam",
+        "func_File_NewWall"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -133,10 +145,16 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-20T16:26:25.584981+00:00",
-      "verification_count": 21,
+      "last_verified": "2026-03-21T13:30:30.871074+00:00",
+      "verification_count": 26,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile",
+        "func_File_New2DFrame",
+        "func_File_New3DFrame",
+        "func_File_NewBeam",
+        "func_File_NewWall"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -161,10 +179,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.415848+00:00",
-      "last_verified": "2026-03-20T16:26:25.705524+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-03-21T13:30:30.901084+00:00",
+      "verification_count": 8,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_New2DFrame",
+        "func_File_New3DFrame",
+        "func_File_NewBeam",
+        "func_File_NewWall"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -203,10 +226,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-03-20T16:26:25.693165+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-03-21T13:30:13.570649+00:00",
+      "verification_count": 11,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile",
+        "func_File_New2DFrame",
+        "func_File_New3DFrame",
+        "func_File_NewBeam"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -231,10 +259,12 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-20T16:26:25.615190+00:00",
-      "verification_count": 9,
+      "last_verified": "2026-03-21T13:29:10.300403+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_FrameObj_AddByCoord",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -315,10 +345,13 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:51.092407+00:00",
-      "last_verified": "2026-03-20T16:26:25.700001+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-03-21T13:30:30.891056+00:00",
+      "verification_count": 8,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_New3DFrame",
+        "func_File_NewWall"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -707,10 +740,12 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:27:54.993896+00:00",
-      "last_verified": "2026-03-20T16:27:54.993896+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-03-21T13:29:10.314970+00:00",
+      "verification_count": 2,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -812,11 +847,91 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.File.OpenFile": {
+      "category": "File",
+      "description": "Open an existing .sdb model file by path",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:29:10.325121+00:00",
+      "last_verified": "2026-03-21T13:30:46.114109+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_File_OpenFile",
+      "used_in_scripts": [
+        "func_File_OpenFile"
+      ],
+      "parameter_notes": "FileName: str (full path to .sdb, .$2k, .s2k, .xlsx, .xls, or .mdb file)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). No ByRef outputs. Only use from external API — not VBA inside SAP2000."
+    },
+    "SapModel.File.New2DFrame": {
+      "category": "File",
+      "description": "Create a 2D portal/braced frame from parametric template",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:29:36.682779+00:00",
+      "last_verified": "2026-03-21T13:30:53.179440+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_File_New2DFrame",
+      "used_in_scripts": [
+        "func_File_New2DFrame"
+      ],
+      "parameter_notes": "TempType: int (0=PortalFrame, 1=ConcentricBraced, 2=EccentricBraced); NumberStorys: int; StoryHeight: float [L]; NumberBays: int; BayWidth: float [L]; Restraint: bool (default=True); Beam: str ('Default' or section name); Column: str ('Default' or section name); Brace: str ('Default' or section name, portal only)",
+      "known_errors": [],
+      "notes": "Creates new model — do not use to add to existing model. Call InitializeNewModel() first."
+    },
+    "SapModel.File.New3DFrame": {
+      "category": "File",
+      "description": "Create a 3D building frame from parametric template",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:29:56.120773+00:00",
+      "last_verified": "2026-03-21T13:30:59.290971+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_File_New3DFrame",
+      "used_in_scripts": [
+        "func_File_New3DFrame"
+      ],
+      "parameter_notes": "TempType: int (0=OpenFrame, 1=PerimeterFrame, 2=BeamSlab, 3=FlatPlate); NumberStorys: int; StoryHeight: float [L]; NumberBaysX: int; BayWidthX: float [L]; NumberBaysY: int; BayWidthY: float [L]; Restraint: bool (True); Beam/Column/Area: str ('Default'); NumberXDivisions/NumberYDivisions: int (4, for BeamSlab/FlatPlate)",
+      "known_errors": [],
+      "notes": "Creates new model — do not use to add to existing model. Area/Divisions only apply to BeamSlab and FlatPlate types."
+    },
+    "SapModel.File.NewBeam": {
+      "category": "File",
+      "description": "Create a simply-supported beam template",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:30:13.560588+00:00",
+      "last_verified": "2026-03-21T13:31:04.114754+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_File_NewBeam",
+      "used_in_scripts": [
+        "func_File_NewBeam"
+      ],
+      "parameter_notes": "NumberSpans: int; SpanLength: float [L]; Restraint: bool (default=True); Beam: str ('Default' or section name)",
+      "known_errors": [],
+      "notes": "Creates new model — do not use to add to existing model. Restraints at each span end."
+    },
+    "SapModel.File.NewWall": {
+      "category": "File",
+      "description": "Create a shear wall template from area element grid",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:30:30.880960+00:00",
+      "last_verified": "2026-03-21T13:31:09.141404+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_File_NewWall",
+      "used_in_scripts": [
+        "func_File_NewWall"
+      ],
+      "parameter_notes": "NumberXDivisions: int; DivisionWidthX: float [L]; NumberZDivisions: int; DivisionWidthZ: float [L]; Restraint: bool (default=True); Area: str ('Default' or shell section name)",
+      "known_errors": [],
+      "notes": "Creates new model — do not use to add to existing model. Wall is built as a grid of area elements."
     }
   },
   "summary": {
-    "total_registered": 58,
-    "total_verified": 58,
-    "last_updated": "2026-03-20T16:27:56.113401+00:00"
+    "total_registered": 63,
+    "total_verified": 63,
+    "last_updated": "2026-03-21T13:31:09.141404+00:00"
   }
 }
