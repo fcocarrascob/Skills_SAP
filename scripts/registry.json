@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T14:12:29.449988+00:00",
-      "verification_count": 47,
+      "last_verified": "2026-03-21T14:29:06.573055+00:00",
+      "verification_count": 58,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -31,7 +31,13 @@
         "func_Results_FrameForce",
         "func_Results_JointDispl",
         "func_Results_JointReact",
-        "func_Results_AreaForceShell"
+        "func_Results_AreaForceShell",
+        "func_GroupDef_SetGroup_1",
+        "func_GroupDef_GetNameList",
+        "func_GroupDef_GetAssignments",
+        "func_SourceMass_SetDefault",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
@@ -43,8 +49,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T14:12:29.468358+00:00",
-      "verification_count": 39,
+      "last_verified": "2026-03-21T14:29:06.587468+00:00",
+      "verification_count": 45,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -66,7 +72,10 @@
         "func_Results_FrameForce",
         "func_Results_JointDispl",
         "func_Results_JointReact",
-        "func_Results_AreaForceShell"
+        "func_Results_AreaForceShell",
+        "func_GroupDef_GetAssignments",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -118,8 +127,8 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T14:10:43.940972+00:00",
-      "verification_count": 24,
+      "last_verified": "2026-03-21T14:29:06.597519+00:00",
+      "verification_count": 30,
       "wrapper_script": "func_PropFrame_SetRectangle",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -133,7 +142,10 @@
         "func_DesignConcrete_StartDesign",
         "func_Results_FrameForce",
         "func_Results_JointDispl",
-        "func_Results_JointReact"
+        "func_Results_JointReact",
+        "func_GroupDef_GetAssignments",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -189,8 +201,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-21T14:12:29.438384+00:00",
-      "verification_count": 50,
+      "last_verified": "2026-03-21T14:29:06.563995+00:00",
+      "verification_count": 65,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -217,7 +229,13 @@
         "func_Results_FrameForce",
         "func_Results_JointDispl",
         "func_Results_JointReact",
-        "func_Results_AreaForceShell"
+        "func_Results_AreaForceShell",
+        "func_GroupDef_SetGroup_1",
+        "func_GroupDef_GetNameList",
+        "func_GroupDef_GetAssignments",
+        "func_SourceMass_SetDefault",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -229,8 +247,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-21T14:12:29.459141+00:00",
-      "verification_count": 48,
+      "last_verified": "2026-03-21T14:29:06.578699+00:00",
+      "verification_count": 55,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -256,7 +274,11 @@
         "func_Results_FrameForce",
         "func_Results_JointDispl",
         "func_Results_JointReact",
-        "func_Results_AreaForceShell"
+        "func_Results_AreaForceShell",
+        "func_GroupDef_GetAssignments",
+        "func_SourceMass_SetDefault",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -368,8 +390,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-21T14:10:43.956260+00:00",
-      "verification_count": 24,
+      "last_verified": "2026-03-21T14:29:06.607822+00:00",
+      "verification_count": 30,
       "wrapper_script": "func_FrameObj_AddByCoord",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -383,7 +405,10 @@
         "func_DesignConcrete_StartDesign",
         "func_Results_FrameForce",
         "func_Results_JointDispl",
-        "func_Results_JointReact"
+        "func_Results_JointReact",
+        "func_GroupDef_GetAssignments",
+        "func_DatabaseTables_GetTableForDisplayArray",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -792,8 +817,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T15:16:30.702789+00:00",
-      "last_verified": "2026-03-21T14:12:29.506063+00:00",
-      "verification_count": 18,
+      "last_verified": "2026-03-21T14:29:06.617883+00:00",
+      "verification_count": 20,
       "wrapper_script": "func_PointObj_SetRestraint",
       "used_in_scripts": [
         "func_PointObj_SetLoadForce",
@@ -805,7 +830,8 @@
         "func_Results_FrameForce",
         "func_Results_JointDispl",
         "func_Results_JointReact",
-        "func_Results_AreaForceShell"
+        "func_Results_AreaForceShell",
+        "func_PointObj_SetLoadMass"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -1060,8 +1086,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-21T13:29:36.682779+00:00",
-      "last_verified": "2026-03-21T13:30:53.179440+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-03-21T14:28:10.577105+00:00",
+      "verification_count": 6,
       "wrapper_script": "func_File_New2DFrame",
       "used_in_scripts": [
         "func_File_New2DFrame"
@@ -1423,11 +1449,202 @@
       "parameter_notes": "Name: str (specific area name — 'All' not supported); ItemTypeElm: int (0=Object); 25 ByRef outputs including membrane forces (F11,F22,F12), bending moments (M11,M22,M12), shear (V13,V23), and principal values (FMax,FMin,MMax,MMin,VMax)",
       "known_errors": [],
       "notes": "Call Results.Setup.SetCaseSelectedForOutput first. ret_code=raw[-1], num_results=raw[0]. Results at each corner of each element. AreaObj.AddByCoord returns [X_coords, Y_coords, Z_coords, Name_str, ret_code] — use raw[3] for area name. 'All' not supported as wildcard — use specific area name."
+    },
+    "SapModel.GroupDef.SetGroup": {
+      "category": "Groups",
+      "description": "Create or modify a group definition with all flags",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:20:10.824039+00:00",
+      "last_verified": "2026-03-21T14:29:27.282249+00:00",
+      "verification_count": 5,
+      "wrapper_script": "func_GroupDef_SetGroup_1",
+      "used_in_scripts": [
+        "func_GroupDef_SetGroup_1",
+        "func_GroupDef_GetNameList",
+        "func_GroupDef_GetAssignments"
+      ],
+      "parameter_notes": "Name: str; Color: int (-1=default); 12 bool flags for selection, section cuts, design contexts, mass/weight, etc. All flags default True except AutoSeismicOutput and AutoWindOutput (default False).",
+      "known_errors": [],
+      "notes": "IMPORTANT: COM bridge exposes as SetGroup (NOT SetGroup_1). Returns ret_code (0=success). 'ALL' group always exists by default. Use FrameObj.SetGroupAssign / AreaObj.SetGroupAssign to add objects to group."
+    },
+    "SapModel.GroupDef.GetNameList": {
+      "category": "Groups",
+      "description": "Get list of all defined group names",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:20:10.837260+00:00",
+      "last_verified": "2026-03-21T14:29:34.407922+00:00",
+      "verification_count": 4,
+      "wrapper_script": "func_GroupDef_GetNameList",
+      "used_in_scripts": [
+        "func_GroupDef_SetGroup_1",
+        "func_GroupDef_GetNameList"
+      ],
+      "parameter_notes": "NumberNames: int (pass 0, ByRef); MyName: list (pass [], ByRef returns str[])",
+      "known_errors": [],
+      "notes": "Returns ret_code=raw[-1], count=raw[0], names=raw[1]. Default 'ALL' group (uppercase) always present. Call with GetNameList(0, [])."
+    },
+    "SapModel.FrameObj.SetGroupAssign": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:21:47.092150+00:00",
+      "last_verified": "2026-03-21T14:21:47.092150+00:00",
+      "verification_count": 1,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_GroupDef_GetAssignments"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.GroupDef.GetAssignments": {
+      "category": "Groups",
+      "description": "Get objects assigned to a group",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:21:47.103145+00:00",
+      "last_verified": "2026-03-21T14:29:40.204400+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_GroupDef_GetAssignments",
+      "used_in_scripts": [
+        "func_GroupDef_GetAssignments"
+      ],
+      "parameter_notes": "Name: str (group name); NumberItems: int (pass 0, ByRef); ObjectType: list (ByRef int[]); ObjectName: list (ByRef str[])",
+      "known_errors": [],
+      "notes": "Returns ret_code=raw[-1], count=raw[0], types=raw[1], names=raw[2]. Object type codes: 1=Point, 2=Frame, 3=Cable, 4=Tendon, 5=Area, 6=Solid, 7=Link. Use SetGroupAssign on object types to populate groups."
+    },
+    "SapModel.SourceMass.SetMassSource": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:22:35.678250+00:00",
+      "last_verified": "2026-03-21T14:23:04.675303+00:00",
+      "verification_count": 2,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_SourceMass_SetDefault"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.SourceMass.SetDefault": {
+      "category": "Mass_Source",
+      "description": "Set the default mass source for analysis",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:23:04.685969+00:00",
+      "last_verified": "2026-03-21T14:29:46.499679+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_SourceMass_SetDefault",
+      "used_in_scripts": [
+        "func_SourceMass_SetDefault"
+      ],
+      "parameter_notes": "Name: str — mass source name to set as default",
+      "known_errors": [],
+      "notes": "IMPORTANT: API path is SapModel.SourceMass (NOT SapModel.MassSource). Use SetMassSource to define mass sources before setting default. SetMassSource returns [LoadPat_byref, SF_byref, ret_code] — use raw[-1]. Use GetDefault to verify."
+    },
+    "SapModel.SourceMass.GetDefault": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:23:04.696803+00:00",
+      "last_verified": "2026-03-21T14:23:04.696803+00:00",
+      "verification_count": 1,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_SourceMass_SetDefault"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.DatabaseTables.GetTableForDisplayArray": {
+      "category": "Database_Tables",
+      "description": "Extract data from SAP2000 display tables as 1D array",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:24:09.678153+00:00",
+      "last_verified": "2026-03-21T14:29:56.972144+00:00",
+      "verification_count": 4,
+      "wrapper_script": "func_DatabaseTables_GetTableForDisplayArray",
+      "used_in_scripts": [
+        "func_DatabaseTables_GetTableForDisplayArray"
+      ],
+      "parameter_notes": "TableKey: str (e.g., 'Joint Coordinates'); FieldKeyList: list [] (not str); GroupName: str ('' for all); TableVersion: int 0 (ByRef Integer); FieldKeysIncluded: [] (ByRef); NumberRecords: 0 (ByRef); TableData: [] (ByRef)",
+      "known_errors": [],
+      "notes": "CRITICAL: TableVersion must be integer 0 (not string \"\"). FieldKeyList must be [] (not \"\"). Return layout: raw[0]=FieldKeyList_byref, raw[1]=TableVersion(int), raw[2]=FieldKeysIncluded(tuple), raw[3]=NumberRecords(int), raw[4]=TableData(tuple), raw[-1]=ret_code. Data is 1D row-major: parse rows with tableData[i*num_cols:(i+1)*num_cols]. Use GetAllTables to discover available TableKeys."
+    },
+    "SapModel.PointObj.SetLoadMass": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:26:39.303743+00:00",
+      "last_verified": "2026-03-21T14:26:39.303743+00:00",
+      "verification_count": 1,
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PointObj.SetMass": {
+      "category": "Object_Model",
+      "description": "Assign concentrated (lumped) mass to a joint",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:27:05.411538+00:00",
+      "last_verified": "2026-03-21T14:30:04.462852+00:00",
+      "verification_count": 5,
+      "wrapper_script": "func_PointObj_SetLoadMass",
+      "used_in_scripts": [
+        "func_PointObj_SetLoadMass"
+      ],
+      "parameter_notes": "Name: str; Value: float[6] [M_UX, M_UY, M_UZ, M_RX, M_RY, M_RZ] in mass units (kg for kN_m_C)",
+      "known_errors": [],
+      "notes": "IMPORTANT: COM bridge exposes as SetMass (NOT SetLoadMass). No LoadPat, Replace, CSys, or ItemType args — directly sets structural mass. Returns [Value_byref(tuple), ret_code]. Use GetMass(Name, [0]*6) to verify. For kN_m_C units, mass is in kg. SetMass completely replaces existing mass values."
+    },
+    "SapModel.PointObj.GetNameList": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:27:40.300308+00:00",
+      "last_verified": "2026-03-21T14:28:10.588092+00:00",
+      "verification_count": 2,
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PointObj.GetMass": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T14:27:40.319219+00:00",
+      "last_verified": "2026-03-21T14:29:06.637799+00:00",
+      "verification_count": 3,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_PointObj_SetLoadMass"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 82,
-    "total_verified": 82,
-    "last_updated": "2026-03-21T14:13:22.077943+00:00"
+    "total_registered": 94,
+    "total_verified": 94,
+    "last_updated": "2026-03-21T14:30:04.463856+00:00"
   }
 }
