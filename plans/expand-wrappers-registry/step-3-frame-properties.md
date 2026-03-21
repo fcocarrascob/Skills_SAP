@@ -9,8 +9,8 @@ Make sure you are on the `expand-wrappers-registry` branch and Steps 1-2 are com
 ### Step-by-Step Instructions
 
 #### Step 3.1: Create `func_PropFrame_SetPipe.py`
-- [ ] Create file `scripts/wrappers/func_PropFrame_SetPipe.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetPipe.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_SetPipe.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetPipe.py`:
 
 ```python
 # ============================================================
@@ -79,8 +79,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.2: Create `func_PropFrame_SetChannel.py`
-- [ ] Create file `scripts/wrappers/func_PropFrame_SetChannel.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetChannel.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_SetChannel.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetChannel.py`:
 
 ```python
 # ============================================================
@@ -152,8 +152,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.3: Create `func_PropFrame_SetAngle.py`
-- [ ] Create file `scripts/wrappers/func_PropFrame_SetAngle.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetAngle.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_SetAngle.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetAngle.py`:
 
 ```python
 # ============================================================
@@ -236,8 +236,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.4: Create `func_PropFrame_SetTee.py`
-- [ ] Create file `scripts/wrappers/func_PropFrame_SetTee.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetTee.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_SetTee.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetTee.py`:
 
 ```python
 # ============================================================
@@ -309,8 +309,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.5: Create `func_FrameObj_SetReleases.py`
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetReleases.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_FrameObj_SetReleases.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetReleases.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_FrameObj_SetReleases.py`:
 
 ```python
 # ============================================================
@@ -389,8 +389,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.6: Create `func_FrameObj_SetEndLengthOffset.py`
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetEndLengthOffset.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_FrameObj_SetEndLengthOffset.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetEndLengthOffset.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_FrameObj_SetEndLengthOffset.py`:
 
 ```python
 # ============================================================
@@ -469,8 +469,8 @@ result["status"] = "verified"
 ```
 
 #### Step 3.7: Create `func_PropFrame_SetModifiers.py`
-- [ ] Create file `scripts/wrappers/func_PropFrame_SetModifiers.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetModifiers.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_SetModifiers.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_PropFrame_SetModifiers.py`:
 
 ```python
 # ============================================================
@@ -539,18 +539,18 @@ result["status"] = "verified"
 ```
 
 #### Step 3.8: Execute & Verify All Wrappers
-- [ ] Ensure SAP2000 is connected (`connect_sap2000`)
-- [ ] Execute each wrapper via `run_sap_script` and verify success:
+- [x] Ensure SAP2000 is connected (`connect_sap2000`)
+- [x] Execute each wrapper via `run_sap_script` and verify success:
   - `func_PropFrame_SetPipe` → save as `func_PropFrame_SetPipe`
   - `func_PropFrame_SetChannel` → save as `func_PropFrame_SetChannel`
   - `func_PropFrame_SetAngle` → save as `func_PropFrame_SetAngle`
   - `func_PropFrame_SetTee` → save as `func_PropFrame_SetTee`
-  - `func_FrameObj_SetReleases` → save as `func_FrameObj_SetReleases`
+  - `func_FrameObj_SetReleases` → save as `func_FrameObj_SetReleases` *(ByRef: raw[-1])*
   - `func_FrameObj_SetEndLengthOffset` → save as `func_FrameObj_SetEndLengthOffset`
-  - `func_PropFrame_SetModifiers` → save as `func_PropFrame_SetModifiers`
+  - `func_PropFrame_SetModifiers` → save as `func_PropFrame_SetModifiers` *(ByRef: raw[-1])*
 
 #### Step 3.9: Register Functions in Registry
-- [ ] Call `register_verified_function` for each of the 7 functions:
+- [x] Call `register_verified_function` for each of the 7 functions:
 
 **SapModel.PropFrame.SetPipe:**
 ```json
@@ -644,10 +644,10 @@ result["status"] = "verified"
 ```
 
 ##### Step 3 Verification Checklist
-- [ ] All 7 wrappers exist in `scripts/wrappers/`
-- [ ] All 7 wrappers executed successfully via `run_sap_script` (status=verified)
-- [ ] All 7 functions registered in `registry.json` with full metadata
-- [ ] Registry count increased from ~69 to ~76
+- [x] All 7 wrappers exist in `scripts/wrappers/`
+- [x] All 7 wrappers executed successfully via `run_sap_script` (status=verified)
+- [x] All 7 functions registered in `registry.json` with full metadata
+- [x] Registry count increased from ~69 to ~76 (confirmed: 76)
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

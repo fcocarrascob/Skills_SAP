@@ -9,8 +9,8 @@ Make sure you are on the `expand-wrappers-registry` branch and Steps 1-3 are com
 ### Step-by-Step Instructions
 
 #### Step 4.1: Create `func_DesignSteel_StartDesign.py`
-- [ ] Create file `scripts/wrappers/func_DesignSteel_StartDesign.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_DesignSteel_StartDesign.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_StartDesign.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_DesignSteel_StartDesign.py`:
 
 ```python
 # ============================================================
@@ -95,8 +95,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.2: Create `func_DesignConcrete_StartDesign.py`
-- [ ] Create file `scripts/wrappers/func_DesignConcrete_StartDesign.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_DesignConcrete_StartDesign.py`:
+- [x] Create file `scripts/wrappers/func_DesignConcrete_StartDesign.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_DesignConcrete_StartDesign.py`:
 
 ```python
 # ============================================================
@@ -177,8 +177,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.3: Create `func_DesignSteel_SetCode.py`
-- [ ] Create file `scripts/wrappers/func_DesignSteel_SetCode.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_DesignSteel_SetCode.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_SetCode.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_DesignSteel_SetCode.py`:
 
 ```python
 # ============================================================
@@ -227,8 +227,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.4: Create `func_Results_FrameForce.py`
-- [ ] Create file `scripts/wrappers/func_Results_FrameForce.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_Results_FrameForce.py`:
+- [x] Create file `scripts/wrappers/func_Results_FrameForce.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_Results_FrameForce.py`:
 
 ```python
 # ============================================================
@@ -339,8 +339,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.5: Create `func_Results_JointDispl.py`
-- [ ] Create file `scripts/wrappers/func_Results_JointDispl.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_Results_JointDispl.py`:
+- [x] Create file `scripts/wrappers/func_Results_JointDispl.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_Results_JointDispl.py`:
 
 ```python
 # ============================================================
@@ -442,8 +442,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.6: Create `func_Results_JointReact.py`
-- [ ] Create file `scripts/wrappers/func_Results_JointReact.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_Results_JointReact.py`:
+- [x] Create file `scripts/wrappers/func_Results_JointReact.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_Results_JointReact.py`:
 
 ```python
 # ============================================================
@@ -553,8 +553,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.7: Create `func_Results_AreaForceShell.py`
-- [ ] Create file `scripts/wrappers/func_Results_AreaForceShell.py`
-- [ ] Copy and paste code below into `scripts/wrappers/func_Results_AreaForceShell.py`:
+- [x] Create file `scripts/wrappers/func_Results_AreaForceShell.py`
+- [x] Copy and paste code below into `scripts/wrappers/func_Results_AreaForceShell.py`:
 
 ```python
 # ============================================================
@@ -660,8 +660,8 @@ result["status"] = "verified"
 ```
 
 #### Step 4.8: Execute & Verify All Wrappers
-- [ ] Ensure SAP2000 is connected (`connect_sap2000`)
-- [ ] Execute each wrapper via `run_sap_script` and verify success:
+- [x] Ensure SAP2000 is connected (`connect_sap2000`)
+- [x] Execute each wrapper via `run_sap_script` and verify success:
   - `func_DesignSteel_StartDesign` → save as `func_DesignSteel_StartDesign`
   - `func_DesignConcrete_StartDesign` → save as `func_DesignConcrete_StartDesign`
   - `func_DesignSteel_SetCode` → save as `func_DesignSteel_SetCode`
@@ -671,7 +671,7 @@ result["status"] = "verified"
   - `func_Results_AreaForceShell` → save as `func_Results_AreaForceShell`
 
 #### Step 4.9: Register Functions in Registry
-- [ ] Call `register_verified_function` for each of the 7 functions:
+- [x] Call `register_verified_function` for each of the 7 functions:
 
 **SapModel.DesignSteel.StartDesign:**
 ```json
@@ -765,10 +765,10 @@ result["status"] = "verified"
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] All 7 wrappers exist in `scripts/wrappers/`
-- [ ] All 7 wrappers executed successfully via `run_sap_script` (status=verified)
-- [ ] All 7 functions registered in `registry.json` with full metadata
-- [ ] Registry count increased from ~76 to ~83
+- [x] All 7 wrappers exist in `scripts/wrappers/`
+- [x] All 7 wrappers executed successfully via `run_sap_script` (status=verified)
+- [x] All 7 functions registered in `registry.json` with full metadata
+- [x] Registry count increased from ~76 to ~83
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
