@@ -7,11 +7,17 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:29:10.270107+00:00",
-      "verification_count": 23,
+      "last_verified": "2026-03-21T13:40:45.206284+00:00",
+      "verification_count": 29,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
-        "func_File_OpenFile"
+        "func_File_OpenFile",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
@@ -23,11 +29,17 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:29:10.280319+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-21T13:40:45.226416+00:00",
+      "verification_count": 22,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
-        "func_File_OpenFile"
+        "func_File_OpenFile",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -39,10 +51,13 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-20T16:26:25.593278+00:00",
-      "verification_count": 14,
+      "last_verified": "2026-03-21T13:40:45.230934+00:00",
+      "verification_count": 16,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
+      ],
       "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
       "known_errors": [],
       "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success)."
@@ -53,10 +68,12 @@
       "signature": "(Name, MyType, Value, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-20T16:26:25.597370+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-03-21T13:40:00.560960+00:00",
+      "verification_count": 5,
       "wrapper_script": "func_PropMaterial_SetWeightAndMass",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadGravity"
+      ],
       "parameter_notes": "Name: str (existing material); MyType: int (1=weight per unit volume [F/L^3], 2=mass per unit volume [M/L^3]); Value: float; Temp: float (default=0)",
       "known_errors": [],
       "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success). Call twice — once for weight (MyType=1) and once for mass (MyType=2)."
@@ -67,11 +84,15 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:29:10.293392+00:00",
-      "verification_count": 11,
+      "last_verified": "2026-03-21T13:40:45.241338+00:00",
+      "verification_count": 15,
       "wrapper_script": "func_PropFrame_SetRectangle",
       "used_in_scripts": [
-        "func_File_OpenFile"
+        "func_File_OpenFile",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -125,15 +146,21 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-21T13:30:30.861013+00:00",
-      "verification_count": 26,
+      "last_verified": "2026-03-21T13:40:45.197223+00:00",
+      "verification_count": 32,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
         "func_File_New2DFrame",
         "func_File_New3DFrame",
         "func_File_NewBeam",
-        "func_File_NewWall"
+        "func_File_NewWall",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -145,15 +172,21 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-21T13:30:30.871074+00:00",
-      "verification_count": 26,
+      "last_verified": "2026-03-21T13:40:45.216341+00:00",
+      "verification_count": 32,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
         "func_File_New2DFrame",
         "func_File_New3DFrame",
         "func_File_NewBeam",
-        "func_File_NewWall"
+        "func_File_NewWall",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -245,10 +278,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-03-20T16:26:25.618170+00:00",
-      "verification_count": 5,
+      "last_verified": "2026-03-21T13:40:45.261340+00:00",
+      "verification_count": 9,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_FrameObj_SetLoadTemperature"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -259,11 +297,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-21T13:29:10.300403+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-03-21T13:40:45.251396+00:00",
+      "verification_count": 14,
       "wrapper_script": "func_FrameObj_AddByCoord",
       "used_in_scripts": [
-        "func_File_OpenFile"
+        "func_File_OpenFile",
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_FrameObj_SetLoadTemperature"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -303,10 +345,13 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:36.155842+00:00",
-      "last_verified": "2026-03-20T16:26:25.611991+00:00",
-      "verification_count": 9,
+      "last_verified": "2026-03-21T13:40:00.570624+00:00",
+      "verification_count": 11,
       "wrapper_script": "func_PropArea_SetShell_1",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -331,10 +376,13 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:51.092407+00:00",
-      "last_verified": "2026-03-20T16:26:25.625631+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-03-21T13:40:00.572976+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_AreaObj_AddByCoord",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -376,10 +424,17 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:53:26.742703+00:00",
-      "last_verified": "2026-03-20T16:26:25.646053+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-03-21T13:40:45.281236+00:00",
+      "verification_count": 13,
       "wrapper_script": "func_LoadPatterns_Add",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_AreaObj_SetLoadUniform",
+        "func_AreaObj_SetLoadGravity",
+        "func_FrameObj_SetLoadTemperature"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs. signature: (Name, MyType, SelfWTMultiplier, AddCase) → ret_code"
@@ -656,10 +711,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T15:16:30.702789+00:00",
-      "last_verified": "2026-03-20T16:26:25.635503+00:00",
-      "verification_count": 5,
+      "last_verified": "2026-03-21T13:40:45.271283+00:00",
+      "verification_count": 9,
       "wrapper_script": "func_PointObj_SetRestraint",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_PointObj_SetLoadForce",
+        "func_FrameObj_SetLoadDistributed",
+        "func_FrameObj_SetLoadPoint",
+        "func_FrameObj_SetLoadTemperature"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -693,32 +753,36 @@
       "notes": ""
     },
     "SapModel.FrameObj.SetLoadDistributed": {
-      "category": "",
-      "description": "",
+      "category": "Load_Assignment",
+      "description": "Apply uniform/trapezoidal distributed loads on frames",
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.647030+00:00",
-      "last_verified": "2026-03-20T16:26:25.647030+00:00",
-      "verification_count": 1,
-      "wrapper_script": "",
-      "used_in_scripts": [],
-      "parameter_notes": "",
+      "last_verified": "2026-03-21T13:41:06.205807+00:00",
+      "verification_count": 3,
+      "wrapper_script": "func_FrameObj_SetLoadDistributed",
+      "used_in_scripts": [
+        "func_FrameObj_SetLoadDistributed"
+      ],
+      "parameter_notes": "Name: str; LoadPat: str; MyType: int (1=Force/L, 2=Moment/L); Dir: int (10=Gravity, 6=Z, etc.); Dist1/Dist2: float (relative 0-1 or absolute); Val1/Val2: float [F/L]; CSys: str ('Global'); RelDist: bool (True); Replace: bool (True); ItemType: int (0)",
       "known_errors": [],
-      "notes": ""
+      "notes": "For uniform load set Val1=Val2. For trapezoidal use different Val1/Val2. Dir=10 for gravity. Returns ret_code directly (int, 0=success)."
     },
     "SapModel.PointObj.SetLoadForce": {
-      "category": "",
-      "description": "",
+      "category": "Load_Assignment",
+      "description": "Apply forces/moments at a joint (6 DOF)",
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.649221+00:00",
-      "last_verified": "2026-03-20T16:26:25.649221+00:00",
-      "verification_count": 1,
-      "wrapper_script": "",
-      "used_in_scripts": [],
-      "parameter_notes": "",
+      "last_verified": "2026-03-21T13:40:58.797626+00:00",
+      "verification_count": 3,
+      "wrapper_script": "func_PointObj_SetLoadForce",
+      "used_in_scripts": [
+        "func_PointObj_SetLoadForce"
+      ],
+      "parameter_notes": "Name: str (point name); LoadPat: str (load pattern); Value: float[6] [F1,F2,F3,M1,M2,M3]; Replace: bool (True); CSys: str ('Global'); ItemType: int (0=Object). Returns [Value_byref, ret_code] — check ret[-1]==0 for success.",
       "known_errors": [],
-      "notes": ""
+      "notes": "Returns [Value_byref, ret_code] — NOT a plain int. Check raw_sf[-1]==0. Value array in coordinate system directions."
     },
     "SapModel.View.RefreshView": {
       "category": "",
@@ -927,11 +991,91 @@
       "parameter_notes": "NumberXDivisions: int; DivisionWidthX: float [L]; NumberZDivisions: int; DivisionWidthZ: float [L]; Restraint: bool (default=True); Area: str ('Default' or shell section name)",
       "known_errors": [],
       "notes": "Creates new model — do not use to add to existing model. Wall is built as a grid of area elements."
+    },
+    "SapModel.PointObj.GetLoadForce": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:38:30.629798+00:00",
+      "last_verified": "2026-03-21T13:38:30.629798+00:00",
+      "verification_count": 1,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_PointObj_SetLoadForce"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.FrameObj.SetLoadPoint": {
+      "category": "Load_Assignment",
+      "description": "Apply a concentrated point load along a frame element",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:39:18.435349+00:00",
+      "last_verified": "2026-03-21T13:41:11.821225+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_FrameObj_SetLoadPoint",
+      "used_in_scripts": [
+        "func_FrameObj_SetLoadPoint"
+      ],
+      "parameter_notes": "Name: str; LoadPat: str; MyType: int (1=Force, 2=Moment); Dir: int (10=Gravity, etc.); Dist: float (0-1 relative or absolute); Val: float [F] or [FL]; CSys: str ('Global'); RelDist: bool (True); Replace: bool (True); ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (int, 0=success). Set Replace=False to add multiple point loads to the same frame."
+    },
+    "SapModel.AreaObj.SetLoadUniform": {
+      "category": "Load_Assignment",
+      "description": "Apply uniform surface pressure on area elements (slab loads)",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:39:39.560671+00:00",
+      "last_verified": "2026-03-21T13:41:17.214310+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_AreaObj_SetLoadUniform",
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadUniform"
+      ],
+      "parameter_notes": "Name: str; LoadPat: str; Value: float [F/L^2]; Dir: int (10=Gravity, 6=Z, etc.); Replace: bool (True); CSys: str ('Global'); ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (int, 0=success). Negative value for downward pressure with gravity direction (Dir=10)."
+    },
+    "SapModel.AreaObj.SetLoadGravity": {
+      "category": "Load_Assignment",
+      "description": "Apply gravity multiplier on area element self-weight",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:40:00.600706+00:00",
+      "last_verified": "2026-03-21T13:41:22.580920+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_AreaObj_SetLoadGravity",
+      "used_in_scripts": [
+        "func_AreaObj_SetLoadGravity"
+      ],
+      "parameter_notes": "Name: str; LoadPat: str; x/y/z: float (gravity multipliers in global directions); Replace: bool (True); CSys: str ('Global'); ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (int, 0=success). Use z=-1 for standard 1g downward gravity. Material must have weight/mass defined for this to produce forces."
+    },
+    "SapModel.FrameObj.SetLoadTemperature": {
+      "category": "Load_Assignment",
+      "description": "Apply thermal loads on frame elements",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:40:45.293042+00:00",
+      "last_verified": "2026-03-21T13:41:28.600640+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_FrameObj_SetLoadTemperature",
+      "used_in_scripts": [
+        "func_FrameObj_SetLoadTemperature"
+      ],
+      "parameter_notes": "Name: str; LoadPat: str; MyType: int (1=Temperature, 2=Gradient2-2, 3=Gradient3-3); Val: float [T] or [T/L]; PatternName: str (''=none); Replace: bool (True); ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (int, 0=success). Requires material with thermal expansion coefficient defined (SetMPIsotropic with non-zero A). PatternName can be omitted (defaults to empty string)."
     }
   },
   "summary": {
-    "total_registered": 63,
-    "total_verified": 63,
-    "last_updated": "2026-03-21T13:31:09.141404+00:00"
+    "total_registered": 68,
+    "total_verified": 68,
+    "last_updated": "2026-03-21T13:41:28.600640+00:00"
   }
 }
