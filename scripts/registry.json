@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:40:45.206284+00:00",
-      "verification_count": 29,
+      "last_verified": "2026-03-21T13:53:50.098389+00:00",
+      "verification_count": 36,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -17,7 +17,14 @@
         "func_FrameObj_SetLoadPoint",
         "func_AreaObj_SetLoadUniform",
         "func_AreaObj_SetLoadGravity",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset",
+        "func_PropFrame_SetModifiers"
       ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
@@ -29,8 +36,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:40:45.226416+00:00",
-      "verification_count": 22,
+      "last_verified": "2026-03-21T13:53:50.121343+00:00",
+      "verification_count": 29,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -39,7 +46,14 @@
         "func_FrameObj_SetLoadPoint",
         "func_AreaObj_SetLoadUniform",
         "func_AreaObj_SetLoadGravity",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset",
+        "func_PropFrame_SetModifiers"
       ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -51,12 +65,16 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:40:45.230934+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-21T13:51:44.699583+00:00",
+      "verification_count": 20,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
       "used_in_scripts": [
         "func_AreaObj_SetLoadGravity",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee"
       ],
       "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
       "known_errors": [],
@@ -84,15 +102,18 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-21T13:40:45.241338+00:00",
-      "verification_count": 15,
+      "last_verified": "2026-03-21T13:53:50.128353+00:00",
+      "verification_count": 18,
       "wrapper_script": "func_PropFrame_SetRectangle",
       "used_in_scripts": [
         "func_File_OpenFile",
         "func_PointObj_SetLoadForce",
         "func_FrameObj_SetLoadDistributed",
         "func_FrameObj_SetLoadPoint",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset",
+        "func_PropFrame_SetModifiers"
       ],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -146,8 +167,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-21T13:40:45.197223+00:00",
-      "verification_count": 32,
+      "last_verified": "2026-03-21T13:53:50.089456+00:00",
+      "verification_count": 39,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -160,7 +181,14 @@
         "func_FrameObj_SetLoadPoint",
         "func_AreaObj_SetLoadUniform",
         "func_AreaObj_SetLoadGravity",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset",
+        "func_PropFrame_SetModifiers"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -172,8 +200,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-21T13:40:45.216341+00:00",
-      "verification_count": 32,
+      "last_verified": "2026-03-21T13:53:50.111772+00:00",
+      "verification_count": 39,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
@@ -186,7 +214,14 @@
         "func_FrameObj_SetLoadPoint",
         "func_AreaObj_SetLoadUniform",
         "func_AreaObj_SetLoadGravity",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset",
+        "func_PropFrame_SetModifiers"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -259,14 +294,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-03-21T13:30:13.570649+00:00",
-      "verification_count": 11,
+      "last_verified": "2026-03-21T13:52:32.759444+00:00",
+      "verification_count": 12,
       "wrapper_script": "",
       "used_in_scripts": [
         "func_File_OpenFile",
         "func_File_New2DFrame",
         "func_File_New3DFrame",
-        "func_File_NewBeam"
+        "func_File_NewBeam",
+        "func_FrameObj_SetReleases"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -297,15 +333,17 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-21T13:40:45.251396+00:00",
-      "verification_count": 14,
+      "last_verified": "2026-03-21T13:53:10.542895+00:00",
+      "verification_count": 16,
       "wrapper_script": "func_FrameObj_AddByCoord",
       "used_in_scripts": [
         "func_File_OpenFile",
         "func_PointObj_SetLoadForce",
         "func_FrameObj_SetLoadDistributed",
         "func_FrameObj_SetLoadPoint",
-        "func_FrameObj_SetLoadTemperature"
+        "func_FrameObj_SetLoadTemperature",
+        "func_FrameObj_SetReleases",
+        "func_FrameObj_SetEndLengthOffset"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -744,10 +782,15 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:21:16.851260+00:00",
-      "last_verified": "2026-03-20T16:21:16.851260+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-03-21T13:51:44.718521+00:00",
+      "verification_count": 5,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "func_PropFrame_SetPipe",
+        "func_PropFrame_SetChannel",
+        "func_PropFrame_SetAngle",
+        "func_PropFrame_SetTee"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -1071,11 +1114,139 @@
       "parameter_notes": "Name: str; LoadPat: str; MyType: int (1=Temperature, 2=Gradient2-2, 3=Gradient3-3); Val: float [T] or [T/L]; PatternName: str (''=none); Replace: bool (True); ItemType: int (0)",
       "known_errors": [],
       "notes": "Returns ret_code directly (int, 0=success). Requires material with thermal expansion coefficient defined (SetMPIsotropic with non-zero A). PatternName can be omitted (defaults to empty string)."
+    },
+    "SapModel.PropFrame.SetPipe": {
+      "category": "PropFrame",
+      "description": "Define a circular hollow section (pipe/HSS round)",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:50:50.506577+00:00",
+      "last_verified": "2026-03-21T13:54:14.986761+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropFrame_SetPipe",
+      "used_in_scripts": [
+        "func_PropFrame_SetPipe"
+      ],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (outer diameter [L]); TW: float (wall thickness [L]); Color: int (-1=default); Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for CHS columns, braces, and truss elements."
+    },
+    "SapModel.PropFrame.SetChannel": {
+      "category": "PropFrame",
+      "description": "Define a C-shape channel section",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:51:08.647025+00:00",
+      "last_verified": "2026-03-21T13:54:19.945509+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropFrame_SetChannel",
+      "used_in_scripts": [
+        "func_PropFrame_SetChannel"
+      ],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (overall depth [L]); T2: float (flange width [L]); TF: float (flange thickness [L]); TW: float (web thickness [L]); Color: int; Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for purlins, girts, light structural members."
+    },
+    "SapModel.PropFrame.SetAngle": {
+      "category": "PropFrame",
+      "description": "Define an L-shape angle section",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:51:26.359088+00:00",
+      "last_verified": "2026-03-21T13:54:24.264879+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropFrame_SetAngle",
+      "used_in_scripts": [
+        "func_PropFrame_SetAngle"
+      ],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (vertical leg depth [L]); T2: float (horizontal leg width [L]); TF: float (horizontal leg thickness [L]); TW: float (vertical leg thickness [L]); Color: int; Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Supports equal and unequal angles."
+    },
+    "SapModel.PropFrame.SetTee": {
+      "category": "PropFrame",
+      "description": "Define a T-shape section",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:51:44.709092+00:00",
+      "last_verified": "2026-03-21T13:54:29.028765+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropFrame_SetTee",
+      "used_in_scripts": [
+        "func_PropFrame_SetTee"
+      ],
+      "parameter_notes": "Name: str; MatProp: str; T3: float (overall depth [L]); T2: float (flange width [L]); TF: float (flange thickness [L]); TW: float (stem thickness [L]); Color: int; Notes: str; GUID: str",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Common for WT shapes (cut I-sections) and composite construction."
+    },
+    "SapModel.FrameObj.SetReleases": {
+      "category": "Object_Model",
+      "description": "Set end releases (moment releases for hinges)",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:52:32.752890+00:00",
+      "last_verified": "2026-03-21T13:54:36.953390+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_FrameObj_SetReleases",
+      "used_in_scripts": [
+        "func_FrameObj_SetReleases"
+      ],
+      "parameter_notes": "Name: str; ii: bool[6] i-end [P,V2,V3,T,M2,M3] True=released; jj: bool[6] j-end; StartValue: float[6] partial fixity springs at i-end (0=fully released); EndValue: float[6] at j-end; ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ByRef tuple: (ii_out, jj_out, start_out, end_out, ret_code). Use raw[-1] to check success. For simple pin, release M3=[False,False,False,False,False,True]. Use StartValue/EndValue=0.0 for fully released."
+    },
+    "SapModel.FrameObj.SetEndLengthOffset": {
+      "category": "Object_Model",
+      "description": "Set rigid-zone offsets at beam-column joints",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:53:10.547909+00:00",
+      "last_verified": "2026-03-21T13:54:43.147073+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_FrameObj_SetEndLengthOffset",
+      "used_in_scripts": [
+        "func_FrameObj_SetEndLengthOffset"
+      ],
+      "parameter_notes": "Name: str; AutoOffset: bool (True=auto from connected objects); Length1: float (i-end offset [L]); Length2: float (j-end offset [L]); RzFactor: float (0-1, rigid-zone factor, 1=fully rigid, 0.5=half-rigid); ItemType: int (0)",
+      "known_errors": [],
+      "notes": "Returns ret_code directly (0=success). Length1/Length2 ignored when AutoOffset=True."
+    },
+    "SapModel.PropFrame.SetModifiers": {
+      "category": "PropFrame",
+      "description": "Set stiffness modifiers (cracked sections, etc.)",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:53:50.138137+00:00",
+      "last_verified": "2026-03-21T13:54:49.801429+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropFrame_SetModifiers",
+      "used_in_scripts": [
+        "func_PropFrame_SetModifiers"
+      ],
+      "parameter_notes": "Name: str (section name); Value: float[8] [Area, AS2, AS3, Torsion, I22, I33, Mass, Weight] — 1.0=no mod, 0.35=ACI beam, 0.70=ACI column",
+      "known_errors": [],
+      "notes": "Returns ByRef tuple: (value_out, ret_code). Use raw[-1] to check success. ACI 318: beams 0.35*Ig, columns 0.70*Ig. Array has 8 elements."
+    },
+    "SapModel.PropFrame.GetModifiers": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-21T13:53:50.148184+00:00",
+      "last_verified": "2026-03-21T13:53:50.148184+00:00",
+      "verification_count": 1,
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "func_PropFrame_SetModifiers"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 68,
-    "total_verified": 68,
-    "last_updated": "2026-03-21T13:41:28.600640+00:00"
+    "total_registered": 76,
+    "total_verified": 76,
+    "last_updated": "2026-03-21T13:54:49.801429+00:00"
   }
 }
