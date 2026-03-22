@@ -15,7 +15,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import pytest
-from sap_bridge import SapBridge
+
+# comtypes is now lazy-loaded in sap_bridge so these modules can be imported
+# on Linux/macOS for pure-Python unit tests.
+
 from function_registry import FunctionRegistry
 
 
@@ -24,6 +27,7 @@ class TestSapBridgeUnit:
 
     def test_bridge_initial_state(self):
         """Bridge starts disconnected."""
+        from sap_bridge import SapBridge
         b = SapBridge()
         assert b.is_connected is False
         assert b.sap_object is None
@@ -31,6 +35,7 @@ class TestSapBridgeUnit:
 
     def test_get_model_info_not_connected(self):
         """get_model_info returns error when not connected."""
+        from sap_bridge import SapBridge
         b = SapBridge()
         info = b.get_model_info()
         assert info["connected"] is False
@@ -38,6 +43,7 @@ class TestSapBridgeUnit:
 
     def test_disconnect_when_not_connected(self):
         """disconnect is safe to call when not connected."""
+        from sap_bridge import SapBridge
         b = SapBridge()
         result = b.disconnect()
         assert result["disconnected"] is True
