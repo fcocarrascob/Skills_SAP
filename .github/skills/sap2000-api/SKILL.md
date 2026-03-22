@@ -63,9 +63,10 @@ execute, and verify scripts that automate SAP2000 operations via the local COM b
 Every script receives these variables automatically — do NOT create them:
 
 ```python
-SapModel   # cSapModel — the active model reference
-SapObject  # cOAPI — the SAP2000 application object
-result     # dict — write output values here for verification
+SapModel      # cSapModel — the active model reference
+SapObject     # cOAPI — the SAP2000 application object
+result        # dict — write output values here for verification
+sap_temp_dir  # str — writable temp directory for File.Save() calls
 ```
 
 ### Basic Script Template
@@ -88,6 +89,10 @@ raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 120, "", "R1", "1")
 frame_name = raw[0]
 assert raw[-1] == 0, f"AddByCoord failed: {raw[-1]}"
 
+# Save model to the temp directory (never hardcode paths)
+ret = SapModel.File.Save(sap_temp_dir + r"\my_model.sdb")
+assert ret == 0, f"File.Save failed: {ret}"
+
 # Write results for verification
 result["frame_name"] = frame_name
 result["num_frames"] = SapModel.FrameObj.Count()
@@ -96,6 +101,10 @@ result["num_frames"] = SapModel.FrameObj.Count()
 ### Results Extraction Template
 
 ```python
+# Save model before analysis (use sap_temp_dir, never hardcode paths)
+ret = SapModel.File.Save(sap_temp_dir + r"\my_model.sdb")
+assert ret == 0, f"File.Save failed: {ret}"
+
 # Select the load case for output
 ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
 ret = SapModel.Results.Setup.SetCaseSelectedForOutput("DEAD")

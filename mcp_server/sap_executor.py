@@ -21,6 +21,8 @@ import functools
 import threading
 import logging
 import ast
+import os as _os
+import tempfile as _tempfile
 
 from sap_bridge import bridge
 from script_library import save_script
@@ -195,6 +197,12 @@ def _build_sandbox_globals() -> dict:
         "itertools": itertools,
         "functools": functools,
     }
+
+    # Inject a writable temp directory for File.Save() calls
+    temp_dir = _os.path.join(_tempfile.gettempdir(), "sap2000_scripts")
+    _os.makedirs(temp_dir, exist_ok=True)
+    sandbox["sap_temp_dir"] = temp_dir
+
     return sandbox
 
 
