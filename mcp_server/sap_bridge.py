@@ -9,8 +9,8 @@ All COM interaction is centralized here. Other modules use this bridge
 to obtain SapObject and SapModel references.
 """
 
-import comtypes.client
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +49,7 @@ class SapBridge:
     def _create_helper(self):
         """Instantiate the SAP2000 COM helper once."""
         if self._helper is None:
+            import comtypes.client  # Windows/COM only — imported lazily
             self._helper = comtypes.client.CreateObject("SAP2000v1.Helper")
 
     def connect(
