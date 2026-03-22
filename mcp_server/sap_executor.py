@@ -20,6 +20,7 @@ import itertools
 import functools
 import threading
 import logging
+import ast
 
 from sap_bridge import bridge
 from script_library import save_script
@@ -106,9 +107,9 @@ def execute_function(function_path: str, args: list, description: str = "") -> d
     return_value = result
     output_params = None
 
-    if isinstance(result, tuple):
-        return_value = result[0]
-        output_params = list(result[1:])
+    if isinstance(result, (list, tuple)):
+        return_value = result[-1]           # ret_code is ALWAYS last
+        output_params = list(result[:-1])   # All ByRef outputs before it
 
     success = (return_value == 0) if isinstance(return_value, int) else True
 
@@ -270,6 +271,20 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
+
+    # Pre-validate syntax before spawning thread
+    try:
+        ast.parse(script)
+    except SyntaxError as e:
+        return {
+            "success": False,
+            "error": f"Syntax error at line {e.lineno}: {e.msg}",
+            "stdout": "",
+            "stderr": "",
+            "result": {},
+            "execution_time_s": 0,
+            "description": description,
+        }
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
