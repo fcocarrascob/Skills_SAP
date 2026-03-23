@@ -257,3 +257,124 @@ result[f"task_{N}_output"] = nombre
 - [SAP2000 API SKILL.md](../.github/skills/sap2000-api/SKILL.md) — Referencia del skill
 - [Function Registry](../scripts/registry.json) — Funciones verificadas
 - [Script Library](../scripts/) — Ejemplos existentes
+
+---
+
+## 🖥️ GUI Standalone — Quick Reference
+
+### Cuándo Generar GUI
+
+Al final de la Fase 5, preguntar al usuario:
+> *"¿Quieres generar una GUI standalone (PySide6) para este script?"*
+
+### Checklist Fase 6
+
+```
+□ 6.1 Identificar inputs (variables configurables del script)
+□ 6.2 Generar backend_{nombre}.py (copiar de template)
+□ 6.3 Generar gui_{nombre}.py (copiar de template)
+□ 6.4 Crear carpeta scripts/{nombre}/
+□ 6.5 Testing: ast.parse + GUI abre + flujo completo
+```
+
+### Estructura de Carpeta
+
+```
+scripts/{nombre}/
+    gui_{nombre}.py         # PySide6 GUI
+    backend_{nombre}.py     # COM directo (comtypes)
+```
+
+### Template: SapConnection (COM directo)
+
+```python
+import comtypes.client
+
+class SapConnection:
+    def __init__(self):
+        self.sap_object = None
+        self.sap_model = None
+
+    @property
+    def is_connected(self) -> bool:
+        return self.sap_model is not None
+
+    def connect(self, attach_to_existing=True) -> dict:
+        try:
+            self.sap_object = comtypes.client.GetActiveObject(
+                "CSI.SAP2000.API.SapObject"
+            )
+            self.sap_model = self.sap_object.SapModel
+            return {"connected": True,
+                    "version": str(self.sap_object.GetOAPIVersionNumber()),
+                    "model_path": str(self.sap_model.GetModelFilename())}
+        except Exception as exc:
+            self.sap_object = None
+            self.sap_model = None
+            return {"connected": False, "error": str(exc)}
+
+    def disconnect(self) -> dict:
+        self.sap_model = None
+        self.sap_object = None
+        return {"disconnected": True}
+```
+
+### Template: Backend.run()
+
+```python
+class MyBackend:
+    def __init__(self, connection: SapConnection):
+        self._conn = connection
+
+    @property
+    def sap_model(self):
+        if not self._conn.is_connected:
+            raise RuntimeError("No hay conexión con SAP2000.")
+        return self._conn.sap_model
+
+    def run(self, config) -> dict:
+        SapModel = self.sap_model
+        result = {}
+        # ... lógica del script (tareas numeradas, asserts) ...
+        result["success"] = True
+        return result
+```
+
+### Template: QThread Worker
+
+```python
+class RunWorker(QThread):
+    finished = Signal(dict)
+
+    def __init__(self, backend, config):
+        super().__init__()
+        self._backend = backend
+        self._config = config
+
+    def run(self):
+        try:
+            result = self._backend.run(self._config)
+            self.finished.emit(result)
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+```
+
+### Reglas
+
+| ✅ Hacer | ❌ No Hacer |
+|----------|-------------|
+| `import comtypes.client` | `from sap_bridge import bridge` |
+| `SapConnection.connect()` | `bridge.connect()` |
+| `backend.run(config)` | `run_script(script_text)` |
+| `from backend_X import ...` | `from sap_executor import ...` |
+| Solo stdlib + comtypes + PySide6 | Importar `app_logger`, `sap_utils_common` |
+
+### Naming Convention
+
+| Tipo | Ubicación | Ejemplo |
+|------|-----------|---------|
+| Script MCP verificado | `scripts/example_*.py` | `scripts/example_ring_areas_parametric.py` |
+| GUI standalone | `scripts/{nombre}/gui_{nombre}.py` | `scripts/ring_areas/gui_ring_areas.py` |
+| Backend standalone | `scripts/{nombre}/backend_{nombre}.py` | `scripts/ring_areas/backend_ring_areas.py` |
+| Templates | `scripts/templates/*.py` | `scripts/templates/backend_template.py` |
+| Wrappers | `scripts/wrappers/func_*.py` | `scripts/wrappers/func_FrameObj_AddByCoord.py` |

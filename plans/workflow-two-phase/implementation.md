@@ -736,8 +736,8 @@ Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_b
 
 #### Step 4: Update `quick-reference-workflow.md` — Add GUI Section
 
-- [ ] Open `plans/quick-reference-workflow.md`
-- [ ] Append the following section at the very end of the file (after the MCP Tools Reference table):
+- [x] Open `plans/quick-reference-workflow.md`
+- [x] Append the following section at the very end of the file (after the MCP Tools Reference table):
 
 ```markdown
 
@@ -864,11 +864,11 @@ class RunWorker(QThread):
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] New section `## 🖥️ GUI Standalone — Quick Reference` appended
-- [ ] Contains checklist, folder structure, 3 code snippets (SapConnection, Backend, Worker)
-- [ ] Rules table clearly shows DO vs DON'T
-- [ ] Naming convention table is accurate
-- [ ] Code snippets are syntactically valid Python
+- [x] New section `## 🖥️ GUI Standalone — Quick Reference` appended
+- [x] Contains checklist, folder structure, 3 code snippets (SapConnection, Backend, Worker)
+- [x] Rules table clearly shows DO vs DON'T
+- [x] Naming convention table is accurate
+- [x] Code snippets are syntactically valid Python
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
