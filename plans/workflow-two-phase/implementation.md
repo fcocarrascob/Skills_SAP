@@ -879,8 +879,8 @@ class RunWorker(QThread):
 
 This step creates the new standalone ring_areas GUI and backend, moves the MCP script out of the old folder, and deletes the old folder.
 
-- [ ] Create directory `scripts/ring_areas/`
-- [ ] Create file `scripts/ring_areas/backend_ring_areas.py` with the complete code below:
+- [x] Create directory `scripts/ring_areas/`
+- [x] Create file `scripts/ring_areas/backend_ring_areas.py` with the complete code below:
 
 ```python
 """
@@ -1126,7 +1126,7 @@ if __name__ == "__main__":
             conn.disconnect()
 ```
 
-- [ ] Create file `scripts/ring_areas/gui_ring_areas.py` with the complete code below:
+- [x] Create file `scripts/ring_areas/gui_ring_areas.py` with the complete code below:
 
 ```python
 """
@@ -1455,23 +1455,23 @@ if __name__ == "__main__":
     sys.exit(app.exec())
 ```
 
-- [ ] Move the MCP script to scripts root:
+- [x] Move the MCP script to scripts root:
 ```powershell
 Copy-Item "scripts/ring_areas_parametric/example_ring_areas_parametric.py" "scripts/example_ring_areas_parametric.py"
 ```
 
-- [ ] Delete the old folder:
+- [x] Delete the old folder:
 ```powershell
 Remove-Item "scripts/ring_areas_parametric" -Recurse -Force
 ```
 
-- [ ] Verify syntax of both new files:
+- [x] Verify syntax of both new files:
 ```powershell
 python -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/ring_areas/backend_ring_areas.py').read_text(encoding='utf-8')); print('backend OK')"
 python -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/ring_areas/gui_ring_areas.py').read_text(encoding='utf-8')); print('gui OK')"
 ```
 
-- [ ] Verify no MCP imports in new files:
+- [x] Verify no MCP imports in new files:
 ```powershell
 python -c "
 for f in ['scripts/ring_areas/backend_ring_areas.py', 'scripts/ring_areas/gui_ring_areas.py']:
@@ -1483,15 +1483,15 @@ print('no MCP imports ✔')
 ```
 
 ##### Step 5a Verification Checklist
-- [ ] `scripts/ring_areas/backend_ring_areas.py` exists with `SapConnection`, `RingAreasConfig`, `RingAreasBackend`
-- [ ] `scripts/ring_areas/gui_ring_areas.py` exists with `RingAreasGUI`, 3 workers
-- [ ] `scripts/example_ring_areas_parametric.py` exists (moved from old folder)
-- [ ] `scripts/ring_areas_parametric/` folder is deleted
-- [ ] Both files pass `ast.parse`
-- [ ] No MCP imports in either file
-- [ ] GUI imports from `backend_ring_areas` (relative)
-- [ ] Backend uses `comtypes.client` for connection
-- [ ] Backend `run()` logic matches the verified MCP script
+- [x] `scripts/ring_areas/backend_ring_areas.py` exists with `SapConnection`, `RingAreasConfig`, `RingAreasBackend`
+- [x] `scripts/ring_areas/gui_ring_areas.py` exists with `RingAreasGUI`, 3 workers
+- [x] `scripts/example_ring_areas_parametric.py` exists (moved from old folder)
+- [x] `scripts/ring_areas_parametric/` folder is deleted
+- [x] Both files pass `ast.parse`
+- [x] No MCP imports in either file
+- [x] GUI imports from `backend_ring_areas` (relative)
+- [x] Backend uses `comtypes.client` for connection
+- [x] Backend `run()` logic matches the verified MCP script
 
 #### Step 5a STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
