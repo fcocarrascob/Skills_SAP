@@ -235,7 +235,7 @@ python -c "t=open('scripts/templates/backend_template.py',encoding='utf-8').read
 
 #### Step 2: Create GUI Template (`scripts/templates/gui_template.py`)
 
-- [ ] Create file `scripts/templates/gui_template.py` with the complete code below:
+- [x] Create file `scripts/templates/gui_template.py` with the complete code below:
 
 ```python
 """
@@ -549,27 +549,27 @@ if __name__ == "__main__":
     sys.exit(app.exec())
 ```
 
-- [ ] Verify syntax:
+- [x] Verify syntax:
 ```powershell
 python -c "import ast, pathlib; ast.parse(pathlib.Path('scripts/templates/gui_template.py').read_text(encoding='utf-8')); print('syntax OK')"
 ```
 
-- [ ] Verify no MCP imports:
+- [x] Verify no MCP imports:
 ```powershell
 python -c "t=open('scripts/templates/gui_template.py',encoding='utf-8').read(); assert 'sap_bridge' not in t; assert 'sap_executor' not in t; assert 'mcp_server' not in t; print('no MCP imports ✔')"
 ```
 
 ##### Step 2 Verification Checklist
-- [ ] File `scripts/templates/gui_template.py` exists
-- [ ] `ast.parse` succeeds — no syntax errors
-- [ ] No imports from `mcp_server`, `sap_bridge`, or `sap_executor`
-- [ ] Imports from `backend_template` (relative)
-- [ ] Has 3 workers: `ConnectWorker`, `RunWorker`, `DisconnectWorker`
-- [ ] Has `MainWindow` with 3 buttons: Conectar, Ejecutar, Desconectar
-- [ ] Has output log (`QTextEdit`, read-only, Consolas 9pt)
-- [ ] Has status indicator (red/green)
-- [ ] Has `_busy()` method
-- [ ] Has `_build_config()` and `_format_result()` methods
+- [x] File `scripts/templates/gui_template.py` exists
+- [x] `ast.parse` succeeds — no syntax errors
+- [x] No imports from `mcp_server`, `sap_bridge`, or `sap_executor`
+- [x] Imports from `backend_template` (relative)
+- [x] Has 3 workers: `ConnectWorker`, `RunWorker`, `DisconnectWorker`
+- [x] Has `MainWindow` with 3 buttons: Conectar, Ejecutar, Desconectar
+- [x] Has output log (`QTextEdit`, read-only, Consolas 9pt)
+- [x] Has status indicator (red/green)
+- [x] Has `_busy()` method
+- [x] Has `_build_config()` and `_format_result()` methods
 
 #### Step 2 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
