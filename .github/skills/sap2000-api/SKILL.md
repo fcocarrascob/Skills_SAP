@@ -55,6 +55,11 @@ execute, and verify scripts that automate SAP2000 operations via the local COM b
    registry, call `register_verified_function` to add full metadata
    (category, description, parameter notes). Auto-registration captures
    the function path, but manual registration adds richer documentation.
+10. **Offer GUI generation** — After delivering a verified script, ask:
+   *"¿Quieres generar una GUI standalone (PySide6) para este script?"*
+   If yes, follow Phase 6 of the workflow in `plans/workflow-script-creation.md`.
+   The GUI uses `comtypes.client` for direct COM connection (no MCP dependency)
+   and follows the templates in `scripts/templates/`.
 
 ## Script Patterns
 
@@ -346,6 +351,45 @@ SapObject (cOAPI)
         ├── All()
         └── ClearSelection()
 ```
+
+## GUI Standalone Pattern
+
+Verified scripts can optionally be converted to standalone GUIs (PySide6 + COM direct).
+These GUIs do NOT depend on the MCP server — they connect directly to SAP2000 via `comtypes`.
+
+### Structure
+
+```
+scripts/{nombre}/
+    gui_{nombre}.py         # PySide6 GUI (imports backend)
+    backend_{nombre}.py     # SAP2000 logic via comtypes.client
+```
+
+### Backend Pattern
+
+```python
+import comtypes.client
+
+class SapConnection:
+    def connect(self, attach_to_existing=True) -> dict: ...
+    def disconnect(self) -> dict: ...
+    @property
+    def is_connected(self) -> bool: ...
+
+class MyBackend:
+    def __init__(self, connection: SapConnection): ...
+    def run(self, config) -> dict: ...  # Returns result dict
+```
+
+### Templates
+
+- `scripts/templates/backend_template.py` — Backend base
+- `scripts/templates/gui_template.py` — GUI base
+
+### Workflow
+
+See **Phase 6** in `plans/workflow-script-creation.md` for the complete
+step-by-step process to generate a GUI from a verified script.
 
 ## Reference Files
 

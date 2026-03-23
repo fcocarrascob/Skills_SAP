@@ -60,3 +60,18 @@ The `sap2000` MCP server provides these tools:
 - Python 3.10+
 - SAP2000 installed locally
 - Python packages: `comtypes`, `mcp[cli]`
+
+### GUI Standalone Generation
+
+The agent can also generate **standalone GUIs** (PySide6 + direct COM) from
+verified scripts. These GUIs do NOT depend on the MCP server.
+
+**When to offer:**
+- After a script has been successfully verified and saved
+- When the user asks for a "GUI", "standalone app", or "desktop tool"
+
+**Structure:** `scripts/{nombre}/gui_{nombre}.py` + `backend_{nombre}.py`
+
+**Templates:** See `scripts/templates/` for base templates.
+
+**Workflow:** See Phase 6 in `plans/workflow-script-creation.md`.
