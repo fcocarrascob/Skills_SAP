@@ -578,8 +578,8 @@ python -c "t=open('scripts/templates/gui_template.py',encoding='utf-8').read(); 
 
 #### Step 3: Update `workflow-script-creation.md` — Add Phase 6
 
-- [ ] Open `plans/workflow-script-creation.md`
-- [ ] In the Table of Contents section, add entry 6 after the existing entry 5. Replace the ToC block with:
+- [x] Open `plans/workflow-script-creation.md`
+- [x] In the Table of Contents section, add entry 6 after the existing entry 5. Replace the ToC block with:
 
 Find:
 ```markdown
@@ -602,7 +602,7 @@ Replace with:
 7. [Ejemplo Práctico: Placa Base](#ejemplo-práctico-placa-base)
 ```
 
-- [ ] At the end of Phase 5 (after the `register_verified_function` tool block — just before the `## Ejemplo Práctico: Placa Base` heading), insert the following new section:
+- [x] At the end of Phase 5 (after the `register_verified_function` tool block — just before the `## Ejemplo Práctico: Placa Base` heading), insert the following new section:
 
 Find the line:
 ```markdown
@@ -721,13 +721,13 @@ Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_b
 ```
 
 ##### Step 3 Verification Checklist
-- [ ] ToC now has 7 entries (including new Fase 6 and renumbered Ejemplo Práctico)
-- [ ] Phase 6 section exists between Phase 5 and Ejemplo Práctico
-- [ ] Phase 6 has subsections 6.1 through 6.6
-- [ ] Transition question from Phase 5 → Phase 6 is clear
-- [ ] Template references (`backend_template.py`, `gui_template.py`) are correct
-- [ ] Style reference to `example_1001_simple_beam.py` is included
-- [ ] No MCP dependencies mentioned in Phase 6 output
+- [x] ToC now has 7 entries (including new Fase 6 and renumbered Ejemplo Práctico)
+- [x] Phase 6 section exists between Phase 5 and Ejemplo Práctico
+- [x] Phase 6 has subsections 6.1 through 6.6
+- [x] Transition question from Phase 5 → Phase 6 is clear
+- [x] Template references (`backend_template.py`, `gui_template.py`) are correct
+- [x] Style reference to `example_1001_simple_beam.py` is included
+- [x] No MCP dependencies mentioned in Phase 6 output
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

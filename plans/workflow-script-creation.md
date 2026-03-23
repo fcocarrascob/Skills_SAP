@@ -11,7 +11,8 @@ y el MCP bridge.
 3. [Fase 3: Desarrollo Iterativo por Tareas](#fase-3-desarrollo-iterativo-por-tareas)
 4. [Fase 4: Integración y Refinamiento](#fase-4-integración-y-refinamiento)
 5. [Fase 5: Documentación y Guardado](#fase-5-documentación-y-guardado)
-6. [Ejemplo Práctico: Placa Base](#ejemplo-práctico-placa-base)
+6. [Fase 6: Generación de GUI Standalone (Opcional)](#fase-6-generación-de-gui-standalone-opcional)
+7. [Ejemplo Práctico: Placa Base](#ejemplo-práctico-placa-base)
 
 ---
 
@@ -447,6 +448,110 @@ Parámetros:
 
 **Beneficio:** La próxima vez que tú (o alguien más) necesite esta función,
 ya estará documentada y verificada.
+
+---
+
+## Fase 6: Generación de GUI Standalone (Opcional)
+
+> **Pregunta de transición (Fase 5 → Fase 6):**
+> *"El script está verificado y guardado. ¿Quieres generar una GUI standalone
+> para que puedas ejecutar este modelo sin necesidad del agente/MCP?"*
+>
+> - **Sí** → Continuar con Fase 6
+> - **No** → Fin del workflow
+
+### Objetivo
+
+Convertir el script MCP verificado en un mini-software standalone compuesto por:
+- `backend_{nombre}.py` — Lógica SAP2000 con COM directo (`comtypes.client`)
+- `gui_{nombre}.py` — Interfaz PySide6 con botones Conectar/Ejecutar/Desconectar
+
+**Resultado:** Un software que el usuario puede distribuir e integrar en sus herramientas,
+**independiente del framework de IA**.
+
+### 6.1 Identificar Inputs del Script
+
+Revisar las variables configurables al inicio del script verificado.
+Cada variable configurable se convierte en un campo de la GUI.
+
+**Ejemplo — ring_areas:**
+```python
+# Estas variables del script...
+r_inner = 1.0
+r_mid1  = 2.0
+r_mid2  = 3.5
+r_outer = 5.0
+t1 = 0.30
+t2 = 0.20
+n_segs = 36
+
+# ...se convierten en estos inputs de GUI:
+#   QLineEdit("r_inner", default="1.0")
+#   QLineEdit("r_mid1",  default="2.0")
+#   ...etc.
+```
+
+### 6.2 Generar Backend Standalone
+
+Usar como base la plantilla `scripts/templates/backend_template.py`:
+
+1. **Copiar** `backend_template.py` → `backend_{nombre}.py`
+2. **Renombrar** `MyConfig` → `{Nombre}Config` con los parámetros del script
+3. **Renombrar** `MyBackend` → `{Nombre}Backend`
+4. **Copiar la lógica** del script verificado al método `run()`:
+   - Variables globales → `config.param_x`
+   - `SapModel` (pre-inyectado en sandbox) → `self.sap_model`
+   - `result` global → `result` local (dict)
+   - `sap_temp_dir` → Ruta configurable o `tempfile.gettempdir()`
+   - Funciones auxiliares → métodos de la clase Backend
+5. **Mantener asserts** y estructura de tareas numeradas
+
+**Reglas inquebrantables:**
+- ❌ NO importar `sap_bridge`, `sap_executor`, ni nada de `mcp_server/`
+- ❌ NO importar `app_logger`, `sap_utils_common`, ni módulos externos
+- ✅ Solo `comtypes.client`, `math`, `dataclasses`, stdlib
+- ✅ `SapConnection` con `connect()`, `disconnect()`, `is_connected`
+
+### 6.3 Generar GUI Standalone
+
+Usar como base la plantilla `scripts/templates/gui_template.py`:
+
+1. **Copiar** `gui_template.py` → `gui_{nombre}.py`
+2. **Ajustar import:** `from backend_{nombre} import SapConnection, {Nombre}Backend, {Nombre}Config`
+3. **Reemplazar inputs:** Un `QLineEdit` por cada variable configurable (de 6.1)
+4. **Ajustar `_build_config()`:** Leer los inputs y crear el Config
+5. **Ajustar `_format_result()`:** Mostrar métricas relevantes del resultado
+6. **Renombrar** `MainWindow` → `{Nombre}GUI`
+7. **Ajustar título** del `setWindowTitle()`
+
+### 6.4 Organizar en Carpeta
+
+```
+scripts/{nombre}/
+    gui_{nombre}.py         # GUI PySide6
+    backend_{nombre}.py     # Lógica SAP2000 COM directo
+```
+
+**Regla:** La carpeta GUI solo contiene `gui_*.py` + `backend_*.py`.
+Los scripts MCP originales van en `scripts/` root (ej: `scripts/example_*.py`).
+
+### 6.5 Testing
+
+1. **Sintaxis:** `python -c "import ast; ast.parse(open('backend_*.py').read())"`
+2. **GUI abre:** `python gui_{nombre}.py` → debe abrir ventana (sin SAP2000)
+3. **Flujo completo** (si SAP2000 disponible):
+   - Conectar → status verde
+   - Ingresar parámetros → Ejecutar → log muestra resultado
+   - Desconectar → status rojo
+
+### 6.6 Estilo de Referencia
+
+Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_beam.py`:
+- Headers claros: `# ── Task N: Nombre ──────────────────────────────`
+- Cada llamada API: `assert ret == 0, f"NombreFuncion failed: {ret}"`
+- Variables configurables al inicio, separadas visualmente
+- Resultado en dict (`result["key"] = value`)
+- Fórmulas de referencia en comentarios (si aplica)
 
 ---
 
