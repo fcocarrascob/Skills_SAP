@@ -15,6 +15,26 @@ Use the `sap2000-api` skill for ANY task involving:
 - Extracting analysis or design results
 - Debugging SAP2000 API errors
 
+### SAP2000 Scripter Agent
+
+For **interactive script generation**, use the **SAP2000 Scripter** custom agent 
+(available in the agents dropdown). This agent specializes in:
+
+- Asking clarifying questions before generating scripts
+- Searching for verified functions and wrappers
+- Generating clean, parametric scripts following established conventions
+- Executing scripts and verifying results
+- Saving successful scripts to the library
+
+**When to use the agent:**
+- User asks to "generate a script" for a specific SAP2000 model
+- User describes a structural element in natural language (e.g., "create a 
+  parametric plate with holes")
+- User needs step-by-step guidance through the scripting process
+
+**How to invoke:** Select "SAP2000 Scripter" from the agents dropdown in Chat, or 
+mention `@sap2000-scripter` in your prompt
+
 ### Available MCP tools
 
 The `sap2000` MCP server provides these tools:
