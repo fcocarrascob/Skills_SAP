@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-24T02:49:38.918500+00:00",
-      "verification_count": 33,
+      "last_verified": "2026-03-24T14:10:13.994893+00:00",
+      "verification_count": 34,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -23,8 +23,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-24T02:49:38.923501+00:00",
-      "verification_count": 26,
+      "last_verified": "2026-03-24T14:10:14.004898+00:00",
+      "verification_count": 27,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -69,8 +69,8 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-23T00:24:44.862963+00:00",
-      "verification_count": 12,
+      "last_verified": "2026-03-24T14:10:14.009513+00:00",
+      "verification_count": 13,
       "wrapper_script": "func_PropFrame_SetRectangle",
       "used_in_scripts": [],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
@@ -125,8 +125,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-24T02:49:38.913460+00:00",
-      "verification_count": 32,
+      "last_verified": "2026-03-24T14:10:13.987360+00:00",
+      "verification_count": 33,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -141,8 +141,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-23T13:36:00.000605+00:00",
-      "verification_count": 30,
+      "last_verified": "2026-03-24T14:10:14.000384+00:00",
+      "verification_count": 31,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -239,8 +239,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-23T00:24:44.868547+00:00",
-      "verification_count": 11,
+      "last_verified": "2026-03-24T14:10:14.009513+00:00",
+      "verification_count": 12,
       "wrapper_script": "func_FrameObj_AddByCoord",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -842,11 +842,67 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.DatabaseTables.GetAllTables": {
+      "category": "Database_Tables",
+      "description": "Returns all tables with import type and empty status",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-24T14:10:14.018254+00:00",
+      "last_verified": "2026-03-24T14:11:14.148439+00:00",
+      "verification_count": 3,
+      "wrapper_script": "func_DatabaseTables_GetAllTables",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": "ByRef outputs: raw[0]=NumberTables, raw[1]=TableKey[], raw[2]=TableName[], raw[3]=ImportType[] (0=not importable,1=non-interactive,2=interactive unlocked,3=interactive any), raw[4]=IsEmpty[], raw[-1]=ret_code"
+    },
+    "SapModel.DatabaseTables.GetAvailableTables": {
+      "category": "Database_Tables",
+      "description": "Returns available (non-empty) tables with their import type — lighter query than GetAllTables",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-24T14:10:23.263893+00:00",
+      "last_verified": "2026-03-24T14:11:20.287192+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_DatabaseTables_GetAvailableTables",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": "ByRef outputs: raw[0]=NumberTables, raw[1]=TableKey[], raw[2]=TableName[], raw[3]=ImportType[], raw[-1]=ret_code. Returns only non-empty tables (subset of GetAllTables)."
+    },
+    "SapModel.DatabaseTables.GetAllFieldsInTable": {
+      "category": "Database_Tables",
+      "description": "Returns all fields (columns) metadata for a specific table",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-24T14:10:32.688826+00:00",
+      "last_verified": "2026-03-24T14:11:26.368731+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_DatabaseTables_GetAllFieldsInTable",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": "Input: TableKey (str). ByRef outputs: raw[0]=TableVersion, raw[1]=NumberFields, raw[2]=FieldKey[], raw[3]=FieldName[], raw[4]=Description[], raw[5]=UnitsString[], raw[6]=IsImportable[], raw[-1]=ret_code"
+    },
+    "SapModel.DatabaseTables.GetObsoleteTableKeyList": {
+      "category": "Database_Tables",
+      "description": "Returns list of obsolete table keys and associated version notes",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-24T14:10:42.398379+00:00",
+      "last_verified": "2026-03-24T14:11:34.143440+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_DatabaseTables_GetObsoleteTableKeyList",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": "ByRef outputs: raw[0]=NumberTableKeys, raw[1]=TableKeyList[], raw[2]=NotesList[], raw[-1]=ret_code. Count may be 0 if no obsolete tables."
     }
   },
   "summary": {
-    "total_registered": 59,
-    "total_verified": 59,
-    "last_updated": "2026-03-24T02:51:02.062125+00:00"
+    "total_registered": 63,
+    "total_verified": 63,
+    "last_updated": "2026-03-24T14:11:34.143440+00:00"
   }
 }
