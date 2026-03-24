@@ -810,7 +810,7 @@ result["status"] = "verified"
 
 #### Step 3: CSV/XML I/O Wrappers (7 functions)
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayCSVFile.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayCSVFile.py`:
 
 ```python
 # ============================================================
@@ -881,7 +881,7 @@ result["csv_path"] = csv_path
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayCSVString.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayCSVString.py`:
 
 ```python
 # ============================================================
@@ -956,7 +956,7 @@ result["csv_preview"] = csv_string[:500]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayXMLString.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayXMLString.py`:
 
 ```python
 # ============================================================
@@ -1031,7 +1031,7 @@ result["xml_preview"] = xml_string[:500]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingCSVFile.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingCSVFile.py`:
 
 ```python
 # ============================================================
@@ -1105,7 +1105,7 @@ result["csv_path"] = csv_path
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingCSVString.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingCSVString.py`:
 
 ```python
 # ============================================================
@@ -1183,7 +1183,7 @@ result["csv_preview"] = csv_string[:500]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingCSVFile.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingCSVFile.py`:
 
 ```python
 # ============================================================
@@ -1264,7 +1264,7 @@ result["csv_path"] = csv_path
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingCSVString.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingCSVString.py`:
 
 ```python
 # ============================================================
@@ -1347,16 +1347,16 @@ result["csv_string_length"] = len(csv_string)
 result["status"] = "verified"
 ```
 
-- [ ] Execute all 7 wrappers via `run_sap_script` and verify
-- [ ] Register all 7 functions in `registry.json`
+- [x] Execute all 7 wrappers via `run_sap_script` and verify
+- [x] Register all 7 functions in `registry.json`
 
 ##### Step 3 Verification Checklist
-- [ ] CSV file export produces a non-zero-length file at the specified path
-- [ ] CSV string exports return non-empty strings with comma-delimited content
-- [ ] XML string export returns valid XML content
-- [ ] CSV file round-trip (export → import) completes without error
-- [ ] CSV string round-trip (export → import) completes without error
-- [ ] All 7 functions registered in `registry.json`
+- [x] CSV file export produces a non-zero-length file at the specified path
+- [x] CSV string exports return non-empty strings with comma-delimited content
+- [x] XML string export returns valid XML content
+- [x] CSV file round-trip (export → import) completes without error
+- [x] CSV string round-trip (export → import) completes without error
+- [x] All 7 functions registered in `registry.json`
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add CSV/XML I/O wrappers (7 functions)`
