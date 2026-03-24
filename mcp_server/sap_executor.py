@@ -20,6 +20,10 @@ import itertools
 import functools
 import threading
 import logging
+import ast
+import os as _os
+import tempfile as _tempfile
+import builtins as _builtins
 
 from sap_bridge import bridge
 from script_library import save_script
@@ -106,9 +110,9 @@ def execute_function(function_path: str, args: list, description: str = "") -> d
     return_value = result
     output_params = None
 
-    if isinstance(result, tuple):
-        return_value = result[0]
-        output_params = list(result[1:])
+    if isinstance(result, (list, tuple)):
+        return_value = result[-1]           # ret_code is ALWAYS last
+        output_params = list(result[:-1])   # All ByRef outputs before it
 
     success = (return_value == 0) if isinstance(return_value, int) else True
 
@@ -158,7 +162,7 @@ def _safe_import(name, globals_=None, locals_=None, fromlist=(), level=0):
             f"Module '{name}' is not available in the SAP2000 script sandbox. "
             f"Allowed: {', '.join(sorted(ALLOWED_MODULES))}"
         )
-    return __builtins__.__import__(name, globals_, locals_, fromlist, level)
+    return _builtins.__import__(name, globals_, locals_, fromlist, level)
 
 
 def _safe_open(*args, **kwargs):
@@ -194,6 +198,12 @@ def _build_sandbox_globals() -> dict:
         "itertools": itertools,
         "functools": functools,
     }
+
+    # Inject a writable temp directory for File.Save() calls
+    temp_dir = _os.path.join(_tempfile.gettempdir(), "sap2000_scripts")
+    _os.makedirs(temp_dir, exist_ok=True)
+    sandbox["sap_temp_dir"] = temp_dir
+
     return sandbox
 
 
@@ -270,6 +280,20 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
+
+    # Pre-validate syntax before spawning thread
+    try:
+        ast.parse(script)
+    except SyntaxError as e:
+        return {
+            "success": False,
+            "error": f"Syntax error at line {e.lineno}: {e.msg}",
+            "stdout": "",
+            "stderr": "",
+            "result": {},
+            "execution_time_s": 0,
+            "description": description,
+        }
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()

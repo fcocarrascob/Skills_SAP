@@ -1,285 +1,212 @@
----
+﻿---
 name: sap2000-api
 description: >-
-  Create, execute, and verify SAP2000 API scripts via MCP bridge.
-  Use when: writing SAP2000 scripts, creating structural models, assigning loads,
-  running analysis, extracting results, debugging API errors, SAP2000 automation,
-  structural engineering modeling, frame objects, area objects, load patterns,
-  load cases, response combinations, design checks.
-  Workflow: search API docs → check script library → generate Python script →
-  execute via MCP → verify results → save script.
+  Referencia técnica para la API de SAP2000 via COM bridge.
+  Convenciones, patrones de scripts, function registry, y errores comunes.
+  Para el workflow completo de scripting, usar el agente @sap2000-scripter.
 ---
 
-# SAP2000 API Assistant
+# SAP2000 API — Referencia Técnica
 
-You are an expert in the SAP2000 structural analysis API. You help users create,
-execute, and verify scripts that automate SAP2000 operations via the local COM bridge.
+Esta skill contiene la referencia técnica para crear scripts de SAP2000.
+Para el **workflow completo** (research → código → ejecución → verificación),
+usar el agente `@sap2000-scripter`.
 
-## Mandatory Workflow
+## Variables Pre-inyectadas
 
-**ALWAYS follow this sequence for every SAP2000 task:**
-
-1. **Check connection** — Call `get_model_info` to verify SAP2000 is connected.
-   If not connected, call `connect_sap2000` first.
-2. **Check function registry** — Call `query_function_registry` with the function
-   name or a keyword query to see if the needed functions have already been
-   verified.
-3. **Load wrapper scripts** — If a `wrapper_script` field exists in the registry
-   entry, call `load_script("func_...")` and **copy the exact call signature,
-   argument order, and ByRef pattern from the wrapper**. The wrapper is the
-   authoritative source of truth — it has been tested against the live COM bridge.
-4. **Search for existing full scripts** — Call `list_scripts` with a relevant
-   query. If a matching script exists, use `load_script` to load it as a starting point.
-5. **Search API docs (FALLBACK ONLY)** — Call `search_api_docs` ONLY for
-   functions that have **no wrapper script** and are **not in the registry**.
-   API documentation describes the VBA interface and may differ from the
-   Python COM bridge behaviour (argument count, order, ByRef layout).
-   **Never override a verified wrapper with an API doc signature.**
-6. **Generate the script** — Write a complete Python script following the
-   patterns described below. For every function that has a wrapper, copy the
-   call exactly from the wrapper — do not invent or reorder arguments.
-
-> ⚠️ **WRAPPER PRIORITY RULE — NON-NEGOTIABLE:**
-> When a verified wrapper exists for a function, it is the ONLY valid
-> reference for that function's argument list, order, and return-value layout.
-> API documentation is a secondary fallback used exclusively for functions
-> with no wrapper. Mixing API doc signatures with wrapper-verified calls
-> will introduce argument-count or ordering bugs that are hard to diagnose.
-6. **Execute** — Call `run_sap_script` with the script. On success, any new
-   API functions used are automatically registered in the function registry.
-7. **Verify** — Read the returned `result`, `stdout`, and `return_value`.
-   If `success` is `false`, analyze the error, fix the script, and re-execute.
-8. **Save** — When the script succeeds, re-run with `save_as` to store it
-   in the script library for future reuse.
-9. **Register new functions** — For any new API functions not yet in the
-   registry, call `register_verified_function` to add full metadata
-   (category, description, parameter notes). Auto-registration captures
-   the function path, but manual registration adds richer documentation.
-
-## Script Patterns
-
-### Pre-injected Variables
-
-Every script receives these variables automatically — do NOT create them:
+Todo script ejecutado via `run_sap_script` recibe estas variables automáticamente:
 
 ```python
-SapModel   # cSapModel — the active model reference
-SapObject  # cOAPI — the SAP2000 application object
-result     # dict — write output values here for verification
+SapModel      # cSapModel — referencia al modelo activo
+SapObject     # cOAPI — objeto de la aplicación SAP2000
+result        # dict — escribir valores de salida aquí para verificación
+sap_temp_dir  # str — directorio temporal para File.Save()
 ```
 
-### Basic Script Template
+**Regla:** NO crear estas variables manualmente. Ya están disponibles.
+
+## Convención ByRef (COM Bridge)
+
+SAP2000 usa parámetros ByRef extensivamente. En Python via COM:
+
+- Las funciones retornan una **lista**: `[byref_out1, byref_out2, ..., return_code]`
+- El **último elemento `[-1]` es SIEMPRE el return code** (Long)
+- Todos los ByRef outputs van **antes** del return code
+
+> **CRÍTICO:** Esto es lo opuesto de lo que sugiere la firma VBA.
+> El COM bridge en Python siempre coloca el `Long` return code al final.
 
 ```python
-# Always work through SapModel — it's already connected
-ret = SapModel.InitializeNewModel()
-ret = SapModel.File.NewBlank()
-
-# Define materials
-ret = SapModel.PropMaterial.SetMaterial("CONC", 2)  # 2 = Concrete
-ret = SapModel.PropMaterial.SetMPIsotropic("CONC", 3600, 0.2, 0.0000055)
-
-# Define sections
-ret = SapModel.PropFrame.SetRectangle("R1", "CONC", 12, 12)
-
-# Create geometry
-# AddByCoord returns [Name_out, ret_code] — Name is raw[0], ret_code is raw[-1]
-raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 120, "", "R1", "1")
-frame_name = raw[0]
-assert raw[-1] == 0, f"AddByCoord failed: {raw[-1]}"
-
-# Write results for verification
-result["frame_name"] = frame_name
-result["num_frames"] = SapModel.FrameObj.Count()
-```
-
-### Results Extraction Template
-
-```python
-# Select the load case for output
-ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
-ret = SapModel.Results.Setup.SetCaseSelectedForOutput("DEAD")
-
-# Get joint displacements — ByRef params come first, ret_code is LAST
-raw = SapModel.Results.JointDispl(
-    "1",      # Joint name
-    0,        # eItemTypeElm_ObjectElm
-    0, [], [], [], [], [], [], [], [], [], []
-)
-# raw layout: [NumberResults, Obj[], Elm[], LoadCase[], StepType[], StepNum[],
-#              U1[], U2[], U3[], R1[], R2[], R3[], ret_code]
-# ret_code is always raw[-1]
-ret_code = raw[-1]
-result["displacement_U3"] = raw[8][0] if ret_code == 0 and len(raw[8]) > 0 else None
-```
-
-## Function Registry
-
-The function registry (`scripts/registry.json`) tracks which API functions
-have been successfully tested. Use it to avoid re-discovering function
-signatures and ByRef conventions from scratch.
-
-### Querying the Registry
-
-```python
-# Check if a specific function has been verified:
-query_function_registry(function_path="SapModel.FrameObj.AddByCoord")
-# → {function_path, category, description, verified, wrapper_script, ...}
-
-# Search by keyword:
-query_function_registry(query="frame")
-# → {count, functions: [{function_path, category, verified, ...}, ...]}
-
-# List verified functions only:
-query_function_registry(verified_only=True)
-
-# Get registry summary:
-query_function_registry()
-# → {total_registered, total_verified, categories: {...}}
-```
-
-### Wrapper Scripts
-
-Verified functions have wrapper scripts in `scripts/wrappers/` that demonstrate
-correct usage. Each wrapper:
-- Targets a single API function
-- Is self-contained (initializes a fresh model)
-- Documents the ByRef output layout
-- Asserts success and writes to `result`
-
-> **The wrapper is the single source of truth for that function.**
-> The argument count, argument order, and return-value layout shown in the
-> wrapper have been verified against the live SAP2000 COM bridge.
-> API documentation describes the VBA interface and can differ — e.g.,
-> `GetTCLimits` takes 5 args in Python (no `ItemType`), `EditArea.Divide`
-> takes 18 args (no trailing `SubMesh`/`SubMeshSize`), and
-> `SelectObj.CoordinateRange` takes coordinates first and `CSys` last.
-
-**Workflow for using a wrapper:**
-1. Call `query_function_registry(function_path="SapModel.X.Y")` — check `wrapper_script`.
-2. If wrapper exists: call `load_script("func_X_Y")` and copy the call verbatim.
-3. Only if no wrapper: consult `search_api_docs` and mark as unverified.
-
-```
-load_script("func_FrameObj_AddByCoord")
-```
-
-### Auto-Registration
-
-When a script executes successfully via `run_sap_script`, all SAP2000 API
-functions called in the script are automatically detected and registered
-as verified in the registry. The response includes a `registered_functions`
-list showing what was captured.
-
-## SAP2000 API Conventions
-
-### Return Codes
-- **0** = Success
-- **Nonzero** = Error — always check `ret` after each call
-
-### ByRef Parameters
-SAP2000 uses ByRef (output) parameters extensively. In Python via COM:
-- Functions return a **list**: `[byref_output1, byref_output2, ..., return_code]`
-- The **last element `[-1]` is ALWAYS the return code** (Long)
-- All ByRef output parameters come **before** the return code
-
-> **CRITICAL:** This is the opposite of what the VBA signature suggests.
-> The COM bridge in Python always places the `Long` return code at the end.
-
-```python
-# Example: AddCartesian returns [Name_out, ret_code]
+# Ejemplo: AddCartesian retorna [Name_out, ret_code]
 raw = SapModel.PointObj.AddCartesian(5, 3, 2, "", "PT1")
-point_name = raw[0]   # ByRef Name output (first)
-ret_code   = raw[-1]  # return code (last)
+point_name = raw[0]   # ByRef Name output (primero)
+ret_code   = raw[-1]  # return code (último)
 assert ret_code == 0, f"AddCartesian failed: {ret_code}"
 
-# Example: GetCoordCartesian returns [x, y, z, ret_code]
+# Ejemplo: GetCoordCartesian retorna [x, y, z, ret_code]
 coord = SapModel.PointObj.GetCoordCartesian(point_name, 0, 0, 0)
 x, y, z = coord[0], coord[1], coord[2]
 ret_code = coord[-1]
 
-# Example: FrameObj.GetPoints returns [pt_i, pt_j, ret_code]
+# Ejemplo: FrameObj.GetPoints retorna [pt_i, pt_j, ret_code]
 raw = SapModel.FrameObj.GetPoints(frame_name, "", "")
 pt_i = raw[0]
 pt_j = raw[1]
 ret_code = raw[-1]
 ```
 
-**Safe pattern to always use:**
+**Patrón seguro universal:**
 ```python
 raw = SapModel.SomeObj.SomeFunction(...)
 ret_code = raw[-1] if isinstance(raw, (list, tuple)) else raw
 assert ret_code == 0, f"SomeFunction failed: {ret_code}"
 ```
 
-### Unit System
-Set units BEFORE creating geometry:
+### Layouts ByRef Verificados
+
+| Función | Elementos | Layout |
+|---------|-----------|--------|
+| `AddCartesian` | 2 | `[Name, ret_code]` |
+| `GetCoordCartesian` | 4 | `[x, y, z, ret_code]` |
+| `GetPoints` | 3 | `[pt_i, pt_j, ret_code]` |
+| `GetMPIsotropic` | 5 | `[E, poisson, thermal, tempDep, ret_code]` |
+| `GetRestraint` | 2 | `[restraints[], ret_code]` |
+| `GetRectangle` | 8 | `[FileName, MatProp, t3, t2, Color, Notes, GUID, ret_code]` |
+| `JointDispl` | 13 | `[NRes, Obj[], Elm[], LC[], StType[], StNum[], U1[], U2[], U3[], R1[], R2[], R3[], ret_code]` |
+
+## Template Básico de Script
+
 ```python
-# Common unit enums (pass as integer):
-# 1=lb_in_F, 2=lb_ft_F, 3=kip_in_F, 4=kip_ft_F,
-# 5=kN_mm_C, 6=kN_m_C, 7=kgf_mm_C, 8=kgf_m_C,
-# 9=N_mm_C, 10=N_m_C, 11=Ton_mm_C, 12=Ton_m_C
-ret = SapModel.SetPresentUnits(4)  # kip_ft_F
+# Siempre trabajar a través de SapModel — ya está conectado
+ret = SapModel.InitializeNewModel()
+ret = SapModel.File.NewBlank()
+
+# Definir materiales
+ret = SapModel.PropMaterial.SetMaterial("CONC", 2)  # 2 = Concrete
+ret = SapModel.PropMaterial.SetMPIsotropic("CONC", 3600, 0.2, 0.0000055)
+
+# Definir secciones
+ret = SapModel.PropFrame.SetRectangle("R1", "CONC", 12, 12)
+
+# Crear geometría
+raw = SapModel.FrameObj.AddByCoord(0, 0, 0, 0, 0, 120, "", "R1", "1")
+frame_name = raw[0]
+assert raw[-1] == 0, f"AddByCoord failed: {raw[-1]}"
+
+# Guardar modelo en directorio temporal
+ret = SapModel.File.Save(sap_temp_dir + r"\my_model.sdb")
+assert ret == 0, f"File.Save failed: {ret}"
+
+# Escribir resultados para verificación
+result["frame_name"] = frame_name
+result["num_frames"] = SapModel.FrameObj.Count()
 ```
 
-### Arrays
-- **0-based** arrays in all cases
-- When passing arrays to COM, use Python lists
-- Dynamic arrays in output: COM fills and returns them in the tuple
+## Template de Extracción de Resultados
 
-### Frame Section Modifiers
-Array of 8 values (indices 0–7):
+```python
+# Guardar modelo antes de análisis
+ret = SapModel.File.Save(sap_temp_dir + r"\my_model.sdb")
+assert ret == 0, f"File.Save failed: {ret}"
+
+# Seleccionar caso de carga para output
+ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
+ret = SapModel.Results.Setup.SetCaseSelectedForOutput("DEAD")
+
+# Obtener desplazamientos de nudo
+raw = SapModel.Results.JointDispl(
+    "1",      # Nombre del nudo
+    0,        # eItemTypeElm_ObjectElm
+    0, [], [], [], [], [], [], [], [], [], []
+)
+# raw[-1] es SIEMPRE el return code
+ret_code = raw[-1]
+result["displacement_U3"] = raw[8][0] if ret_code == 0 and len(raw[8]) > 0 else None
+```
+
+## Function Registry
+
+El registry (`scripts/registry.json`) rastrea qué funciones API han sido
+testeadas exitosamente. Usar para evitar re-descubrir firmas y convenciones ByRef.
+
+### Consultar el Registry
+
+```python
+# Verificar si una función específica ha sido verificada:
+query_function_registry(function_path="SapModel.FrameObj.AddByCoord")
+
+# Buscar por keyword:
+query_function_registry(query="frame")
+
+# Solo funciones verificadas:
+query_function_registry(verified_only=True)
+
+# Resumen del registry:
+query_function_registry()
+```
+
+### Wrapper Scripts
+
+Los wrappers verificados viven en `scripts/wrappers/` y demuestran el uso correcto.
+Cada wrapper:
+- Apunta a una sola función API
+- Es auto-contenido (inicializa un modelo fresco)
+- Documenta el layout ByRef de outputs
+- Valida con asserts y escribe a `result`
+
+> **El wrapper es la única fuente de verdad para esa función.**
+> El conteo de argumentos, orden, y layout de retorno mostrados en el wrapper
+> han sido verificados contra el COM bridge live de SAP2000.
+
+**Workflow para usar un wrapper:**
+1. `query_function_registry(function_path="SapModel.X.Y")` → verificar `wrapper_script`
+2. Si existe: `load_script("func_X_Y")` → copiar la llamada verbatim
+3. Solo si no existe: consultar `search_api_docs` y marcar como no verificado
+
+### Auto-Registro
+
+Cuando un script se ejecuta exitosamente via `run_sap_script`, todas las
+funciones API usadas se detectan y registran automáticamente como verificadas.
+La respuesta incluye una lista `registered_functions` mostrando lo capturado.
+
+## Unidades
+
+Establecer unidades ANTES de crear geometría:
+```python
+ret = SapModel.SetPresentUnits(6)  # kN_m_C
+```
+
+Para la lista completa de enumeraciones (eUnits, eMatType, eLoadPatternType, etc.)
+→ ver [enum-reference.md](references/enum-reference.md).
+
+## Arrays
+
+- **0-based** en todos los casos
+- Al pasar arrays a COM, usar listas de Python
+- Arrays dinámicos en output: COM los llena y retorna en la tupla
+
+## Modificadores de Sección Frame
+
+Array de 8 valores (índices 0–7):
 ```python
 ModValue = [1000, 0, 0, 1, 1, 1, 1, 1]
 # [0]=Area, [1]=AS2, [2]=AS3, [3]=Torsion, [4]=I22, [5]=I33, [6]=Mass, [7]=Weight
 ret = SapModel.PropFrame.SetModifiers("R1", ModValue)
 ```
 
-### Material Types (eMatType)
-```
-1 = Steel
-2 = Concrete
-3 = NoDesign
-4 = Aluminum
-5 = ColdFormed
-6 = Rebar
-7 = Tendon
-```
+## Errores Comunes y Soluciones
 
-### Load Pattern Types (eLoadPatternType)
-```
-1 = Dead,  2 = SuperDead,  3 = Live,  4 = ReduceLive
-5 = Quake, 6 = Wind,       7 = Snow,  8 = Other
-```
+| Error | Causa | Solución |
+|-------|-------|----------|
+| `return_code != 0` | Parámetros inválidos o estado incorrecto | Verificar tipos y orden de params via wrapper o `search_api_docs` |
+| `AttributeError: 'NoneType'` | SapModel es None | Conexión perdida — llamar `connect_sap2000` |
+| `COMError` | Fallo de interfaz COM | SAP2000 pudo haber crasheado — reconectar |
+| `Module blocked` | Importando os, subprocess, etc. | Usar solo módulos permitidos (math, json, datetime, etc.) |
+| `Timeout after 120s` | Análisis tomando demasiado tiempo | Simplificar modelo o aumentar timeout |
+| `IndexError` | Layout ByRef incorrecto | Verificar wrapper: `raw[0]` vs `raw[-1]` |
+| `AssertionError` | Validación falló | Leer mensaje del assert, ajustar parámetros |
 
-### 2D Frame Types (e2DFrameType)
-```
-0 = PortalFrame
-1 = ConcentricBraced
-2 = EccentricBraced
-```
-
-### 3D Frame Types (e3DFrameType)
-```
-0 = OpenFrame
-1 = PerimeterFrame
-2 = BeamSlab
-3 = FlatPlate
-```
-
-## Common Errors and Fixes
-
-| Error | Cause | Fix |
-|-------|-------|-----|
-| `return_code != 0` | Invalid parameters or wrong state | Check param types and order via `search_api_docs` |
-| `AttributeError: 'NoneType'` | SapModel is None | Connection lost — call `connect_sap2000` |
-| `COMError` | COM interface failure | SAP2000 may have crashed — reconnect |
-| `Module blocked` | Importing os, subprocess, etc. | Use only allowed modules (math, json, datetime, etc.) |
-| `Timeout after 120s` | Analysis taking too long | Simplify model or increase timeout |
-
-## Object Hierarchy
-
-The SAP2000 API is accessed through a hierarchy of objects:
+## Jerarquía de Objetos
 
 ```
 SapObject (cOAPI)
@@ -338,9 +265,11 @@ SapObject (cOAPI)
         └── ClearSelection()
 ```
 
-## Reference Files
+## Archivos de Referencia
 
-For detailed information, load these reference files on demand:
-- [API Patterns](./references/api-patterns.md) — Detailed patterns for common operations
-- [Common Workflows](./references/common-workflows.md) — Step-by-step workflows for typical tasks
-- [Enum Reference](./references/enum-reference.md) — Complete enumeration values
+Para información detallada, cargar estos archivos bajo demanda:
+- [Patrones API](references/api-patterns.md) — Patrones detallados para operaciones comunes
+- [Workflows Comunes](references/common-workflows.md) — Pasos para tareas típicas
+- [Referencia de Enumeraciones](references/enum-reference.md) — Valores completos de enums
+- [Templates de Scripts](references/script-templates.md) — Templates paramétricos reutilizables
+- [Generación de GUI](references/gui-generation.md) — Guía para generar GUI standalone

@@ -54,7 +54,7 @@ class SapBridge:
     def connect(
         self,
         program_path: str | None = None,
-        attach_to_existing: bool = False,
+        attach_to_existing: bool = True,
     ) -> dict:
         """
         Connect to SAP2000.
