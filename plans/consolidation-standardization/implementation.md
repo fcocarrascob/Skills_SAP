@@ -544,8 +544,8 @@ Para información detallada, cargar estos archivos bajo demanda:
 
 Este paso crea la guía dedicada de generación de GUI y verifica que los enums estén consolidados.
 
-- [ ] Crear el archivo `.github/skills/sap2000-api/references/gui-generation.md` con el siguiente contenido:
-- [ ] Copiar y pegar el código siguiente en `.github/skills/sap2000-api/references/gui-generation.md`:
+- [x] Crear el archivo `.github/skills/sap2000-api/references/gui-generation.md` con el siguiente contenido:
+- [x] Copiar y pegar el código siguiente en `.github/skills/sap2000-api/references/gui-generation.md`:
 
 ```markdown
 # Generación de GUI Standalone (PySide6 + COM Directo)
@@ -728,7 +728,7 @@ Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_b
 - Fórmulas de referencia en comentarios (si aplica)
 ```
 
-- [ ] Verificar que `.github/skills/sap2000-api/references/enum-reference.md` contiene TODOS estos enums:
+- [x] Verificar que `.github/skills/sap2000-api/references/enum-reference.md` contiene TODOS estos enums:
 
 | Enum | Verificar presente |
 |------|--------------------|
@@ -745,13 +745,13 @@ Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_b
 > **Nota:** El archivo `enum-reference.md` existente ya contiene todos los enums necesarios. No requiere modificación.
 
 ##### Step 3 Verification Checklist
-- [ ] `gui-generation.md` existe en `.github/skills/sap2000-api/references/`
-- [ ] Contiene workflow completo: identificar inputs → backend → GUI → testing
-- [ ] Enlaza correctamente a templates (`scripts/templates/backend_template.py`, `gui_template.py`)
-- [ ] Enlaza correctamente a ejemplos (`scripts/placabase/`, `scripts/ring_areas/`)
-- [ ] Reglas de importación están claras (NO importar mcp_server, SOLO comtypes + stdlib)
-- [ ] `enum-reference.md` tiene los 9 tipos de enum completos
-- [ ] Ningún otro archivo duplica las tablas de enums (SKILL.md ya no las incluye tras Step 2)
+- [x] `gui-generation.md` existe en `.github/skills/sap2000-api/references/`
+- [x] Contiene workflow completo: identificar inputs → backend → GUI → testing
+- [x] Enlaza correctamente a templates (`scripts/templates/backend_template.py`, `gui_template.py`)
+- [x] Enlaza correctamente a ejemplos (`scripts/placabase/`, `scripts/ring_areas/`)
+- [x] Reglas de importación están claras (NO importar mcp_server, SOLO comtypes + stdlib)
+- [x] `enum-reference.md` tiene los 9 tipos de enum completos
+- [x] Ningún otro archivo duplica las tablas de enums (SKILL.md ya no las incluye tras Step 2)
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
