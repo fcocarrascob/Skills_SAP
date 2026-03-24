@@ -245,8 +245,8 @@ Cargar estos archivos SOLO cuando los necesites:
 
 Este paso transforma SKILL.md de "workflow + referencia" a **solo referencia técnica**, eliminando todo el contenido que ahora vive en el agente.
 
-- [ ] Reemplazar el contenido completo de `.github/skills/sap2000-api/SKILL.md` con el siguiente:
-- [ ] Copiar y pegar el código siguiente en `.github/skills/sap2000-api/SKILL.md`:
+- [x] Reemplazar el contenido completo de `.github/skills/sap2000-api/SKILL.md` con el siguiente:
+- [x] Copiar y pegar el código siguiente en `.github/skills/sap2000-api/SKILL.md`:
 
 ```markdown
 ---
@@ -527,12 +527,12 @@ Para información detallada, cargar estos archivos bajo demanda:
 ```
 
 ##### Step 2 Verification Checklist
-- [ ] SKILL.md ya NO contiene el workflow de 10 pasos (ahora vive en el agente)
-- [ ] SKILL.md ya NO contiene instrucciones de personalidad/comportamiento
-- [ ] SKILL.md MANTIENE: convenciones ByRef, templates de script, function registry, errores comunes, jerarquía de objetos
-- [ ] Los enums inline (eMatType, eLoadPatternType, e2DFrameType, e3DFrameType) han sido ELIMINADOS y reemplazados por enlace a `enum-reference.md`
-- [ ] El enlace a `gui-generation.md` está presente (se creará en Step 3)
-- [ ] Todo el texto está en español (excepto nombres de funciones/variables que son en inglés)
+- [x] SKILL.md ya NO contiene el workflow de 10 pasos (ahora vive en el agente)
+- [x] SKILL.md ya NO contiene instrucciones de personalidad/comportamiento
+- [x] SKILL.md MANTIENE: convenciones ByRef, templates de script, function registry, errores comunes, jerarquía de objetos
+- [x] Los enums inline (eMatType, eLoadPatternType, e2DFrameType, e3DFrameType) han sido ELIMINADOS y reemplazados por enlace a `enum-reference.md`
+- [x] El enlace a `gui-generation.md` está presente (se creará en Step 3)
+- [x] Todo el texto está en español (excepto nombres de funciones/variables que son en inglés)
 - [ ] Sin errores de Markdown
 
 #### Step 2 STOP & COMMIT
