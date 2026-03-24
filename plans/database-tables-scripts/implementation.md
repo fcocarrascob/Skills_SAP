@@ -1365,7 +1365,7 @@ result["status"] = "verified"
 
 #### Step 4: Display Selection Consolidated Wrapper (20 functions)
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_DisplaySelection_Consolidated.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_DisplaySelection_Consolidated.py`:
 
 ```python
 # ============================================================
@@ -1578,8 +1578,8 @@ result["total_tested"] = len(tested_functions)
 result["status"] = "verified"
 ```
 
-- [ ] Execute the consolidated wrapper via `run_sap_script`
-- [ ] Register all 20 individual functions in `registry.json` (all pointing to the same wrapper `func_DatabaseTables_DisplaySelection_Consolidated`):
+- [x] Execute the consolidated wrapper via `run_sap_script`
+- [x] Register all 20 individual functions in `registry.json` (all pointing to the same wrapper `func_DatabaseTables_DisplaySelection_Consolidated`):
 
 The 20 function paths to register:
 ```
@@ -1606,11 +1606,11 @@ SapModel.DatabaseTables.SetTableOutputOptionsForDisplay
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] All 20 functions execute without error in the consolidated wrapper
-- [ ] Get/Set pairs for LoadCases, LoadCombinations, LoadPatterns work
-- [ ] All named set pairs (VirtualWork, Generalized, JointResponse, PlotFunction, Pushover, SectionCuts) return `ret_code == 0`
-- [ ] TableOutputOptions Get/Set works with 18 parameters
-- [ ] All 20 functions appear in `registry.json`
+- [x] All 20 functions execute without error in the consolidated wrapper
+- [x] Get/Set pairs for LoadCases, LoadCombinations, LoadPatterns work
+- [x] All named set pairs (VirtualWork, Generalized, JointResponse, PlotFunction, Pushover, SectionCuts) return `ret_code == 0`
+- [x] TableOutputOptions Get/Set works with 18 parameters
+- [x] All 20 functions appear in `registry.json`
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add Display Selection consolidated wrapper (20 functions)`
