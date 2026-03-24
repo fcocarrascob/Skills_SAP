@@ -760,8 +760,8 @@ Todo el código generado debe seguir el estilo de `scripts/example_1001_simple_b
 
 #### Step 4: Reescribir `copilot-instructions.md` como router ligero
 
-- [ ] Reemplazar el contenido completo de `.github/copilot-instructions.md` con el siguiente:
-- [ ] Copiar y pegar el código siguiente en `.github/copilot-instructions.md`:
+- [x] Reemplazar el contenido completo de `.github/copilot-instructions.md` con el siguiente:
+- [x] Copiar y pegar el código siguiente en `.github/copilot-instructions.md`:
 
 ```markdown
 # SAP2000 API Skill — Instrucciones de Copilot
@@ -834,13 +834,13 @@ El servidor MCP se autoconfigura via `.vscode/mcp.json`:
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] `copilot-instructions.md` es un router ligero (~70 líneas)
-- [ ] Contiene mapa de documentación con todos los archivos relevantes
-- [ ] Documenta la configuración MCP (`.vscode/mcp.json`)
-- [ ] Explica cuándo usar el agente vs la skill
-- [ ] Lista requisitos del sistema
-- [ ] Todo en español
-- [ ] Un nuevo usuario puede leer este archivo y entender qué es el workspace, dónde buscar info, y cómo empezar
+- [x] `copilot-instructions.md` es un router ligero (~70 líneas)
+- [x] Contiene mapa de documentación con todos los archivos relevantes
+- [x] Documenta la configuración MCP (`.vscode/mcp.json`)
+- [x] Explica cuándo usar el agente vs la skill
+- [x] Lista requisitos del sistema
+- [x] Todo en español
+- [x] Un nuevo usuario puede leer este archivo y entender qué es el workspace, dónde buscar info, y cómo empezar
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

@@ -1,77 +1,67 @@
-# Copilot Instructions
+﻿# SAP2000 API Skill — Instrucciones de Copilot
 
-## SAP2000 API Skill
+## ¿Qué es este workspace?
 
-This workspace contains a **SAP2000 API skill** (`sap2000-api`) that enables
-Copilot to create, execute, and verify SAP2000 scripts via a local COM bridge.
+Framework para automatizar SAP2000 mediante scripts Python ejecutados a través
+de un MCP bridge local (COM). Permite generar modelos estructurales, asignar
+cargas, ejecutar análisis y extraer resultados de forma programática.
 
-### When to use
+## Mapa de Documentación
 
-Use the `sap2000-api` skill for ANY task involving:
-- SAP2000 modeling, automation, or scripting
-- Creating structural models (frames, areas, joints)
-- Assigning loads (dead, live, seismic, wind)
-- Running structural analysis
-- Extracting analysis or design results
-- Debugging SAP2000 API errors
+| Documento | Para qué |
+|-----------|----------|
+| `.github/agents/sap2000-scripter.agent.md` | Agente con workflow completo (usa `@sap2000-scripter`) |
+| `.github/skills/sap2000-api/SKILL.md` | Referencia técnica API (convenciones, templates, registry) |
+| `.github/skills/sap2000-api/references/api-patterns.md` | Patrones detallados de operaciones comunes |
+| `.github/skills/sap2000-api/references/enum-reference.md` | Enumeraciones completas (eUnits, eMatType, etc.) |
+| `.github/skills/sap2000-api/references/common-workflows.md` | Workflows paso a paso para tareas típicas |
+| `.github/skills/sap2000-api/references/script-templates.md` | Templates paramétricos (grid, circular, placa) |
+| `.github/skills/sap2000-api/references/gui-generation.md` | Guía de generación de GUI standalone (PySide6) |
+| `scripts/wrappers/` | Funciones verificadas (fuente de verdad para firmas) |
+| `scripts/templates/` | Templates base para backend y GUI standalone |
+| `scripts/registry.json` | Registry de funciones verificadas |
 
-### SAP2000 Scripter Agent
+## Configuración MCP
 
-For **interactive script generation**, use the **SAP2000 Scripter** custom agent 
-(available in the agents dropdown). This agent specializes in:
+El servidor MCP se autoconfigura via `.vscode/mcp.json`:
+- **Python venv:** `.venv/Scripts/python.exe`
+- **Script:** `mcp_server/server.py`
+- **Protocolo:** stdio (auto-start al invocar herramientas)
+- **Tools expuestos:** 12 (connect, disconnect, get_model_info, execute_sap_function,
+  run_sap_script, list_scripts, load_script, search_api_docs, list_api_categories,
+  query_function_registry, register_verified_function, list_registry_categories)
 
-- Asking clarifying questions before generating scripts
-- Searching for verified functions and wrappers
-- Generating clean, parametric scripts following established conventions
-- Executing scripts and verifying results
-- Saving successful scripts to the library
+## Cuándo usar qué
 
-**When to use the agent:**
-- User asks to "generate a script" for a specific SAP2000 model
-- User describes a structural element in natural language (e.g., "create a 
-  parametric plate with holes")
-- User needs step-by-step guidance through the scripting process
+### Agente SAP2000 Scripter (`@sap2000-scripter`)
 
-**How to invoke:** Select "SAP2000 Scripter" from the agents dropdown in Chat, or 
-mention `@sap2000-scripter` in your prompt
+**Usar para:**
+- Generar scripts de SAP2000 (marcos, áreas, análisis)
+- Automatización estructural completa
+- Workflow: research → código → ejecución → verificación → guardado
 
-### Available MCP tools
+**Capacidades:**
+- Research automático para scripts complejos (via subagent Explore)
+- Consulta inteligente al registry de funciones verificadas
+- Generación iterativa con testing incremental
+- Oferta de GUI standalone al finalizar
 
-The `sap2000` MCP server provides these tools:
+### Skill sap2000-api (attachment)
 
-| Tool | Purpose |
-|------|---------|
-| `connect_sap2000` | Connect to a local SAP2000 instance |
-| `disconnect_sap2000` | Disconnect and release COM resources |
-| `get_model_info` | Check connection status and model summary |
-| `execute_sap_function` | Execute a single API function by dot-path |
-| `run_sap_script` | Execute a full Python script in sandbox |
-| `list_scripts` | Browse saved scripts in the library |
-| `load_script` | Load a saved script for modification |
-| `search_api_docs` | Search API documentation for functions |
-| `list_api_categories` | List API documentation categories |
-| `query_function_registry` | Query verified functions by path, category, or keyword |
-| `register_verified_function` | Register or update a verified API function |
-| `list_registry_categories` | List categories with registered/verified counts |
+**Usar para:**
+- Consultas rápidas sobre convenciones API (ByRef, return codes)
+- Patrones de código específicos
+- Referencia de enumeraciones y jerarquía de objetos
 
-### Requirements
+## Requisitos del Sistema
 
-- Windows OS (SAP2000 only runs on Windows)
+- Windows OS (SAP2000 solo corre en Windows)
 - Python 3.10+
-- SAP2000 installed locally
-- Python packages: `comtypes`, `mcp[cli]`
+- SAP2000 instalado localmente
+- Paquetes: `comtypes`, `mcp[cli]` (ver `mcp_server/requirements.txt`)
 
-### GUI Standalone Generation
+## Quick Start
 
-The agent can also generate **standalone GUIs** (PySide6 + direct COM) from
-verified scripts. These GUIs do NOT depend on the MCP server.
-
-**When to offer:**
-- After a script has been successfully verified and saved
-- When the user asks for a "GUI", "standalone app", or "desktop tool"
-
-**Structure:** `scripts/{nombre}/gui_{nombre}.py` + `backend_{nombre}.py`
-
-**Templates:** See `scripts/templates/` for base templates.
-
-**Workflow:** See Phase 6 in `plans/workflow-script-creation.md`.
+1. Activar venv: `.venv/Scripts/Activate.ps1`
+2. Invocar agente: `@sap2000-scripter genera una viga simple con carga muerta`
+3. El agente maneja el resto (conexión, registry, generación, ejecución)
