@@ -348,7 +348,7 @@ result["status"] = "verified"
 
 #### Step 2: Core Array R/W Wrappers (GetTableForEditingArray, SetTableForEditingArray, GetTableForDisplayArray, ApplyEditedTables, CancelTableEditing)
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingArray.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForEditingArray.py`:
 
 ```python
 # ============================================================
@@ -442,7 +442,7 @@ result["sample_data"] = table_data[:20]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingArray.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_SetTableForEditingArray.py`:
 
 ```python
 # ============================================================
@@ -528,7 +528,7 @@ result["num_records"] = num_records
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_ApplyEditedTables.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_ApplyEditedTables.py`:
 
 ```python
 # ============================================================
@@ -623,7 +623,7 @@ result["import_log_length"] = len(import_log) if import_log else 0
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_CancelTableEditing.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_CancelTableEditing.py`:
 
 ```python
 # ============================================================
@@ -701,7 +701,7 @@ result["cancel_ret_code"] = ret
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayArray.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_GetTableForDisplayArray.py`:
 
 ```python
 # ============================================================
@@ -787,8 +787,8 @@ result["sample_data"] = table_data[:20]
 result["status"] = "verified"
 ```
 
-- [ ] Execute each wrapper via `run_sap_script` and verify
-- [ ] Register 5 functions in `registry.json` via `register_verified_function`:
+- [x] Execute each wrapper via `run_sap_script` and verify
+- [x] Register 5 functions in `registry.json` via `register_verified_function`:
   - `SapModel.DatabaseTables.GetTableForEditingArray`
   - `SapModel.DatabaseTables.SetTableForEditingArray`
   - `SapModel.DatabaseTables.GetTableForDisplayArray`
@@ -796,12 +796,12 @@ result["status"] = "verified"
   - `SapModel.DatabaseTables.CancelTableEditing`
 
 ##### Step 2 Verification Checklist
-- [ ] `GetTableForEditingArray` returns data with field_keys and table_data
-- [ ] `SetTableForEditingArray` accepts round-trip data without error
-- [ ] `ApplyEditedTables` completes with 0 fatal errors
-- [ ] `CancelTableEditing` clears pending edits
-- [ ] `GetTableForDisplayArray` reads display data successfully
-- [ ] All 5 functions registered in `registry.json`
+- [x] `GetTableForEditingArray` returns data with field_keys and table_data
+- [x] `SetTableForEditingArray` accepts round-trip data without error
+- [x] `ApplyEditedTables` completes with 0 fatal errors
+- [x] `CancelTableEditing` clears pending edits
+- [x] `GetTableForDisplayArray` reads display data successfully
+- [x] All 5 functions registered in `registry.json`
 
 #### Step 2 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add core array R/W wrappers (Get/Set/Apply/Cancel/Display)`
