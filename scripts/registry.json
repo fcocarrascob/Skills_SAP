@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-24T14:43:30.945490+00:00",
-      "verification_count": 50,
+      "last_verified": "2026-03-24T14:53:31.874390+00:00",
+      "verification_count": 51,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -23,8 +23,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-24T14:43:30.970648+00:00",
-      "verification_count": 43,
+      "last_verified": "2026-03-24T14:53:31.885914+00:00",
+      "verification_count": 44,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -69,8 +69,8 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-24T14:43:30.976159+00:00",
-      "verification_count": 29,
+      "last_verified": "2026-03-24T14:53:31.891570+00:00",
+      "verification_count": 30,
       "wrapper_script": "func_PropFrame_SetRectangle",
       "used_in_scripts": [],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
@@ -125,8 +125,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-24T14:43:30.936631+00:00",
-      "verification_count": 49,
+      "last_verified": "2026-03-24T14:53:31.701504+00:00",
+      "verification_count": 50,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -141,8 +141,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-24T14:43:30.960804+00:00",
-      "verification_count": 47,
+      "last_verified": "2026-03-24T14:53:31.879898+00:00",
+      "verification_count": 48,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -239,8 +239,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-03-24T14:43:30.981151+00:00",
-      "verification_count": 28,
+      "last_verified": "2026-03-24T14:53:31.896787+00:00",
+      "verification_count": 29,
       "wrapper_script": "func_FrameObj_AddByCoord",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -849,8 +849,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-24T14:10:14.018254+00:00",
-      "last_verified": "2026-03-24T14:29:30.614463+00:00",
-      "verification_count": 18,
+      "last_verified": "2026-03-24T14:53:31.901305+00:00",
+      "verification_count": 19,
       "wrapper_script": "func_DatabaseTables_GetAllTables",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1346,11 +1346,25 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": "18 positional args. Returns int or (int,) — use: ret if isinstance(ret, int) else ret[-1]. Part of consolidated Display Selection wrapper."
+    },
+    "SapModel.DatabaseTables.ShowTablesInExcel": {
+      "category": "Database_Tables",
+      "description": "Export specified tables directly to Excel. Excel must be installed. Returns 0 on success.",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-24T14:53:31.907334+00:00",
+      "last_verified": "2026-03-24T14:53:46.635077+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_DatabaseTables_ShowTablesInExcel",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 95,
-    "total_verified": 95,
-    "last_updated": "2026-03-24T14:45:33.421740+00:00"
+    "total_registered": 96,
+    "total_verified": 96,
+    "last_updated": "2026-03-24T14:53:46.635077+00:00"
   }
 }

@@ -1619,7 +1619,7 @@ SapModel.DatabaseTables.SetTableOutputOptionsForDisplay
 
 #### Step 5: ShowTablesInExcel Wrapper + Registry Validation
 
-- [ ] Create file `scripts/wrappers/func_DatabaseTables_ShowTablesInExcel.py`:
+- [x] Create file `scripts/wrappers/func_DatabaseTables_ShowTablesInExcel.py`:
 
 ```python
 # ============================================================
@@ -1682,14 +1682,14 @@ result["tables_exported"] = test_keys
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` (note: Excel will open — this is visual verification)
-- [ ] Register `SapModel.DatabaseTables.ShowTablesInExcel` in `registry.json`
-- [ ] Validate total registry count: run `query_function_registry(category="Database_Tables")` and confirm **37 functions** are returned
+- [x] Execute via `run_sap_script` (note: Excel will open — this is visual verification)
+- [x] Register `SapModel.DatabaseTables.ShowTablesInExcel` in `registry.json`
+- [x] Validate total registry count: run `query_function_registry(category="Database_Tables")` and confirm **37 functions** are returned
 
 ##### Step 5 Verification Checklist
-- [ ] `ShowTablesInExcel` opens Excel with requested tables
-- [ ] `query_function_registry(category="Database_Tables")` returns 37 entries
-- [ ] All wrapper filenames match the expected naming convention
+- [x] `ShowTablesInExcel` opens Excel with requested tables
+- [x] `query_function_registry(category="Database_Tables")` returns 37 entries
+- [x] All wrapper filenames match the expected naming convention
 
 #### Step 5 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add ShowTablesInExcel wrapper + complete registry (37 functions)`
