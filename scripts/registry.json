@@ -7,10 +7,12 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-23T13:35:59.995184+00:00",
-      "verification_count": 31,
+      "last_verified": "2026-03-24T02:49:38.918500+00:00",
+      "verification_count": 33,
       "wrapper_script": "func_File_NewBlank",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs."
@@ -21,10 +23,12 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-23T13:36:00.007081+00:00",
-      "verification_count": 24,
+      "last_verified": "2026-03-24T02:49:38.923501+00:00",
+      "verification_count": 26,
       "wrapper_script": "func_PropMaterial_SetMaterial",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs. Minimum required: Name, MatType."
@@ -35,10 +39,12 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-23T13:36:00.012010+00:00",
-      "verification_count": 23,
+      "last_verified": "2026-03-24T02:49:38.927521+00:00",
+      "verification_count": 25,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
       "known_errors": [],
       "notes": "Prerequisites: material must exist via SetMaterial. Returns ret_code (0=success)."
@@ -119,10 +125,12 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-23T13:35:59.990721+00:00",
-      "verification_count": 30,
+      "last_verified": "2026-03-24T02:49:38.913460+00:00",
+      "verification_count": 32,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -269,14 +277,16 @@
     },
     "SapModel.PropArea.SetShell_1": {
       "category": "PropArea",
-      "description": "Create a shell (area) section property with uniform thickness",
+      "description": "Define una propiedad de área tipo shell. ShellType: 1=thin, 2=thick, 3=plate-thin, 4=plate-thick, 5=membrane, 6=layered. Retorna ret_code (0=OK).",
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:36.155842+00:00",
-      "last_verified": "2026-03-23T13:36:00.019003+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-24T02:50:52.705812+00:00",
+      "verification_count": 19,
       "wrapper_script": "func_PropArea_SetShell_1",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -296,15 +306,17 @@
       "notes": ""
     },
     "SapModel.AreaObj.AddByCoord": {
-      "category": "Object_Model",
-      "description": "Create an area element from corner coordinates",
+      "category": "AreaObj",
+      "description": "Crea un objeto de área (shell) definiendo sus vértices por coordenadas. Acepta triángulos (3 pts) o quads (4 pts). Retorna [Name_out, ret_code].",
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:51.092407+00:00",
-      "last_verified": "2026-03-23T13:36:00.025472+00:00",
-      "verification_count": 15,
+      "last_verified": "2026-03-24T02:51:02.062125+00:00",
+      "verification_count": 18,
       "wrapper_script": "func_AreaObj_AddByCoord",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -693,10 +705,12 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.743029+00:00",
-      "last_verified": "2026-03-23T13:36:00.037548+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-03-24T02:49:38.938538+00:00",
+      "verification_count": 10,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -707,10 +721,12 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:27:54.993896+00:00",
-      "last_verified": "2026-03-23T13:36:00.031478+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-03-24T02:49:38.942539+00:00",
+      "verification_count": 12,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "domo_elipsoidal_parametrico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
@@ -831,6 +847,6 @@
   "summary": {
     "total_registered": 59,
     "total_verified": 59,
-    "last_updated": "2026-03-23T13:36:00.037592+00:00"
+    "last_updated": "2026-03-24T02:51:02.062125+00:00"
   }
 }

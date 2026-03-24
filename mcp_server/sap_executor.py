@@ -23,6 +23,7 @@ import logging
 import ast
 import os as _os
 import tempfile as _tempfile
+import builtins as _builtins
 
 from sap_bridge import bridge
 from script_library import save_script
@@ -161,7 +162,7 @@ def _safe_import(name, globals_=None, locals_=None, fromlist=(), level=0):
             f"Module '{name}' is not available in the SAP2000 script sandbox. "
             f"Allowed: {', '.join(sorted(ALLOWED_MODULES))}"
         )
-    return __builtins__.__import__(name, globals_, locals_, fromlist, level)
+    return _builtins.__import__(name, globals_, locals_, fromlist, level)
 
 
 def _safe_open(*args, **kwargs):
