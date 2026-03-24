@@ -2216,7 +2216,7 @@ The backend's `read_table()` converts this to a list of dicts for easy manipulat
 
 #### Step 7: PySide6 GUI (gui_database_tables.py)
 
-- [ ] Create file `scripts/database_tables/gui_database_tables.py`:
+- [x] Create file `scripts/database_tables/gui_database_tables.py`:
 
 ```python
 """
@@ -2894,22 +2894,22 @@ if __name__ == "__main__":
     sys.exit(app.exec())
 ```
 
-- [ ] Test GUI: `python scripts/database_tables/gui_database_tables.py`
+- [x] Test GUI: `python scripts/database_tables/gui_database_tables.py`
 
 ##### Step 7 Verification Checklist
-- [ ] GUI opens without errors
-- [ ] Connect button attaches to running SAP2000
-- [ ] Table list populates in left panel
-- [ ] Filter input narrows the table list
-- [ ] Clicking a table loads data in the right panel
-- [ ] Column headers show field keys
-- [ ] Lock indicator shows 🔒 when model is locked (after running analysis)
-- [ ] Lock indicator shows 🔓 when model is unlocked
-- [ ] When unlocked: double-click enables cell editing, Apply Changes is active
-- [ ] When locked: cells are read-only, Apply Changes is grayed out with tooltip
-- [ ] Export CSV produces a valid file
-- [ ] Import CSV (when unlocked) imports data and refreshes table
-- [ ] Disconnect button works and resets UI
+- [x] GUI opens without errors
+- [x] Connect button attaches to running SAP2000
+- [x] Table list populates in left panel
+- [x] Filter input narrows the table list
+- [x] Clicking a table loads data in the right panel
+- [x] Column headers show field keys
+- [x] Lock indicator shows 🔒 when model is locked (after running analysis)
+- [x] Lock indicator shows 🔓 when model is unlocked
+- [x] When unlocked: double-click enables cell editing, Apply Changes is active
+- [x] When locked: cells are read-only, Apply Changes is grayed out with tooltip
+- [x] Export CSV produces a valid file
+- [x] Import CSV (when unlocked) imports data and refreshes table
+- [x] Disconnect button works and resets UI
 
 #### Step 7 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add PySide6 GUI with conditional editing and lock state monitoring`
