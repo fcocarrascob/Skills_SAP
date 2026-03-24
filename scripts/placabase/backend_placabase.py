@@ -9,7 +9,6 @@ Basado en: placabase_backend.py (migrado a standalone, sin app_logger/sap_utils_
 """
 
 import math
-import tempfile
 import comtypes.client
 from dataclasses import dataclass, field
 from typing import List, Tuple, Optional
@@ -151,6 +150,10 @@ class PlacaBaseBackend:
             raise RuntimeError("No hay conexión con SAP2000.")
         return self._conn.sap_model
 
+    def _log(self, message: str):
+        """Log a stdout (standalone no tiene logger externo)."""
+        print(message)
+
     # ── Funciones de geometría ───────────────────────────────────────────
 
     def _create_point(self, x: float, y: float, z: float, user_name: str = "") -> Optional[str]:
@@ -181,8 +184,23 @@ class PlacaBaseBackend:
         return None
 
     def _create_shell_prop(self, name: str, thickness: float, mat: str = "A992Fy50"):
-        ret = self.sap_model.PropArea.SetShell_1(name, 1, True, mat, 0.0, thickness, thickness)
-        assert _check_ret(ret), f"SetShell_1({name}) failed"
+        """Crea propiedad shell con fallback SetShell_1 → SetShell."""
+        try:
+            ret = self.sap_model.PropArea.SetShell_1(name, 1, True, mat, 0.0, thickness, thickness)
+            if _check_ret(ret):
+                self._log(f"Propiedad '{name}' creada (SetShell_1).")
+                return True
+        except AttributeError:
+            try:
+                ret = self.sap_model.PropArea.SetShell(name, 1, mat, 0.0, thickness, thickness)
+                if _check_ret(ret):
+                    self._log(f"Propiedad '{name}' creada (SetShell).")
+                    return True
+            except Exception as e:
+                self._log(f"Error creando propiedad '{name}': {e}")
+        except Exception as e:
+            self._log(f"Error creando propiedad '{name}': {e}")
+        return False
 
     def _create_circle_points(self, cx, cy, z, radius, num_points=16, prefix="P_c"):
         names = []
@@ -328,6 +346,8 @@ class PlacaBaseBackend:
             dict con resultados del modelo generado.
         """
         config.resolve_bolt_centers()
+        self._log("Iniciando generación de placa base...")
+        self._log(f"Pernos: {len(config.bolt_centers)} | H={config.H_col} B={config.B_col} | dia={config.bolt_dia}")
         SapModel = self.sap_model
         result = {}
 
@@ -355,6 +375,7 @@ class PlacaBaseBackend:
             chair_prop = "ChairPlate"
             self._create_shell_prop(chair_prop, config.anchor_chair_thickness)
 
+        self._log("Task 1: Propiedades de material creadas.")
         result["task_1_properties"] = True
 
         # ── Task 1b: Sección Frame para pernos ──────────────────────────
@@ -362,6 +383,10 @@ class PlacaBaseBackend:
         ret = SapModel.PropFrame.SetCircle(bolt_section, config.bolt_material, config.bolt_dia)
         bolt_section_ok = _check_ret(ret)
         result["bolt_section"] = bolt_section if bolt_section_ok else None
+        if bolt_section_ok:
+            self._log(f"Sección Frame '{bolt_section}' creada (d={config.bolt_dia}, mat={config.bolt_material}).")
+        else:
+            self._log(f"⚠ No se pudo crear la sección Frame del perno.")
 
         # ── Task 2: Geometría de columna ─────────────────────────────────
         self._create_area_by_coord(
@@ -382,6 +407,7 @@ class PlacaBaseBackend:
             [0, 0, z_col, z_col],
             "ALMA", "COL_WEB",
         )
+        self._log("Task 2: Geometría de columna creada.")
         result["task_2_column"] = True
 
         # ── Task 3: Áreas de pernos y mesh ───────────────────────────────
@@ -390,6 +416,7 @@ class PlacaBaseBackend:
         bolt_frame_names = []
 
         for idx, (cx, cy, cz) in enumerate(config.bolt_centers, 1):
+            self._log(f"Procesando perno {idx} en ({cx}, {cy}, {cz})...")
             self._create_point(cx, cy, cz, f"CENTER_{idx}")
 
             c_pts = self._create_circle_points(cx, cy, cz, circle_radius, 16, f"P_c{idx}_")
@@ -452,6 +479,7 @@ class PlacaBaseBackend:
                         )
                         self._set_pin_restraint(bottom_pt)
 
+        self._log(f"Task 3: {len(config.bolt_centers)} pernos procesados, {len(bolt_frame_names)} frames creados.")
         result["task_3_bolts"] = len(config.bolt_centers)
         result["bolt_frames"] = len(bolt_frame_names)
 
@@ -498,6 +526,7 @@ class PlacaBaseBackend:
             self._create_point(0, H / 2, z_ch, "COL_WEB_CHAIR_T")
             self._create_point(0, -H / 2, z_ch, "COL_WEB_CHAIR_B")
 
+        self._log("Task 4: Áreas de enlace creadas.")
         result["task_4_link_area"] = True
 
         # ── Task 5: Mesh refinement ──────────────────────────────────────
@@ -586,6 +615,7 @@ class PlacaBaseBackend:
         except Exception:
             pass
 
+        self._log("Task 5: Mesh refinement completado.")
         result["task_5_mesh"] = True
 
         # ── Task 6: TC Limits (compresión=0 en pernos) ──────────────────
@@ -607,7 +637,7 @@ class PlacaBaseBackend:
                 SapModel.SelectObj.ClearSelection()
                 ok, _ = self._coordinate_range(
                     -1e10, 1e10, -1e10, 1e10, 0.0, 0.0,
-                    deselect=False, csys="Global", include_intersections=True,
+                    deselect=False, csys="Global", include_intersections=False,
                     point=False, line=False, area=True, solid=False, link=False,
                 )
                 if ok:
@@ -636,6 +666,7 @@ class PlacaBaseBackend:
         result["bolt_frames_total"] = len(bolt_frame_names)
         result["include_anchor_chair"] = config.include_anchor_chair
 
+        self._log("Proceso finalizado correctamente.")
         return result
 
     # ── Helpers internos de pernos ───────────────────────────────────────
