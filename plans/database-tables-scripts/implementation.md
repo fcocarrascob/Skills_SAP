@@ -1698,7 +1698,7 @@ result["status"] = "verified"
 
 #### Step 6: Backend Class (DatabaseTablesBackend)
 
-- [ ] Create file `scripts/database_tables/backend_database_tables.py`:
+- [x] Create file `scripts/database_tables/backend_database_tables.py`:
 
 ```python
 """
@@ -2113,7 +2113,7 @@ if __name__ == "__main__":
             conn.disconnect()
 ```
 
-- [ ] Create file `scripts/database_tables/README.md`:
+- [x] Create file `scripts/database_tables/README.md`:
 
 ```markdown
 # Database Tables — SAP2000 Module
@@ -2197,17 +2197,17 @@ The backend's `read_table()` converts this to a list of dicts for easy manipulat
 | 3 | Interactive import when model is unlocked or locked |
 ```
 
-- [ ] Test standalone: `python scripts/database_tables/backend_database_tables.py` (requires SAP2000 running)
+- [x] Test standalone: `python scripts/database_tables/backend_database_tables.py` (requires SAP2000 running)
 
 ##### Step 6 Verification Checklist
-- [ ] `list_tables()` returns tables with metadata
-- [ ] `read_table()` returns structured rows from a known table
-- [ ] `get_table_fields()` returns field metadata
-- [ ] `export_csv()` creates a valid CSV file
-- [ ] `export_csv_string()` returns non-empty CSV content
-- [ ] `export_xml_string()` returns non-empty XML content
-- [ ] `is_model_locked()` returns correct boolean
-- [ ] Standalone test (`__main__`) runs and prints results
+- [x] `list_tables()` returns tables with metadata
+- [x] `read_table()` returns structured rows from a known table
+- [x] `get_table_fields()` returns field metadata
+- [x] `export_csv()` creates a valid CSV file
+- [x] `export_csv_string()` returns non-empty CSV content
+- [x] `export_xml_string()` returns non-empty XML content
+- [x] `is_model_locked()` returns correct boolean
+- [x] Standalone test (`__main__`) runs and prints results
 
 #### Step 6 STOP & COMMIT
 **STOP & COMMIT:** `feat(db-tables): add DatabaseTablesBackend class with high-level API`
