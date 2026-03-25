@@ -1,2 +1,4 @@
 mcp[cli]>=1.0.0
 comtypes>=1.4.0
+pyside6
+matplotlib
