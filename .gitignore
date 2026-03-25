@@ -1,4 +1,26 @@
-.venv
+# Python
+.venv/
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
+dist/
+build/
+
+# SAP2000
+*.sdb
+*.sdb.$2k
+*.$2k
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+
+# Temporales
+*.tmp
+*.bak
