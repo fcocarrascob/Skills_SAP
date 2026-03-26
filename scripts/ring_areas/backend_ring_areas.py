@@ -125,19 +125,7 @@ class RingAreasBackend:
         SapModel = self.sap_model
         result = {}
 
-        # ── Task 1: Inicializar modelo ───────────────────────────────────
-        ret = SapModel.InitializeNewModel()
-        assert ret == 0, f"InitializeNewModel failed: {ret}"
-
-        ret = SapModel.File.NewBlank()
-        assert ret == 0, f"NewBlank failed: {ret}"
-
-        ret = SapModel.SetPresentUnits(6)  # kN_m_C
-        assert ret == 0, f"SetPresentUnits failed: {ret}"
-
-        result["task_1_init"] = True
-
-        # ── Task 2: Definir material ─────────────────────────────────────
+        # ── Task 1: Definir material ─────────────────────────────────────
         ret = SapModel.PropMaterial.SetMaterial(config.mat_name, 2)  # 2 = Concrete
         assert ret == 0, f"SetMaterial failed: {ret}"
 
@@ -146,9 +134,9 @@ class RingAreasBackend:
         )
         assert ret == 0, f"SetMPIsotropic failed: {ret}"
 
-        result["task_2_material"] = config.mat_name
+        result["task_1_material"] = config.mat_name
 
-        # ── Task 3: Definir propiedades de área (shell) ──────────────────
+        # ── Task 2: Definir propiedades de área (shell) ──────────────────
         ret = SapModel.PropArea.SetShell_1(
             "SHELL_T1", 1, True, config.mat_name, 0, config.t1, config.t1
         )
@@ -159,9 +147,9 @@ class RingAreasBackend:
         )
         assert ret == 0, f"SetShell_1(SHELL_T2) failed: {ret}"
 
-        result["task_3_sections"] = {"SHELL_T1": config.t1, "SHELL_T2": config.t2}
+        result["task_2_sections"] = {"SHELL_T1": config.t1, "SHELL_T2": config.t2}
 
-        # ── Task 4: Generar geometría de anillos concéntricos ────────────
+        # ── Task 3: Generar geometría de anillos concéntricos ────────────
         zones = [
             (config.r_inner, config.r_mid1,  "SHELL_T1", "ZONA1_interior"),
             (config.r_mid1,  config.r_mid2,  "SHELL_T2", "ZONA2_intermedia"),
@@ -189,17 +177,12 @@ class RingAreasBackend:
                 assert raw[-1] == 0, f"AddByCoord({label}[{i}]) failed: {raw[-1]}"
                 area_count[label] += 1
 
-        result["task_4_geometry"] = area_count
+        result["task_3_geometry"] = area_count
         result["total_areas"] = sum(area_count.values())
 
-        # ── Task 5: Guardar modelo y refrescar vista ─────────────────────
-        save_path = tempfile.gettempdir() + r"\ring_areas_model.sdb"
-        ret = SapModel.File.Save(save_path)
-        assert ret == 0, f"File.Save failed: {ret}"
+        # ── Task 4: refrescar vista ─────────────────────
 
         SapModel.View.RefreshView(0, False)
-        result["task_5_saved"] = True
-        result["save_path"] = save_path
 
         # ── Resumen final ────────────────────────────────────────────────
         result["success"] = True
