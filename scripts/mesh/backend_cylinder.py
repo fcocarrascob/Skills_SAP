@@ -96,6 +96,12 @@ class CylinderConfig:
     center_y: float = 0.0
     base_z: float = 0.0
 
+    # Plano de la sección circular (la altura se extrude en la dirección perpendicular)
+    #   "XY" → sección en XY, extrude en +Z  (cilindro vertical, comportamiento por defecto)
+    #   "XZ" → sección en XZ, extrude en +Y
+    #   "YZ" → sección en YZ, extrude en +X
+    plane: str = "XY"
+
     # Propiedad de área (nombre existente en el modelo)
     prop_name: str = "Default"
 
@@ -139,28 +145,45 @@ class CylinderBackend:
         result: dict = {}
 
         # ── Task 1: Geometría del cilindro ───────────────────────────────
-        n  = config.n_radial
-        nv = config.n_vert
-        dz = config.height / nv
+        n   = config.n_radial
+        nv  = config.n_vert
+        dz  = config.height / nv
+        cx  = config.center_x
+        cy  = config.center_y
+        bz  = config.base_z
+        R   = config.radius
+        plane = config.plane.upper()
         area_count = 0
 
+        def _pt(cos_a: float, sin_a: float, level: float) -> tuple:
+            """Convierte coordenadas locales (u,v,level) al sistema global."""
+            if plane == "XY":
+                return cx + R * cos_a, cy + R * sin_a, level
+            elif plane == "XZ":
+                return cx + R * cos_a, level, bz + R * sin_a
+            else:  # YZ
+                return level, cy + R * cos_a, bz + R * sin_a
+
         for j in range(nv):
-            z0 = config.base_z + j * dz
-            z1 = z0 + dz
+            lv0 = bz + j * dz       if plane == "XY" else \
+                  cy + j * dz       if plane == "XZ" else \
+                  cx + j * dz
+            lv1 = lv0 + dz
             for i in range(n):
                 i_next = (i + 1) % n
-                a0 = 2.0 * math.pi * i / n
-                a1 = 2.0 * math.pi * i_next / n
+                a0  = 2.0 * math.pi * i      / n
+                a1  = 2.0 * math.pi * i_next / n
+                c0, s0 = math.cos(a0), math.sin(a0)
+                c1, s1 = math.cos(a1), math.sin(a1)
 
-                xs = [config.center_x + config.radius * math.cos(a0),
-                      config.center_x + config.radius * math.cos(a1),
-                      config.center_x + config.radius * math.cos(a1),
-                      config.center_x + config.radius * math.cos(a0)]
-                ys = [config.center_y + config.radius * math.sin(a0),
-                      config.center_y + config.radius * math.sin(a1),
-                      config.center_y + config.radius * math.sin(a1),
-                      config.center_y + config.radius * math.sin(a0)]
-                zs = [z0, z0, z1, z1]
+                p00 = _pt(c0, s0, lv0)
+                p10 = _pt(c1, s1, lv0)
+                p11 = _pt(c1, s1, lv1)
+                p01 = _pt(c0, s0, lv1)
+
+                xs = [p00[0], p10[0], p11[0], p01[0]]
+                ys = [p00[1], p10[1], p11[1], p01[1]]
+                zs = [p00[2], p10[2], p11[2], p01[2]]
 
                 ret = SapModel.AreaObj.AddByCoord(
                     4, xs, ys, zs, "", config.prop_name, "", "Global"
@@ -181,6 +204,7 @@ class CylinderBackend:
         result["n_radial"]  = config.n_radial
         result["n_vert"]    = config.n_vert
         result["center"]    = (config.center_x, config.center_y, config.base_z)
+        result["plane"]     = config.plane
         result["prop_name"] = config.prop_name
         return result
 
@@ -200,6 +224,7 @@ if __name__ == "__main__":
             radius=5.0, height=10.0,
             n_radial=36, n_vert=10,
             center_x=0.0, center_y=0.0, base_z=0.0,
+            plane="XY",
             prop_name="Default",
         )
         try:

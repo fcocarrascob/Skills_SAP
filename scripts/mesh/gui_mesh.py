@@ -31,7 +31,7 @@ import json
 import math
 
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtGui import QFont, QPainter, QPen
+from PySide6.QtGui import QFont, QColor, QBrush, QPainter, QPen
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -227,6 +227,11 @@ class PreviewWidget(QWidget):
         self.data = {"ri": r_inner, "ro": r_outer, "n": n_segs}
         self.update()
 
+    def update_cylinder(self, radius, height, n_radial, n_vert):
+        self.mode = "cylinder"
+        self.data = {"R": radius, "H": height, "nr": n_radial, "nv": n_vert}
+        self.update()
+
     # ── Cotas ─────────────────────────────────────────────────────────────
 
     def _draw_dimension(self, painter, p1, p2, text, offset=20):
@@ -279,6 +284,8 @@ class PreviewWidget(QWidget):
             self._draw_hole(painter, cx, cy, w, h)
         elif self.mode == "ring":
             self._draw_ring(painter, cx, cy, w, h)
+        elif self.mode == "cylinder":
+            self._draw_cylinder(painter, cx, cy, w, h)
 
     # ── Modo rectangular ──────────────────────────────────────────────────
 
@@ -449,6 +456,81 @@ class PreviewWidget(QWidget):
         self._draw_dimension(painter,
                              (cx, cy), (cx + ro_px, cy),
                              f"Rᵒ={r_outer:.3g}", offset=18)
+
+    # ── Modo cilindro (franja desarrollada) ──────────────────────────────
+
+    def _draw_cylinder(self, painter, cx, cy, w_px, h_px):
+        """Previsualiza una franja del cilindro (superficie desarrollada).
+
+        Muestra una grilla de elementos con cotas de arco y altura,
+        más un indicador de relación de aspecto AR = arco/dz.
+        """
+        d = self.data
+        R  = d.get("R", 5.0)
+        H  = d.get("H", 10.0)
+        nr = max(int(d.get("nr", 36)), 3)
+        nv = max(int(d.get("nv", 1)), 1)
+        if R <= 0 or H <= 0:
+            return
+
+        arc_w  = 2.0 * math.pi * R / nr   # longitud de arco por segmento
+        dz     = H / nv                     # altura por división vertical
+        aspect = arc_w / dz if dz > 0 else 0.0
+
+        n_show_h = min(nr, 4)
+        n_show_v = min(nv, 5)
+
+        margin  = 55
+        avail_w = w_px - 2 * margin
+        avail_h = h_px - 2 * margin - 30
+        if avail_w <= 0 or avail_h <= 0 or arc_w <= 0 or dz <= 0:
+            return
+
+        scale  = min(avail_w / (n_show_h * arc_w), avail_h / (n_show_v * dz))
+        cell_w = arc_w * scale
+        cell_h = dz    * scale
+        grid_w = n_show_h * cell_w
+        grid_h = n_show_v * cell_h
+        x0     = cx - grid_w / 2
+        y0     = (h_px - 30 - grid_h) / 2
+
+        # ── Celdas rellenas ───────────────────────────────────────────────
+        painter.setBrush(QBrush(QColor(255, 200, 200, 180)))
+        painter.setPen(QPen(Qt.darkRed, 1))
+        for col in range(n_show_h):
+            for row in range(n_show_v):
+                painter.drawRect(x0 + col * cell_w, y0 + row * cell_h,
+                                 cell_w, cell_h)
+
+        # ── Borde exterior ────────────────────────────────────────────────
+        painter.setPen(QPen(Qt.blue, 2))
+        painter.setBrush(Qt.NoBrush)
+        painter.drawRect(x0, y0, grid_w, grid_h)
+
+        # ── Cota: ancho de arco (una celda, arriba) ───────────────────────
+        self._draw_dimension(painter,
+                             (x0, y0), (x0 + cell_w, y0),
+                             f"arco = {arc_w:.3g}", offset=-28)
+        # ── Cota: dz (una celda, izquierda) ──────────────────────────────
+        self._draw_dimension(painter,
+                             (x0, y0 + cell_h), (x0, y0),
+                             f"dz = {dz:.3g}", offset=-28)
+
+        # ── Indicador de relación de aspecto ──────────────────────────────
+        if 0.5 <= aspect <= 2.0:
+            ar_color = QColor(0, 140, 0)
+            ar_label = "✔"
+        elif 0.25 <= aspect <= 4.0:
+            ar_color = QColor(200, 120, 0)
+            ar_label = "⚠"
+        else:
+            ar_color = QColor(180, 0, 0)
+            ar_label = "✘"
+
+        painter.setPen(QPen(ar_color, 1))
+        ar_text = f"{ar_label}  AR = {aspect:.2f}   (arco = {arc_w:.3g}  ·  dz = {dz:.3g})"
+        painter.drawText(int(0), int(h_px - 28), int(w_px), int(24),
+                         Qt.AlignCenter, ar_text)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1205,6 +1287,12 @@ class CylinderTab(QWidget):
         root.setSpacing(10)
         root.setContentsMargins(10, 10, 10, 10)
 
+        # ── Columna izquierda (parámetros)  │  Preview ────────────────
+        _mid = QHBoxLayout()
+        _mid.setSpacing(10)
+        _params = QVBoxLayout()
+        _params.setSpacing(10)
+
         # ── Parámetros de geometría ──────────────────────────────────────
         grp_params = QGroupBox("Parámetros de Geometría")
         grid = QGridLayout(grp_params)
@@ -1223,7 +1311,7 @@ class CylinderTab(QWidget):
         lbl, self._n_vert = _field("Divisiones vert.:", "10", "Divisiones verticales")
         grid.addWidget(lbl, r, 2); grid.addWidget(self._n_vert, r, 3)
 
-        root.addWidget(grp_params)
+        _params.addWidget(grp_params)
 
         # ── Ubicación y Propiedades ───────────────────────────────────────
         grp_loc = QGroupBox("Ubicación y Propiedades")
@@ -1240,6 +1328,14 @@ class CylinderTab(QWidget):
 
         lbl, self._bz = _field("Base Z:", "0.0", "Coordenada Z de la base del cilindro")
         grid2.addWidget(lbl, r, 0); grid2.addWidget(self._bz, r, 1)
+
+        lbl = QLabel("Plano:")
+        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._plane = QComboBox()
+        self._plane.addItems(["", "XY", "XZ", "YZ"])
+        self._plane.setCurrentIndex(0)
+        self._plane.setToolTip("Plano de la sección circular (la altura se extrude perpendicularmente)")
+        grid2.addWidget(lbl, r, 2); grid2.addWidget(self._plane, r, 3)
         r += 1
 
         lbl_prop = QLabel("Propiedad de Área:")
@@ -1258,7 +1354,21 @@ class CylinderTab(QWidget):
         self._btn_get_coords.clicked.connect(self._on_get_coords)
         grid2.addWidget(self._btn_get_coords, r, 2, 1, 2)
 
-        root.addWidget(grp_loc)
+        _params.addWidget(grp_loc)
+        _params.addStretch()
+
+        # ── Preview ───────────────────────────────────────────────────────
+        self._preview = PreviewWidget()
+        _mid.addLayout(_params, 1)
+        _mid.addWidget(self._preview, 1)
+        root.addLayout(_mid)
+
+        # ── Señales de preview ────────────────────────────────────────────
+        self._radius.textChanged.connect(self._update_preview)
+        self._height.textChanged.connect(self._update_preview)
+        self._n_radial.textChanged.connect(self._update_preview)
+        self._n_vert.textChanged.connect(self._update_preview)
+        self._update_preview()
 
         self._btn_run = QPushButton("Generar Cilindro Vertical")
         self._btn_run.setFixedHeight(34)
@@ -1301,7 +1411,21 @@ class CylinderTab(QWidget):
         self._btn_run.setEnabled(not is_busy and self._conn.is_connected)
         self._btn_get_coords.setEnabled(not is_busy and self._conn.is_connected)
 
+    def _update_preview(self):
+        try:
+            self._preview.update_cylinder(
+                float(self._radius.text()),
+                float(self._height.text()),
+                int(self._n_radial.text()),
+                int(self._n_vert.text()),
+            )
+        except ValueError:
+            pass
+
     def _build_config(self) -> CylinderConfig:
+        plane = self._plane.currentText().strip()
+        if not plane:
+            raise ValueError("Debe seleccionar un Plano antes de generar el cilindro.")
         return CylinderConfig(
             radius=float(self._radius.text()),
             height=float(self._height.text()),
@@ -1310,6 +1434,7 @@ class CylinderTab(QWidget):
             center_x=float(self._cx.text()),
             center_y=float(self._cy.text()),
             base_z=float(self._bz.text()),
+            plane=plane,
             prop_name=self._prop.currentText().strip() or "Default",
         )
 
@@ -1320,6 +1445,7 @@ class CylinderTab(QWidget):
             f"  Altura       : {data.get('height', '?')} m",
             f"  n_radial     : {data.get('n_radial', '?')}",
             f"  n_vert       : {data.get('n_vert', '?')}",
+            f"  Plano        : {data.get('plane', '?')}",
             f"  Propiedad    : {data.get('prop_name', '?')}",
         ]
         return "\n".join(lines)
@@ -1344,6 +1470,7 @@ class CylinderTab(QWidget):
         if result.get("success"):
             self._log_append("✔ Cilindro generado correctamente")
             self._log_append(self._format_result(result))
+            self._plane.setCurrentIndex(0)
         else:
             self._log_append(f"✘ Error: {result.get('error', 'Error desconocido')}")
 
