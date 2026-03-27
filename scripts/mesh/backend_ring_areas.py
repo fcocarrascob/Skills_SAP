@@ -1,17 +1,19 @@
 """
 Backend — SAP2000 Circular Ring Area Generator (Standalone)
 ============================================================
-Genera un modelo de anillo circular (placa anular) con 3 zonas concéntricas
-de área (shell), separadas por radios intermedios.
+Genera un anillo circular (placa anular) discretizado con elementos shell,
+dividido en dos sub-anillos concéntricos (interior y exterior) con la misma
+propiedad de área. El radio medio se calcula automáticamente como el promedio
+de radio interior y radio exterior.
 
 Conexión: COM directo vía comtypes.client (sin MCP).
-Referencia de estilo: example_1001_simple_beam.py
+Referencia de estilo: backend_mesh_rect.py / backend_mesh_hole.py
 """
 
 import math
-import tempfile
 import comtypes.client
 from dataclasses import dataclass
+from typing import List
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -30,6 +32,14 @@ class SapConnection:
         return self.sap_model is not None
 
     def connect(self, attach_to_existing: bool = True) -> dict:
+        """Conecta a una instancia de SAP2000 en ejecución.
+
+        Args:
+            attach_to_existing: Si True, se conecta a la instancia ya abierta.
+
+        Returns:
+            dict con claves: connected, version, model_path, error (si falla).
+        """
         try:
             if attach_to_existing:
                 self.sap_object = comtypes.client.GetActiveObject(
@@ -51,9 +61,21 @@ class SapConnection:
             return {"connected": False, "error": str(exc)}
 
     def disconnect(self) -> dict:
+        """Libera la referencia COM (no cierra SAP2000)."""
         self.sap_model = None
         self.sap_object = None
         return {"disconnected": True}
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Helpers internos
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _check_ret(ret) -> bool:
+    """Retorna True si el código de retorno de la API es 0 (éxito)."""
+    if isinstance(ret, (list, tuple)):
+        return int(ret[-1]) == 0
+    return int(ret) == 0
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -62,23 +84,25 @@ class SapConnection:
 
 @dataclass
 class RingAreasConfig:
-    """Parámetros de entrada para el generador de anillos."""
+    """Parámetros de entrada para el generador de anillo."""
 
     # Radios [m]
     r_inner: float = 1.0
-    r_mid1: float = 2.0
-    r_mid2: float = 3.5
     r_outer: float = 5.0
-
-    # Espesores de shell [m]
-    t1: float = 0.30   # Zona 1 (interior) y Zona 3 (exterior)
-    t2: float = 0.20   # Zona 2 (intermedia)
-
-    # Material (nombre existente en el modelo)
-    mat_name: str = "CONC"
 
     # Discretización
     n_segs: int = 36
+
+    # Ubicación — centro del anillo
+    center_x: float = 0.0
+    center_y: float = 0.0
+    center_z: float = 0.0
+
+    # Plano de dibujo
+    plane: str = "XY"          # "XY", "XZ", "YZ"
+
+    # Propiedad de área (nombre existente en el modelo)
+    prop_name: str = "Default"
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -97,27 +121,39 @@ class RingAreasBackend:
             raise RuntimeError("No hay conexión con SAP2000.")
         return self._conn.sap_model
 
-    # ── Funciones auxiliares ──────────────────────────────────────────────
-
-    def get_materials(self) -> list:
-        """Devuelve la lista de materiales definidos en el modelo activo."""
-        raw = self.sap_model.PropMaterial.GetNameList()
-        assert raw[-1] == 0, f"GetNameList failed: {raw[-1]}"
-        return list(raw[1]) if raw[0] > 0 else []
+    # ── Helpers ───────────────────────────────────────────────────────────
 
     @staticmethod
-    def ring_pts(radius: float, n: int):
-        """Devuelve lista de n puntos (x, y) sobre una circunferencia."""
+    def _ring_pts_2d(radius: float, n: int) -> List[tuple]:
+        """Devuelve n puntos (u, v) sobre una circunferencia."""
         return [
             (radius * math.cos(2.0 * math.pi * i / n),
              radius * math.sin(2.0 * math.pi * i / n))
             for i in range(n)
         ]
 
+    @staticmethod
+    def _to_global(
+        u: float, v: float,
+        cx: float, cy: float, cz: float,
+        plane: str,
+    ):
+        """Convierte coordenadas locales 2D al espacio global 3D."""
+        if plane == "XY":
+            return cx + u, cy + v, cz
+        if plane == "XZ":
+            return cx + u, cy, cz + v
+        # YZ
+        return cx, cy + u, cz + v
+
     # ── Ejecución principal ──────────────────────────────────────────────
 
     def run(self, config: RingAreasConfig) -> dict:
-        """Ejecuta la generación de anillos concéntricos.
+        """Genera el anillo de shells en el modelo activo de SAP2000.
+
+        No inicializa modelo nuevo; opera sobre el modelo abierto.
+        El radio medio se calcula automáticamente (promedio de r_inner y r_outer)
+        y divide el anillo en dos sub-anillos con la misma propiedad.
 
         Args:
             config: Parámetros de entrada.
@@ -125,71 +161,73 @@ class RingAreasBackend:
         Returns:
             dict con resultados del modelo generado.
         """
-        SapModel = self.sap_model
-        result = {}
+        # ── Validar parámetros ───────────────────────────────────────────
+        if config.r_inner <= 0 or config.r_outer <= 0:
+            raise ValueError("r_inner y r_outer deben ser > 0.")
+        if config.r_inner >= config.r_outer:
+            raise ValueError("r_inner debe ser menor que r_outer.")
+        if config.n_segs < 3:
+            raise ValueError("n_segs debe ser >= 3.")
+        if config.plane.upper() not in ("XY", "XZ", "YZ"):
+            raise ValueError(f"plane '{config.plane}' no válido. Use XY, XZ o YZ.")
 
-        # ── Task 1: Definir propiedades de área (shell) ──────────────────
-        ret = SapModel.PropArea.SetShell_1(
-            "SHELL_T1", 1, True, config.mat_name, 0, config.t1, config.t1
-        )
-        assert ret == 0, f"SetShell_1(SHELL_T1) failed: {ret}"
-
-        ret = SapModel.PropArea.SetShell_1(
-            "SHELL_T2", 1, True, config.mat_name, 0, config.t2, config.t2
-        )
-        assert ret == 0, f"SetShell_1(SHELL_T2) failed: {ret}"
-
-        result["task_2_sections"] = {"SHELL_T1": config.t1, "SHELL_T2": config.t2}
-
-        # ── Task 3: Generar geometría de anillos concéntricos ────────────
-        zones = [
-            (config.r_inner, config.r_mid1,  "SHELL_T1", "ZONA1_interior"),
-            (config.r_mid1,  config.r_mid2,  "SHELL_T2", "ZONA2_intermedia"),
-            (config.r_mid2,  config.r_outer, "SHELL_T1", "ZONA3_exterior"),
-        ]
-        area_count = {
-            "ZONA1_interior": 0,
-            "ZONA2_intermedia": 0,
-            "ZONA3_exterior": 0,
-        }
-
+        plane = config.plane.upper()
+        r_mid = (config.r_inner + config.r_outer) / 2.0
         n = config.n_segs
-        for (r_in, r_out, prop, label) in zones:
-            pts_in = self.ring_pts(r_in, n)
-            pts_out = self.ring_pts(r_out, n)
+
+        SapModel = self.sap_model
+        result: dict = {}
+
+        # ── Task 1: Generar geometría de anillos ─────────────────────────
+        zones = [
+            (config.r_inner, r_mid,          "anillo_interior"),
+            (r_mid,          config.r_outer, "anillo_exterior"),
+        ]
+        area_count = {"anillo_interior": 0, "anillo_exterior": 0}
+
+        for (r_in, r_out, label) in zones:
+            pts_in  = self._ring_pts_2d(r_in,  n)
+            pts_out = self._ring_pts_2d(r_out, n)
 
             for i in range(n):
                 j = (i + 1) % n
 
-                x = [pts_in[i][0], pts_out[i][0], pts_out[j][0], pts_in[j][0]]
-                y = [pts_in[i][1], pts_out[i][1], pts_out[j][1], pts_in[j][1]]
-                z = [0.0, 0.0, 0.0, 0.0]
+                u = [pts_in[i][0], pts_out[i][0], pts_out[j][0], pts_in[j][0]]
+                v = [pts_in[i][1], pts_out[i][1], pts_out[j][1], pts_in[j][1]]
 
-                raw = SapModel.AreaObj.AddByCoord(4, x, y, z, "", prop, "")
-                assert raw[-1] == 0, f"AddByCoord({label}[{i}]) failed: {raw[-1]}"
+                xs, ys, zs = [], [], []
+                for k in range(4):
+                    gx, gy, gz = self._to_global(
+                        u[k], v[k],
+                        config.center_x, config.center_y, config.center_z,
+                        plane,
+                    )
+                    xs.append(gx)
+                    ys.append(gy)
+                    zs.append(gz)
+
+                ret = SapModel.AreaObj.AddByCoord(
+                    4, xs, ys, zs, "", config.prop_name, "", "Global"
+                )
+                assert _check_ret(ret), f"AddByCoord({label}[{i}]) failed: {ret}"
                 area_count[label] += 1
 
-        result["task_3_geometry"] = area_count
-        result["total_areas"] = sum(area_count.values())
+        # ── Task 2: Refrescar vista ──────────────────────────────────────
+        try:
+            SapModel.View.RefreshView(0, False)
+        except Exception:
+            pass
 
-        # ── Task 4: refrescar vista ─────────────────────
-
-        SapModel.View.RefreshView(0, False)
-
-        # ── Resumen final ────────────────────────────────────────────────
-        result["success"] = True
-        result["radii"] = {
-            "r_inner": config.r_inner,
-            "r_mid1": config.r_mid1,
-            "r_mid2": config.r_mid2,
-            "r_outer": config.r_outer,
-        }
-        result["thicknesses"] = {
-            "t1 (Zona1+Zona3)": config.t1,
-            "t2 (Zona2)": config.t2,
-        }
-        result["n_segments"] = config.n_segs
-
+        result["success"]    = True
+        result["num_areas"]  = sum(area_count.values())
+        result["area_count"] = area_count
+        result["r_inner"]    = config.r_inner
+        result["r_mid"]      = r_mid
+        result["r_outer"]    = config.r_outer
+        result["n_segs"]     = config.n_segs
+        result["plane"]      = plane
+        result["center"]     = (config.center_x, config.center_y, config.center_z)
+        result["prop_name"]  = config.prop_name
         return result
 
 
@@ -204,11 +242,16 @@ if __name__ == "__main__":
 
     if res.get("connected"):
         backend = RingAreasBackend(conn)
-        config = RingAreasConfig()
-
+        config = RingAreasConfig(
+            r_inner=1.0, r_outer=5.0,
+            n_segs=36,
+            center_x=0.0, center_y=0.0, center_z=0.0,
+            plane="XY",
+            prop_name="Default",
+        )
         try:
-            output = backend.run(config)
             import json
+            output = backend.run(config)
             print(json.dumps(output, indent=2, ensure_ascii=False))
         except Exception as e:
             print(f"Error: {e}")

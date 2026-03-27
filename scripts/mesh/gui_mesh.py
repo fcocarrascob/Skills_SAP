@@ -222,6 +222,11 @@ class PreviewWidget(QWidget):
         self.data = {"os": os_, "od": od, "is": is_, "id": id_, "na": na, "nr": nr}
         self.update()
 
+    def update_ring(self, r_inner, r_outer, n_segs):
+        self.mode = "ring"
+        self.data = {"ri": r_inner, "ro": r_outer, "n": n_segs}
+        self.update()
+
     # ── Cotas ─────────────────────────────────────────────────────────────
 
     def _draw_dimension(self, painter, p1, p2, text, offset=20):
@@ -272,6 +277,8 @@ class PreviewWidget(QWidget):
             self._draw_rect(painter, cx, cy, w, h)
         elif self.mode == "hole":
             self._draw_hole(painter, cx, cy, w, h)
+        elif self.mode == "ring":
+            self._draw_ring(painter, cx, cy, w, h)
 
     # ── Modo rectangular ──────────────────────────────────────────────────
 
@@ -390,6 +397,58 @@ class PreviewWidget(QWidget):
         self._draw_dimension(painter,
                              (cx - r_in, cy + r_in), (cx + r_in, cy + r_in),
                              f"Int: {inner_d:.2f} ({inner_s})", offset=30)
+
+    # ── Modo anillo ───────────────────────────────────────────────────────
+
+    def _draw_ring(self, painter, cx, cy, w_px, h_px):
+        d = self.data
+        r_inner = d.get("ri", 1.0)
+        r_outer = d.get("ro", 5.0)
+        n_segs  = max(d.get("n", 12), 3)
+        if r_inner <= 0 or r_outer <= 0 or r_inner >= r_outer:
+            return
+
+        r_mid = (r_inner + r_outer) / 2.0
+        scale = min(w_px, h_px) / (r_outer * 2.0) * 0.65
+
+        ri_px  = r_inner * scale
+        rm_px  = r_mid   * scale
+        ro_px  = r_outer * scale
+
+        # ── Radial lines (sector boundaries) ─────────────────────────────
+        painter.setPen(QPen(Qt.gray, 1))
+        for i in range(n_segs):
+            angle = 2.0 * math.pi * i / n_segs
+            x1 = cx + ri_px * math.cos(angle)
+            y1 = cy - ri_px * math.sin(angle)
+            x2 = cx + ro_px * math.cos(angle)
+            y2 = cy - ro_px * math.sin(angle)
+            painter.drawLine(x1, y1, x2, y2)
+
+        # ── Inner circle (blue) ───────────────────────────────────────────
+        painter.setPen(QPen(Qt.blue, 2))
+        painter.setBrush(Qt.NoBrush)
+        painter.drawEllipse(cx - ri_px, cy - ri_px, ri_px * 2, ri_px * 2)
+
+        # ── Mid circle (gray dashed) ──────────────────────────────────────
+        pen_mid = QPen(Qt.darkGray, 1)
+        pen_mid.setStyle(Qt.DashLine)
+        painter.setPen(pen_mid)
+        painter.drawEllipse(cx - rm_px, cy - rm_px, rm_px * 2, rm_px * 2)
+
+        # ── Outer circle (blue) ───────────────────────────────────────────
+        painter.setPen(QPen(Qt.blue, 2))
+        painter.drawEllipse(cx - ro_px, cy - ro_px, ro_px * 2, ro_px * 2)
+
+        # ── Dimension: r_inner ────────────────────────────────────────────
+        self._draw_dimension(painter,
+                             (cx, cy), (cx + ri_px, cy),
+                             f"Rᴵ={r_inner:.3g}", offset=-18)
+
+        # ── Dimension: r_outer ────────────────────────────────────────────
+        self._draw_dimension(painter,
+                             (cx, cy), (cx + ro_px, cy),
+                             f"Rᵒ={r_outer:.3g}", offset=18)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -911,13 +970,14 @@ class HoleMeshTab(QWidget):
 # ══════════════════════════════════════════════════════════════════════════════
 
 class RingAreasTab(QWidget):
-    """Pestaña de generación de anillo concéntrico con 3 zonas de espesor."""
+    """Pestaña de generación de anillo (2 sub-anillos, misma propiedad)."""
 
     def __init__(self, connection: SapConnection, parent=None):
         super().__init__(parent)
         self._conn = connection
         self._backend = RingAreasBackend(self._conn)
         self._worker = None
+        self._coords_worker = None
         self._init_ui()
 
     def _init_ui(self):
@@ -925,54 +985,87 @@ class RingAreasTab(QWidget):
         root.setSpacing(10)
         root.setContentsMargins(10, 10, 10, 10)
 
-        grp_params = QGroupBox("Parámetros de entrada")
+        # ── Columna izquierda (parámetros)  │  Preview ────────────────
+        _mid = QHBoxLayout()
+        _mid.setSpacing(10)
+        _params = QVBoxLayout()
+        _params.setSpacing(10)
+
+        # ── Parámetros de anillo ──────────────────────────────────────────
+        grp_params = QGroupBox("Parámetros de Anillo")
         grid = QGridLayout(grp_params)
         grid.setHorizontalSpacing(12)
         grid.setVerticalSpacing(8)
 
-        def _header(text: str, row: int):
-            lbl = QLabel(f"<b>{text}</b>")
-            grid.addWidget(lbl, row, 0, 1, 4)
-
         r = 0
-
-        _header("Radios [m]", r); r += 1
-        lbl, self._r_inner = _field("r_inner:", "1.0", "Radio interior – borde del agujero central")
+        lbl, self._r_inner = _field("Radio interior:", "1.0", "Radio interior del anillo")
         grid.addWidget(lbl, r, 0); grid.addWidget(self._r_inner, r, 1)
-        lbl, self._r_mid1 = _field("r_mid1:", "2.0", "Límite Zona 1 / Zona 2")
-        grid.addWidget(lbl, r, 2); grid.addWidget(self._r_mid1, r, 3)
-        r += 1
-
-        lbl, self._r_mid2 = _field("r_mid2:", "3.5", "Límite Zona 2 / Zona 3")
-        grid.addWidget(lbl, r, 0); grid.addWidget(self._r_mid2, r, 1)
-        lbl, self._r_outer = _field("r_outer:", "5.0", "Radio exterior del anillo")
+        lbl, self._r_outer = _field("Radio exterior:", "5.0", "Radio exterior del anillo")
         grid.addWidget(lbl, r, 2); grid.addWidget(self._r_outer, r, 3)
         r += 1
 
-        _header("Espesores de shell [m]", r); r += 1
-        lbl, self._t1 = _field("t1:", "0.30", "Espesor Zona 1 (interior) y Zona 3 (exterior)")
-        grid.addWidget(lbl, r, 0); grid.addWidget(self._t1, r, 1)
-        lbl, self._t2 = _field("t2:", "0.20", "Espesor Zona 2 (intermedia)")
-        grid.addWidget(lbl, r, 2); grid.addWidget(self._t2, r, 3)
-        r += 1
-
-        _header("Material", r); r += 1
-        lbl = QLabel("Material:")
-        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._mat_combo = QComboBox()
-        self._mat_combo.setEnabled(False)
-        self._mat_combo.setToolTip("Materiales disponibles en el modelo — se cargan al conectar")
-        grid.addWidget(lbl, r, 0)
-        grid.addWidget(self._mat_combo, r, 1, 1, 3)
-        r += 1
-
-        _header("Discretización", r); r += 1
-        lbl, self._n_segs = _field("n_segs:", "36", "Segmentos angulares (≥ 12 recomendado)")
+        lbl, self._n_segs = _field("Segmentos:", "36", "Divisiones angulares (≥ 3)")
         grid.addWidget(lbl, r, 0); grid.addWidget(self._n_segs, r, 1)
 
-        root.addWidget(grp_params)
+        _params.addWidget(grp_params)
 
-        self._btn_run = QPushButton("Generar Anillo Concéntrico")
+        # ── Ubicación y Propiedades ───────────────────────────────────────
+        grp_loc = QGroupBox("Ubicación y Propiedades")
+        grid2 = QGridLayout(grp_loc)
+        grid2.setHorizontalSpacing(12)
+        grid2.setVerticalSpacing(8)
+
+        r = 0
+        lbl, self._cx = _field("Centro X:", "0.0")
+        grid2.addWidget(lbl, r, 0); grid2.addWidget(self._cx, r, 1)
+        lbl, self._cy = _field("Centro Y:", "0.0")
+        grid2.addWidget(lbl, r, 2); grid2.addWidget(self._cy, r, 3)
+        r += 1
+
+        lbl, self._cz = _field("Centro Z:", "0.0")
+        grid2.addWidget(lbl, r, 0); grid2.addWidget(self._cz, r, 1)
+
+        lbl = QLabel("Plano:")
+        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._plane = QComboBox()
+        self._plane.addItems(["", "XY", "XZ", "YZ"])
+        self._plane.setCurrentIndex(0)
+        self._plane.setToolTip("Plano donde se dibuja el anillo")
+        grid2.addWidget(lbl, r, 2); grid2.addWidget(self._plane, r, 3)
+        r += 1
+
+        lbl_prop = QLabel("Propiedad de Área:")
+        lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lbl_prop.setToolTip("Sección Shell disponible en SAP2000 (se actualiza al conectar)")
+        self._prop = QComboBox()
+        self._prop.setEditable(True)
+        self._prop.addItem("Default")
+        self._prop.setToolTip("Sección Shell disponible en SAP2000 (se actualiza al conectar)")
+        grid2.addWidget(lbl_prop, r, 0); grid2.addWidget(self._prop, r, 1)
+
+        self._btn_get_coords = QPushButton("📍 Obtener Nodo")
+        self._btn_get_coords.setFixedHeight(26)
+        self._btn_get_coords.setEnabled(False)
+        self._btn_get_coords.setToolTip("Lee las coordenadas del nodo seleccionado en SAP2000 y las carga como Centro.")
+        self._btn_get_coords.clicked.connect(self._on_get_coords)
+        grid2.addWidget(self._btn_get_coords, r, 2, 1, 2)
+
+        _params.addWidget(grp_loc)
+        _params.addStretch()
+
+        # ── Preview ───────────────────────────────────────────────────────
+        self._preview = PreviewWidget()
+        _mid.addLayout(_params, 1)
+        _mid.addWidget(self._preview, 1)
+        root.addLayout(_mid)
+
+        # ── Señales de preview ────────────────────────────────────────────
+        self._r_inner.textChanged.connect(self._update_preview)
+        self._r_outer.textChanged.connect(self._update_preview)
+        self._n_segs.textChanged.connect(self._update_preview)
+        self._update_preview()
+
+        self._btn_run = QPushButton("Generar Anillo")
         self._btn_run.setFixedHeight(34)
         self._btn_run.setEnabled(False)
         self._btn_run.clicked.connect(self._on_run)
@@ -991,34 +1084,63 @@ class RingAreasTab(QWidget):
 
     def set_connected(self, connected: bool):
         self._btn_run.setEnabled(connected)
+        self._btn_get_coords.setEnabled(connected)
 
-    def populate_materials(self, materials: list):
-        self._mat_combo.clear()
-        self._mat_combo.addItems(materials)
-        self._mat_combo.setEnabled(bool(materials))
+    def set_origin(self, x: float, y: float, z: float):
+        self._cx.setText(f"{x:.6g}")
+        self._cy.setText(f"{y:.6g}")
+        self._cz.setText(f"{z:.6g}")
+
+    def populate_area_props(self, names: list):
+        current = self._prop.currentText()
+        self._prop.clear()
+        items = list(names) if names else ["Default"]
+        self._prop.addItems(items)
+        idx = self._prop.findText(current)
+        self._prop.setCurrentIndex(idx if idx >= 0 else 0)
 
     def _log_append(self, text: str):
         self._log.append(text)
 
     def _busy(self, is_busy: bool):
         self._btn_run.setEnabled(not is_busy and self._conn.is_connected)
+        self._btn_get_coords.setEnabled(not is_busy and self._conn.is_connected)
+
+    def _update_preview(self):
+        try:
+            self._preview.update_ring(
+                float(self._r_inner.text()),
+                float(self._r_outer.text()),
+                int(self._n_segs.text()),
+            )
+        except ValueError:
+            pass
 
     def _build_config(self) -> RingAreasConfig:
+        plane = self._plane.currentText().strip()
+        if not plane:
+            raise ValueError("Debe seleccionar un Plano antes de generar el anillo.")
         return RingAreasConfig(
             r_inner=float(self._r_inner.text()),
-            r_mid1=float(self._r_mid1.text()),
-            r_mid2=float(self._r_mid2.text()),
             r_outer=float(self._r_outer.text()),
-            t1=float(self._t1.text()),
-            t2=float(self._t2.text()),
-            mat_name=self._mat_combo.currentText() or "CONC",
             n_segs=int(self._n_segs.text()),
+            center_x=float(self._cx.text()),
+            center_y=float(self._cy.text()),
+            center_z=float(self._cz.text()),
+            plane=plane,
+            prop_name=self._prop.currentText().strip() or "Default",
         )
 
     def _format_result(self, data: dict) -> str:
-        lines = [f"  Total áreas  : {data.get('total_areas', '?')}",
-                 f"  Segmentos    : {data.get('n_segments', '?')}"]
-        for zona, cnt in data.get("task_3_geometry", {}).items():
+        lines = [
+            f"  Total áreas  : {data.get('num_areas', '?')}",
+            f"  Segmentos    : {data.get('n_segs', '?')}",
+            f"  r_inner      : {data.get('r_inner', '?')} m",
+            f"  r_mid        : {data.get('r_mid', '?')} m  (calculado)",
+            f"  r_outer      : {data.get('r_outer', '?')} m",
+            f"  Plano        : {data.get('plane', '?')}",
+        ]
+        for zona, cnt in data.get("area_count", {}).items():
             lines.append(f"  {zona}: {cnt}")
         return "\n".join(lines)
 
@@ -1031,7 +1153,7 @@ class RingAreasTab(QWidget):
             self._log_append(f"✘ Error en parámetros: {e}")
             return
 
-        self._log_append("\n─── Generando anillo concéntrico ─────────────────")
+        self._log_append("\n─── Generando anillo ─────────────────────────────")
         self._busy(True)
         self._worker = RunWorker(self._backend, config)
         self._worker.finished.connect(self._on_run_done)
@@ -1042,8 +1164,25 @@ class RingAreasTab(QWidget):
         if result.get("success"):
             self._log_append("✔ Anillo generado correctamente")
             self._log_append(self._format_result(result))
+            self._plane.setCurrentIndex(0)
         else:
             self._log_append(f"✘ Error: {result.get('error', 'Error desconocido')}")
+
+    def _on_get_coords(self):
+        self._busy(True)
+        self._coords_worker = GetCoordsWorker(self._conn)
+        self._coords_worker.finished.connect(self._on_get_coords_done)
+        self._coords_worker.start()
+
+    def _on_get_coords_done(self, result: dict):
+        self._busy(False)
+        if result.get("success"):
+            x, y, z = result["x"], result["y"], result["z"]
+            name = result.get("name", "?")
+            self.set_origin(x, y, z)
+            self._log_append(f"📍 Nodo '{name}'  →  X={x:.6g}  Y={y:.6g}  Z={z:.6g}")
+        else:
+            self._log_append(f"✘ {result.get('error', 'Error desconocido')}")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1058,6 +1197,7 @@ class CylinderTab(QWidget):
         self._conn = connection
         self._backend = CylinderBackend(self._conn)
         self._worker = None
+        self._coords_worker = None
         self._init_ui()
 
     def _init_ui(self):
@@ -1065,46 +1205,60 @@ class CylinderTab(QWidget):
         root.setSpacing(10)
         root.setContentsMargins(10, 10, 10, 10)
 
-        grp_params = QGroupBox("Parámetros de entrada")
+        # ── Parámetros de geometría ──────────────────────────────────────
+        grp_params = QGroupBox("Parámetros de Geometría")
         grid = QGridLayout(grp_params)
         grid.setHorizontalSpacing(12)
         grid.setVerticalSpacing(8)
 
-        def _header(text: str, row: int):
-            lbl = QLabel(f"<b>{text}</b>")
-            grid.addWidget(lbl, row, 0, 1, 4)
-
         r = 0
-
-        _header("Geometría [m]", r); r += 1
         lbl, self._radius = _field("Radio:", "5.0", "Radio del cilindro")
         grid.addWidget(lbl, r, 0); grid.addWidget(self._radius, r, 1)
         lbl, self._height = _field("Altura:", "10.0", "Altura total del cilindro")
         grid.addWidget(lbl, r, 2); grid.addWidget(self._height, r, 3)
         r += 1
 
-        _header("Espesor de shell [m]", r); r += 1
-        lbl, self._thickness = _field("t:", "0.25", "Espesor de la pared del cilindro")
-        grid.addWidget(lbl, r, 0); grid.addWidget(self._thickness, r, 1)
-        r += 1
-
-        _header("Material", r); r += 1
-        lbl = QLabel("Material:")
-        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._mat_combo = QComboBox()
-        self._mat_combo.setEnabled(False)
-        self._mat_combo.setToolTip("Materiales disponibles en el modelo — se cargan al conectar")
-        grid.addWidget(lbl, r, 0)
-        grid.addWidget(self._mat_combo, r, 1, 1, 3)
-        r += 1
-
-        _header("Discretización", r); r += 1
-        lbl, self._n_radial = _field("n_radial:", "36", "Segmentos angulares – circunferencia (≥ 12)")
+        lbl, self._n_radial = _field("Segm. angulares:", "36", "Divisiones angulares – circunferencia (≥ 12)")
         grid.addWidget(lbl, r, 0); grid.addWidget(self._n_radial, r, 1)
-        lbl, self._n_vert = _field("n_vert:", "10", "Divisiones verticales")
+        lbl, self._n_vert = _field("Divisiones vert.:", "10", "Divisiones verticales")
         grid.addWidget(lbl, r, 2); grid.addWidget(self._n_vert, r, 3)
 
         root.addWidget(grp_params)
+
+        # ── Ubicación y Propiedades ───────────────────────────────────────
+        grp_loc = QGroupBox("Ubicación y Propiedades")
+        grid2 = QGridLayout(grp_loc)
+        grid2.setHorizontalSpacing(12)
+        grid2.setVerticalSpacing(8)
+
+        r = 0
+        lbl, self._cx = _field("Centro X:", "0.0")
+        grid2.addWidget(lbl, r, 0); grid2.addWidget(self._cx, r, 1)
+        lbl, self._cy = _field("Centro Y:", "0.0")
+        grid2.addWidget(lbl, r, 2); grid2.addWidget(self._cy, r, 3)
+        r += 1
+
+        lbl, self._bz = _field("Base Z:", "0.0", "Coordenada Z de la base del cilindro")
+        grid2.addWidget(lbl, r, 0); grid2.addWidget(self._bz, r, 1)
+        r += 1
+
+        lbl_prop = QLabel("Propiedad de Área:")
+        lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lbl_prop.setToolTip("Sección Shell disponible en SAP2000 (se actualiza al conectar)")
+        self._prop = QComboBox()
+        self._prop.setEditable(True)
+        self._prop.addItem("Default")
+        self._prop.setToolTip("Sección Shell disponible en SAP2000 (se actualiza al conectar)")
+        grid2.addWidget(lbl_prop, r, 0); grid2.addWidget(self._prop, r, 1)
+
+        self._btn_get_coords = QPushButton("📍 Obtener Nodo")
+        self._btn_get_coords.setFixedHeight(26)
+        self._btn_get_coords.setEnabled(False)
+        self._btn_get_coords.setToolTip("Lee las coordenadas del nodo seleccionado en SAP2000 y las carga como Base.")
+        self._btn_get_coords.clicked.connect(self._on_get_coords)
+        grid2.addWidget(self._btn_get_coords, r, 2, 1, 2)
+
+        root.addWidget(grp_loc)
 
         self._btn_run = QPushButton("Generar Cilindro Vertical")
         self._btn_run.setFixedHeight(34)
@@ -1125,36 +1279,48 @@ class CylinderTab(QWidget):
 
     def set_connected(self, connected: bool):
         self._btn_run.setEnabled(connected)
+        self._btn_get_coords.setEnabled(connected)
 
-    def populate_materials(self, materials: list):
-        self._mat_combo.clear()
-        self._mat_combo.addItems(materials)
-        self._mat_combo.setEnabled(bool(materials))
+    def set_origin(self, x: float, y: float, z: float):
+        self._cx.setText(f"{x:.6g}")
+        self._cy.setText(f"{y:.6g}")
+        self._bz.setText(f"{z:.6g}")
+
+    def populate_area_props(self, names: list):
+        current = self._prop.currentText()
+        self._prop.clear()
+        items = list(names) if names else ["Default"]
+        self._prop.addItems(items)
+        idx = self._prop.findText(current)
+        self._prop.setCurrentIndex(idx if idx >= 0 else 0)
 
     def _log_append(self, text: str):
         self._log.append(text)
 
     def _busy(self, is_busy: bool):
         self._btn_run.setEnabled(not is_busy and self._conn.is_connected)
+        self._btn_get_coords.setEnabled(not is_busy and self._conn.is_connected)
 
     def _build_config(self) -> CylinderConfig:
         return CylinderConfig(
             radius=float(self._radius.text()),
             height=float(self._height.text()),
-            thickness=float(self._thickness.text()),
-            mat_name=self._mat_combo.currentText() or "CONC",
             n_radial=int(self._n_radial.text()),
             n_vert=int(self._n_vert.text()),
+            center_x=float(self._cx.text()),
+            center_y=float(self._cy.text()),
+            base_z=float(self._bz.text()),
+            prop_name=self._prop.currentText().strip() or "Default",
         )
 
     def _format_result(self, data: dict) -> str:
         lines = [
-            f"  Total áreas  : {data.get('total_areas', '?')}",
+            f"  Total áreas  : {data.get('num_areas', '?')}",
             f"  Radio        : {data.get('radius', '?')} m",
             f"  Altura       : {data.get('height', '?')} m",
-            f"  Espesor      : {data.get('thickness', '?')} m",
             f"  n_radial     : {data.get('n_radial', '?')}",
             f"  n_vert       : {data.get('n_vert', '?')}",
+            f"  Propiedad    : {data.get('prop_name', '?')}",
         ]
         return "\n".join(lines)
 
@@ -1180,6 +1346,22 @@ class CylinderTab(QWidget):
             self._log_append(self._format_result(result))
         else:
             self._log_append(f"✘ Error: {result.get('error', 'Error desconocido')}")
+
+    def _on_get_coords(self):
+        self._busy(True)
+        self._coords_worker = GetCoordsWorker(self._conn)
+        self._coords_worker.finished.connect(self._on_get_coords_done)
+        self._coords_worker.start()
+
+    def _on_get_coords_done(self, result: dict):
+        self._busy(False)
+        if result.get("success"):
+            x, y, z = result["x"], result["y"], result["z"]
+            name = result.get("name", "?")
+            self.set_origin(x, y, z)
+            self._log_append(f"📍 Nodo '{name}'  →  X={x:.6g}  Y={y:.6g}  Z={z:.6g}")
+        else:
+            self._log_append(f"✘ {result.get('error', 'Error desconocido')}")
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1285,22 +1467,15 @@ class MeshGUI(QWidget):
             self._tab_cyl._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
             self._tab_rect.populate_area_props(shell_props)
             self._tab_hole.populate_area_props(shell_props)
-            self._tab_ring.populate_materials(materials)
-            self._tab_cyl.populate_materials(materials)
+            self._tab_ring.populate_area_props(shell_props)
+            self._tab_cyl.populate_area_props(shell_props)
             if shell_props:
                 n = len(shell_props)
-                self._tab_rect._log_append(f"  Propiedades de área Shell cargadas: {n}")
-                self._tab_hole._log_append(f"  Propiedades de área Shell cargadas: {n}")
+                for tab in (self._tab_rect, self._tab_hole, self._tab_ring, self._tab_cyl):
+                    tab._log_append(f"  Propiedades de área Shell cargadas: {n}")
             else:
-                self._tab_rect._log_append("  Sin propiedades de área en el modelo (usando 'Default')")
-                self._tab_hole._log_append("  Sin propiedades de área en el modelo (usando 'Default')")
-            if materials:
-                n_m = len(materials)
-                self._tab_ring._log_append(f"  Materiales cargados: {n_m}")
-                self._tab_cyl._log_append(f"  Materiales cargados: {n_m}")
-            else:
-                self._tab_ring._log_append("  ⚠ No se encontraron materiales en el modelo.")
-                self._tab_cyl._log_append("  ⚠ No se encontraron materiales en el modelo.")
+                for tab in (self._tab_rect, self._tab_hole, self._tab_ring, self._tab_cyl):
+                    tab._log_append("  Sin propiedades de área en el modelo (usando 'Default')")
             self._set_connected(True)
         else:
             err = result.get("error", "Error desconocido")
@@ -1325,8 +1500,8 @@ class MeshGUI(QWidget):
         self._tab_cyl._log_append("✔ Desconectado de SAP2000")
         self._tab_rect.populate_area_props([])
         self._tab_hole.populate_area_props([])
-        self._tab_ring.populate_materials([])
-        self._tab_cyl.populate_materials([])
+        self._tab_ring.populate_area_props([])
+        self._tab_cyl.populate_area_props([])
         self._set_connected(False)
 
 
