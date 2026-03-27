@@ -1,10 +1,14 @@
 """
 GUI — SAP2000 Generador de Mallas (Standalone)
 ===============================================
-PySide6 interface con dos pestañas:
+PySide6 interface con cuatro pestañas:
   - Malla Rectangular: genera una grilla de áreas AddByCoord.
   - Malla con Orificio: genera una malla interpolada entre anillo
     interno y externo, con soporte de forma Círculo/Cuadrado.
+  - Anillo Concéntrico: genera una placa anular con 3 zonas
+    concéntricas de espesor variable.
+  - Cilindro Vertical: genera un cilindro discretizado con
+    elementos shell cuadriláteros.
 
 Conexión directa vía comtypes (sin MCP). Un solo SapConnection
 compartido por ambas pestañas.
@@ -47,6 +51,8 @@ from PySide6.QtWidgets import (
 
 from backend_mesh_rect import SapConnection, RectMeshBackend, RectMeshConfig
 from backend_mesh_hole import HoleMeshBackend, HoleMeshConfig
+from backend_ring_areas import RingAreasBackend, RingAreasConfig
+from backend_cylinder import CylinderBackend, CylinderConfig
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -71,6 +77,14 @@ class ConnectWorker(QThread):
                     result["shell_props"] = []
             except Exception:
                 result["shell_props"] = []
+            try:
+                ret = self._conn.sap_model.PropMaterial.GetNameList()
+                if isinstance(ret, (list, tuple)) and int(ret[-1]) == 0 and int(ret[0]) > 0:
+                    result["materials"] = list(ret[1])
+                else:
+                    result["materials"] = []
+            except Exception:
+                result["materials"] = []
         self.finished.emit(result)
 
 
@@ -104,6 +118,22 @@ class HoleRunWorker(QThread):
     finished = Signal(dict)
 
     def __init__(self, backend: HoleMeshBackend, config: HoleMeshConfig):
+        super().__init__()
+        self._backend = backend
+        self._config = config
+
+    def run(self):
+        try:
+            self.finished.emit(self._backend.run(self._config))
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+class RunWorker(QThread):
+    """Worker genérico para ejecutar cualquier backend con su config."""
+    finished = Signal(dict)
+
+    def __init__(self, backend, config):
         super().__init__()
         self._backend = backend
         self._config = config
@@ -877,6 +907,282 @@ class HoleMeshTab(QWidget):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Tab 3 — Anillo Concéntrico
+# ══════════════════════════════════════════════════════════════════════════════
+
+class RingAreasTab(QWidget):
+    """Pestaña de generación de anillo concéntrico con 3 zonas de espesor."""
+
+    def __init__(self, connection: SapConnection, parent=None):
+        super().__init__(parent)
+        self._conn = connection
+        self._backend = RingAreasBackend(self._conn)
+        self._worker = None
+        self._init_ui()
+
+    def _init_ui(self):
+        root = QVBoxLayout(self)
+        root.setSpacing(10)
+        root.setContentsMargins(10, 10, 10, 10)
+
+        grp_params = QGroupBox("Parámetros de entrada")
+        grid = QGridLayout(grp_params)
+        grid.setHorizontalSpacing(12)
+        grid.setVerticalSpacing(8)
+
+        def _header(text: str, row: int):
+            lbl = QLabel(f"<b>{text}</b>")
+            grid.addWidget(lbl, row, 0, 1, 4)
+
+        r = 0
+
+        _header("Radios [m]", r); r += 1
+        lbl, self._r_inner = _field("r_inner:", "1.0", "Radio interior – borde del agujero central")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._r_inner, r, 1)
+        lbl, self._r_mid1 = _field("r_mid1:", "2.0", "Límite Zona 1 / Zona 2")
+        grid.addWidget(lbl, r, 2); grid.addWidget(self._r_mid1, r, 3)
+        r += 1
+
+        lbl, self._r_mid2 = _field("r_mid2:", "3.5", "Límite Zona 2 / Zona 3")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._r_mid2, r, 1)
+        lbl, self._r_outer = _field("r_outer:", "5.0", "Radio exterior del anillo")
+        grid.addWidget(lbl, r, 2); grid.addWidget(self._r_outer, r, 3)
+        r += 1
+
+        _header("Espesores de shell [m]", r); r += 1
+        lbl, self._t1 = _field("t1:", "0.30", "Espesor Zona 1 (interior) y Zona 3 (exterior)")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._t1, r, 1)
+        lbl, self._t2 = _field("t2:", "0.20", "Espesor Zona 2 (intermedia)")
+        grid.addWidget(lbl, r, 2); grid.addWidget(self._t2, r, 3)
+        r += 1
+
+        _header("Material", r); r += 1
+        lbl = QLabel("Material:")
+        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._mat_combo = QComboBox()
+        self._mat_combo.setEnabled(False)
+        self._mat_combo.setToolTip("Materiales disponibles en el modelo — se cargan al conectar")
+        grid.addWidget(lbl, r, 0)
+        grid.addWidget(self._mat_combo, r, 1, 1, 3)
+        r += 1
+
+        _header("Discretización", r); r += 1
+        lbl, self._n_segs = _field("n_segs:", "36", "Segmentos angulares (≥ 12 recomendado)")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._n_segs, r, 1)
+
+        root.addWidget(grp_params)
+
+        self._btn_run = QPushButton("Generar Anillo Concéntrico")
+        self._btn_run.setFixedHeight(34)
+        self._btn_run.setEnabled(False)
+        self._btn_run.clicked.connect(self._on_run)
+        root.addWidget(self._btn_run)
+
+        grp_log = QGroupBox("Salida")
+        log_layout = QVBoxLayout(grp_log)
+        self._log = QTextEdit()
+        self._log.setReadOnly(True)
+        self._log.setFont(QFont("Consolas", 9))
+        self._log.setMinimumHeight(160)
+        log_layout.addWidget(self._log)
+        root.addWidget(grp_log)
+
+    # ── API pública ───────────────────────────────────────────────────────
+
+    def set_connected(self, connected: bool):
+        self._btn_run.setEnabled(connected)
+
+    def populate_materials(self, materials: list):
+        self._mat_combo.clear()
+        self._mat_combo.addItems(materials)
+        self._mat_combo.setEnabled(bool(materials))
+
+    def _log_append(self, text: str):
+        self._log.append(text)
+
+    def _busy(self, is_busy: bool):
+        self._btn_run.setEnabled(not is_busy and self._conn.is_connected)
+
+    def _build_config(self) -> RingAreasConfig:
+        return RingAreasConfig(
+            r_inner=float(self._r_inner.text()),
+            r_mid1=float(self._r_mid1.text()),
+            r_mid2=float(self._r_mid2.text()),
+            r_outer=float(self._r_outer.text()),
+            t1=float(self._t1.text()),
+            t2=float(self._t2.text()),
+            mat_name=self._mat_combo.currentText() or "CONC",
+            n_segs=int(self._n_segs.text()),
+        )
+
+    def _format_result(self, data: dict) -> str:
+        lines = [f"  Total áreas  : {data.get('total_areas', '?')}",
+                 f"  Segmentos    : {data.get('n_segments', '?')}"]
+        for zona, cnt in data.get("task_3_geometry", {}).items():
+            lines.append(f"  {zona}: {cnt}")
+        return "\n".join(lines)
+
+    # ── Slots ─────────────────────────────────────────────────────────────
+
+    def _on_run(self):
+        try:
+            config = self._build_config()
+        except ValueError as e:
+            self._log_append(f"✘ Error en parámetros: {e}")
+            return
+
+        self._log_append("\n─── Generando anillo concéntrico ─────────────────")
+        self._busy(True)
+        self._worker = RunWorker(self._backend, config)
+        self._worker.finished.connect(self._on_run_done)
+        self._worker.start()
+
+    def _on_run_done(self, result: dict):
+        self._busy(False)
+        if result.get("success"):
+            self._log_append("✔ Anillo generado correctamente")
+            self._log_append(self._format_result(result))
+        else:
+            self._log_append(f"✘ Error: {result.get('error', 'Error desconocido')}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Tab 4 — Cilindro Vertical
+# ══════════════════════════════════════════════════════════════════════════════
+
+class CylinderTab(QWidget):
+    """Pestaña de generación de cilindro vertical discretizado."""
+
+    def __init__(self, connection: SapConnection, parent=None):
+        super().__init__(parent)
+        self._conn = connection
+        self._backend = CylinderBackend(self._conn)
+        self._worker = None
+        self._init_ui()
+
+    def _init_ui(self):
+        root = QVBoxLayout(self)
+        root.setSpacing(10)
+        root.setContentsMargins(10, 10, 10, 10)
+
+        grp_params = QGroupBox("Parámetros de entrada")
+        grid = QGridLayout(grp_params)
+        grid.setHorizontalSpacing(12)
+        grid.setVerticalSpacing(8)
+
+        def _header(text: str, row: int):
+            lbl = QLabel(f"<b>{text}</b>")
+            grid.addWidget(lbl, row, 0, 1, 4)
+
+        r = 0
+
+        _header("Geometría [m]", r); r += 1
+        lbl, self._radius = _field("Radio:", "5.0", "Radio del cilindro")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._radius, r, 1)
+        lbl, self._height = _field("Altura:", "10.0", "Altura total del cilindro")
+        grid.addWidget(lbl, r, 2); grid.addWidget(self._height, r, 3)
+        r += 1
+
+        _header("Espesor de shell [m]", r); r += 1
+        lbl, self._thickness = _field("t:", "0.25", "Espesor de la pared del cilindro")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._thickness, r, 1)
+        r += 1
+
+        _header("Material", r); r += 1
+        lbl = QLabel("Material:")
+        lbl.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._mat_combo = QComboBox()
+        self._mat_combo.setEnabled(False)
+        self._mat_combo.setToolTip("Materiales disponibles en el modelo — se cargan al conectar")
+        grid.addWidget(lbl, r, 0)
+        grid.addWidget(self._mat_combo, r, 1, 1, 3)
+        r += 1
+
+        _header("Discretización", r); r += 1
+        lbl, self._n_radial = _field("n_radial:", "36", "Segmentos angulares – circunferencia (≥ 12)")
+        grid.addWidget(lbl, r, 0); grid.addWidget(self._n_radial, r, 1)
+        lbl, self._n_vert = _field("n_vert:", "10", "Divisiones verticales")
+        grid.addWidget(lbl, r, 2); grid.addWidget(self._n_vert, r, 3)
+
+        root.addWidget(grp_params)
+
+        self._btn_run = QPushButton("Generar Cilindro Vertical")
+        self._btn_run.setFixedHeight(34)
+        self._btn_run.setEnabled(False)
+        self._btn_run.clicked.connect(self._on_run)
+        root.addWidget(self._btn_run)
+
+        grp_log = QGroupBox("Salida")
+        log_layout = QVBoxLayout(grp_log)
+        self._log = QTextEdit()
+        self._log.setReadOnly(True)
+        self._log.setFont(QFont("Consolas", 9))
+        self._log.setMinimumHeight(160)
+        log_layout.addWidget(self._log)
+        root.addWidget(grp_log)
+
+    # ── API pública ───────────────────────────────────────────────────────
+
+    def set_connected(self, connected: bool):
+        self._btn_run.setEnabled(connected)
+
+    def populate_materials(self, materials: list):
+        self._mat_combo.clear()
+        self._mat_combo.addItems(materials)
+        self._mat_combo.setEnabled(bool(materials))
+
+    def _log_append(self, text: str):
+        self._log.append(text)
+
+    def _busy(self, is_busy: bool):
+        self._btn_run.setEnabled(not is_busy and self._conn.is_connected)
+
+    def _build_config(self) -> CylinderConfig:
+        return CylinderConfig(
+            radius=float(self._radius.text()),
+            height=float(self._height.text()),
+            thickness=float(self._thickness.text()),
+            mat_name=self._mat_combo.currentText() or "CONC",
+            n_radial=int(self._n_radial.text()),
+            n_vert=int(self._n_vert.text()),
+        )
+
+    def _format_result(self, data: dict) -> str:
+        lines = [
+            f"  Total áreas  : {data.get('total_areas', '?')}",
+            f"  Radio        : {data.get('radius', '?')} m",
+            f"  Altura       : {data.get('height', '?')} m",
+            f"  Espesor      : {data.get('thickness', '?')} m",
+            f"  n_radial     : {data.get('n_radial', '?')}",
+            f"  n_vert       : {data.get('n_vert', '?')}",
+        ]
+        return "\n".join(lines)
+
+    # ── Slots ─────────────────────────────────────────────────────────────
+
+    def _on_run(self):
+        try:
+            config = self._build_config()
+        except ValueError as e:
+            self._log_append(f"✘ Error en parámetros: {e}")
+            return
+
+        self._log_append("\n─── Generando cilindro vertical ─────────────────")
+        self._busy(True)
+        self._worker = RunWorker(self._backend, config)
+        self._worker.finished.connect(self._on_run_done)
+        self._worker.start()
+
+    def _on_run_done(self, result: dict):
+        self._busy(False)
+        if result.get("success"):
+            self._log_append("✔ Cilindro generado correctamente")
+            self._log_append(self._format_result(result))
+        else:
+            self._log_append(f"✘ Error: {result.get('error', 'Error desconocido')}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Ventana Principal
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -923,9 +1229,13 @@ class MeshGUI(QWidget):
 
         self._tab_rect = RectMeshTab(self._conn)
         self._tab_hole = HoleMeshTab(self._conn)
+        self._tab_ring = RingAreasTab(self._conn)
+        self._tab_cyl  = CylinderTab(self._conn)
 
         self._tabs.addTab(self._tab_rect, "Malla Rectangular")
         self._tabs.addTab(self._tab_hole, "Malla con Orificio")
+        self._tabs.addTab(self._tab_ring, "Anillo Concéntrico")
+        self._tabs.addTab(self._tab_cyl,  "Cilindro Vertical")
 
         root.addWidget(self._tabs)
 
@@ -938,6 +1248,8 @@ class MeshGUI(QWidget):
         self._btn_disconnect.setEnabled(connected)
         self._tab_rect.set_connected(connected)
         self._tab_hole.set_connected(connected)
+        self._tab_ring.set_connected(connected)
+        self._tab_cyl.set_connected(connected)
         if connected:
             self._status_lbl.setText("Estado: conectado ✔")
             self._status_lbl.setStyleSheet("color: #27ae60; font-weight: bold;")
@@ -966,10 +1278,15 @@ class MeshGUI(QWidget):
             ver = result.get("version", "?")
             path = result.get("model_path") or "(sin modelo)"
             shell_props = result.get("shell_props", [])
+            materials = result.get("materials", [])
             self._tab_rect._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
             self._tab_hole._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
+            self._tab_ring._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
+            self._tab_cyl._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
             self._tab_rect.populate_area_props(shell_props)
             self._tab_hole.populate_area_props(shell_props)
+            self._tab_ring.populate_materials(materials)
+            self._tab_cyl.populate_materials(materials)
             if shell_props:
                 n = len(shell_props)
                 self._tab_rect._log_append(f"  Propiedades de área Shell cargadas: {n}")
@@ -977,6 +1294,13 @@ class MeshGUI(QWidget):
             else:
                 self._tab_rect._log_append("  Sin propiedades de área en el modelo (usando 'Default')")
                 self._tab_hole._log_append("  Sin propiedades de área en el modelo (usando 'Default')")
+            if materials:
+                n_m = len(materials)
+                self._tab_ring._log_append(f"  Materiales cargados: {n_m}")
+                self._tab_cyl._log_append(f"  Materiales cargados: {n_m}")
+            else:
+                self._tab_ring._log_append("  ⚠ No se encontraron materiales en el modelo.")
+                self._tab_cyl._log_append("  ⚠ No se encontraron materiales en el modelo.")
             self._set_connected(True)
         else:
             err = result.get("error", "Error desconocido")
@@ -997,8 +1321,12 @@ class MeshGUI(QWidget):
         self._busy_conn(False)
         self._tab_rect._log_append("✔ Desconectado de SAP2000")
         self._tab_hole._log_append("✔ Desconectado de SAP2000")
+        self._tab_ring._log_append("✔ Desconectado de SAP2000")
+        self._tab_cyl._log_append("✔ Desconectado de SAP2000")
         self._tab_rect.populate_area_props([])
         self._tab_hole.populate_area_props([])
+        self._tab_ring.populate_materials([])
+        self._tab_cyl.populate_materials([])
         self._set_connected(False)
 
 
