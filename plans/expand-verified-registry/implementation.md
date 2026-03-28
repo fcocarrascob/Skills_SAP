@@ -1341,7 +1341,7 @@ result["status"] = "verified"
 
 ##### 4.1 — `ConstraintDef.SetDiaphragm`
 
-- [ ] Create file `scripts/wrappers/func_ConstraintDef_SetDiaphragm.py`:
+- [x] Create file `scripts/wrappers/func_ConstraintDef_SetDiaphragm.py`:
 
 ```python
 # ============================================================
@@ -1416,8 +1416,8 @@ result["points_assigned"] = ["PT1", "PT2", "PT3", "PT4"]
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `axis_read == 3` (Z-axis).
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `axis_read == 3` (Z-axis).
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.ConstraintDef.SetDiaphragm`
   - `category`: `Constraints`
   - `description`: `Define a diaphragm constraint (rigid floor)`
@@ -1428,7 +1428,7 @@ result["status"] = "verified"
 
 ##### 4.2 — `ConstraintDef.GetDiaphragm`
 
-- [ ] Create file `scripts/wrappers/func_ConstraintDef_GetDiaphragm.py`:
+- [x] Create file `scripts/wrappers/func_ConstraintDef_GetDiaphragm.py`:
 
 ```python
 # ============================================================
@@ -1487,8 +1487,8 @@ result["diaph_auto_axis"] = axis_auto
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `axis == 3` and `axis == 4`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `axis == 3` and `axis == 4`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.ConstraintDef.GetDiaphragm`
   - `category`: `Constraints`
   - `description`: `Retrieve diaphragm constraint definition (axis and coordinate system)`
@@ -1496,10 +1496,10 @@ result["status"] = "verified"
   - `wrapper_script`: `func_ConstraintDef_GetDiaphragm`
 
 ##### Step 4 Verification Checklist
-- [ ] Both wrappers execute with `ret_code == 0`
-- [ ] `SetDiaphragm` — Z-axis constraint reads back axis=3
-- [ ] `GetDiaphragm` — both Z and Auto axes verified
-- [ ] Both functions registered in `scripts/registry.json`
+- [x] Both wrappers execute with `ret_code == 0`
+- [x] `SetDiaphragm` — Z-axis constraint reads back axis=3
+- [x] `GetDiaphragm` — both Z and Auto axes verified
+- [x] Both functions registered in `scripts/registry.json`
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
