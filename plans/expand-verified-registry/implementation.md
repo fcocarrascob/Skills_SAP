@@ -1685,7 +1685,7 @@ result["status"] = "verified"
 
 7 wrappers: `LoadCases.ResponseSpectrum.SetDampConstant`, `LoadCases.Count`, `.Delete`, `.ChangeName`, `LoadPatterns.Count`, `.Delete`, `.ChangeName`
 
-- [ ] Create file `scripts/wrappers/func_LoadCases_ResponseSpectrum_SetDampConstant.py`:
+- [x] Create file `scripts/wrappers/func_LoadCases_ResponseSpectrum_SetDampConstant.py`:
 
 ```python
 # ============================================================
@@ -1731,7 +1731,7 @@ result["damping"] = 0.05
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadCases_Count.py`:
+- [x] Create file `scripts/wrappers/func_LoadCases_Count.py`:
 
 ```python
 # ============================================================
@@ -1773,7 +1773,7 @@ result["count_all"] = count_all
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadCases_Delete.py`:
+- [x] Create file `scripts/wrappers/func_LoadCases_Delete.py`:
 
 ```python
 # ============================================================
@@ -1823,7 +1823,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadCases_ChangeName.py`:
+- [x] Create file `scripts/wrappers/func_LoadCases_ChangeName.py`:
 
 ```python
 # ============================================================
@@ -1875,7 +1875,7 @@ result["new_name"] = "RENAMED_LC"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadPatterns_Count.py`:
+- [x] Create file `scripts/wrappers/func_LoadPatterns_Count.py`:
 
 ```python
 # ============================================================
@@ -1924,7 +1924,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadPatterns_Delete.py`:
+- [x] Create file `scripts/wrappers/func_LoadPatterns_Delete.py`:
 
 ```python
 # ============================================================
@@ -1975,7 +1975,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_LoadPatterns_ChangeName.py`:
+- [x] Create file `scripts/wrappers/func_LoadPatterns_ChangeName.py`:
 
 ```python
 # ============================================================
@@ -2024,15 +2024,15 @@ result["new_name"] = "PP"
 result["status"] = "verified"
 ```
 
-- [ ] Register all 7 functions in `scripts/registry.json`
-- [ ] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
+- [x] Register all 7 functions in `scripts/registry.json`
+- [x] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
 
 ##### Step 5 Verification Checklist
-- [ ] All 7 wrappers execute without assertion errors
-- [ ] `Count` reports correct totals before/after operations
-- [ ] `Delete` and `ChangeName` confirmed via `GetNameList`
-- [ ] `SetDampConstant` succeeds on RS case
-- [ ] All 7 functions appear in `registry.json` with `verified: true`
+- [x] All 7 wrappers execute without assertion errors
+- [x] `Count` reports correct totals before/after operations
+- [x] `Delete` and `ChangeName` confirmed via `GetNameList`
+- [x] `SetDampConstant` succeeds on RS case
+- [x] All 7 functions appear in `registry.json` with `verified: true`
 
 #### Step 5 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
