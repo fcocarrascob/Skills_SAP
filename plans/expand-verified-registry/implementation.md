@@ -2632,7 +2632,7 @@ result["status"] = "verified"
 
 10 wrappers: `FrameObj.SetModifiers`, `.GetModifiers`, `PropArea.SetModifiers`, `.GetModifiers`, `PropFrame.ChangeName`, `.Delete`, `.Count`, `PropMaterial.ChangeName`, `.Delete`, `.Count`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetModifiers.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetModifiers.py`:
 
 ```python
 # ============================================================
@@ -2705,7 +2705,7 @@ result["column_modifiers"] = col_mods
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_GetModifiers.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_GetModifiers.py`:
 
 ```python
 # ============================================================
@@ -2770,7 +2770,7 @@ result["byref_layout"] = "[Value[8], ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropArea_SetModifiers.py`:
+- [x] Create file `scripts/wrappers/func_PropArea_SetModifiers.py`:
 
 ```python
 # ============================================================
@@ -2826,7 +2826,7 @@ result["modifiers"] = slab_mods
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropArea_GetModifiers.py`:
+- [x] Create file `scripts/wrappers/func_PropArea_GetModifiers.py`:
 
 ```python
 # ============================================================
@@ -2885,7 +2885,7 @@ result["byref_layout"] = "[Value[10], ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropFrame_ChangeName.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_ChangeName.py`:
 
 ```python
 # ============================================================
@@ -2939,7 +2939,7 @@ result["new_name"] = "NEW_SEC"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropFrame_Delete.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_Delete.py`:
 
 ```python
 # ============================================================
@@ -2992,7 +2992,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropFrame_Count.py`:
+- [x] Create file `scripts/wrappers/func_PropFrame_Count.py`:
 
 ```python
 # ============================================================
@@ -3042,7 +3042,7 @@ result["count_all"] = count_all
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropMaterial_ChangeName.py`:
+- [x] Create file `scripts/wrappers/func_PropMaterial_ChangeName.py`:
 
 ```python
 # ============================================================
@@ -3094,7 +3094,7 @@ result["new_name"] = "NEW_MAT"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropMaterial_Delete.py`:
+- [x] Create file `scripts/wrappers/func_PropMaterial_Delete.py`:
 
 ```python
 # ============================================================
@@ -3145,7 +3145,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_PropMaterial_Count.py`:
+- [x] Create file `scripts/wrappers/func_PropMaterial_Count.py`:
 
 ```python
 # ============================================================
@@ -3191,17 +3191,17 @@ result["count_all"] = count_all
 result["status"] = "verified"
 ```
 
-- [ ] Register all 10 functions in `scripts/registry.json`
-- [ ] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
+- [x] Register all 10 functions in `scripts/registry.json`
+- [x] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
 
 ##### Step 8 Verification Checklist
-- [ ] All 10 wrappers execute without assertion errors
-- [ ] `FrameObj.SetModifiers` → `GetModifiers` roundtrip matches (I22=0.35, I33=0.35)
-- [ ] `PropArea.SetModifiers` → `GetModifiers` roundtrip matches
-- [ ] `ChangeName` renames (old gone, new present) for both PropFrame and PropMaterial
-- [ ] `Delete` removes property (count decrements) for both PropFrame and PropMaterial
-- [ ] `Count` returns correct totals
-- [ ] All 10 functions appear in `registry.json` with `verified: true`
+- [x] All 10 wrappers execute without assertion errors
+- [x] `FrameObj.SetModifiers` → `GetModifiers` roundtrip matches (I22=0.35, I33=0.35)
+- [x] `PropArea.SetModifiers` → `GetModifiers` roundtrip matches
+- [x] `ChangeName` renames (old gone, new present) for both PropFrame and PropMaterial
+- [x] `Delete` removes property (count decrements) for both PropFrame and PropMaterial
+- [x] `Count` returns correct totals
+- [x] All 10 functions appear in `registry.json` with `verified: true`
 
 #### Step 8 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
