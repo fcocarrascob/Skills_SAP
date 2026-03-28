@@ -1510,7 +1510,7 @@ result["status"] = "verified"
 
 ##### 5a.1 — `Results.BaseReact`
 
-- [ ] Create file `scripts/wrappers/func_Results_BaseReact.py`:
+- [x] Create file `scripts/wrappers/func_Results_BaseReact.py`:
 
 ```python
 # ============================================================
@@ -1610,8 +1610,8 @@ result["My"] = My
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `total_Fz ≈ 200 kN`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `total_Fz ≈ 200 kN`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Results.BaseReact`
   - `category`: `Analysis_Results`
   - `description`: `Extract total base reactions (forces and moments at reporting point)`
@@ -1622,7 +1622,7 @@ result["status"] = "verified"
 
 ##### 5a.2 — `Results.AreaStressShell`
 
-- [ ] Create file `scripts/wrappers/func_Results_AreaStressShell.py`:
+- [x] Create file `scripts/wrappers/func_Results_AreaStressShell.py`:
 
 ```python
 # ============================================================
@@ -1722,8 +1722,8 @@ result["S22Top_sample"] = S22Top[:4] if len(S22Top) >= 4 else S22Top
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `num_results > 0`, stress arrays non-empty.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `num_results > 0`, stress arrays non-empty.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Results.AreaStressShell`
   - `category`: `Analysis_Results`
   - `description`: `Extract shell element stresses (S11, S22, S12 at top/bottom, principal, Von Mises)`
@@ -1731,10 +1731,10 @@ result["status"] = "verified"
   - `wrapper_script`: `func_Results_AreaStressShell`
 
 ##### Step 5a Verification Checklist
-- [ ] Both wrappers execute with `ret_code == 0`
-- [ ] `BaseReact` — `total_Fz ≈ 200 kN`
-- [ ] `AreaStressShell` — non-empty stress arrays
-- [ ] Both functions registered in `scripts/registry.json`
+- [x] Both wrappers execute with `ret_code == 0`
+- [x] `BaseReact` — `total_Fz ≈ 200 kN`
+- [x] `AreaStressShell` — non-empty stress arrays
+- [x] Both functions registered in `scripts/registry.json`
 
 #### Step 5a STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
@@ -1745,7 +1745,7 @@ result["status"] = "verified"
 
 ##### 5b.1 — `Results.ModalPeriod`
 
-- [ ] Create file `scripts/wrappers/func_Results_ModalPeriod.py`:
+- [x] Create file `scripts/wrappers/func_Results_ModalPeriod.py`:
 
 ```python
 # ============================================================
@@ -1856,8 +1856,8 @@ result["T1"] = periods[0]
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `num_modes > 0`, `T1 > 0`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `num_modes > 0`, `T1 > 0`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Results.ModalPeriod`
   - `category`: `Analysis_Results`
   - `description`: `Extract modal periods, frequencies, circular frequencies, and eigenvalues`
@@ -1868,7 +1868,7 @@ result["status"] = "verified"
 
 ##### 5b.2 — `Results.ModalParticipatingMassRatios`
 
-- [ ] Create file `scripts/wrappers/func_Results_ModalParticipatingMassRatios.py`:
+- [x] Create file `scripts/wrappers/func_Results_ModalParticipatingMassRatios.py`:
 
 ```python
 # ============================================================
@@ -1980,8 +1980,8 @@ result["final_SumUx"] = last_SumUx
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `num_modes > 0`, `SumUx` array populated.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `num_modes > 0`, `SumUx` array populated.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Results.ModalParticipatingMassRatios`
   - `category`: `Analysis_Results`
   - `description`: `Extract modal participating mass ratios (individual and cumulative per DOF)`
@@ -1992,7 +1992,7 @@ result["status"] = "verified"
 
 ##### 5b.3 — `Results.ModeShape`
 
-- [ ] Create file `scripts/wrappers/func_Results_ModeShape.py`:
+- [x] Create file `scripts/wrappers/func_Results_ModeShape.py`:
 
 ```python
 # ============================================================
@@ -2099,8 +2099,8 @@ result["U1_sample"] = U1[:6]
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `num_results > 0`, arrays populated.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `num_results > 0`, arrays populated.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Results.ModeShape`
   - `category`: `Analysis_Results`
   - `description`: `Extract modal displacements (mode shapes) at point elements`
@@ -2108,11 +2108,11 @@ result["status"] = "verified"
   - `wrapper_script`: `func_Results_ModeShape`
 
 ##### Step 5b Verification Checklist
-- [ ] All 3 wrappers execute with `ret_code == 0`
-- [ ] `ModalPeriod` — `T1 > 0`, all periods positive
-- [ ] `ModalParticipatingMassRatios` — `SumUx` populated, increasing
-- [ ] `ModeShape` — non-empty displacement arrays with multiple modes
-- [ ] All 3 functions registered in `scripts/registry.json`
+- [x] All 3 wrappers execute with `ret_code == 0`
+- [x] `ModalPeriod` — `T1 > 0`, all periods positive
+- [x] `ModalParticipatingMassRatios` — `SumUx` populated, increasing
+- [x] `ModeShape` — non-empty displacement arrays with multiple modes
+- [x] All 3 functions registered in `scripts/registry.json`
 
 #### Step 5b STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
