@@ -2123,7 +2123,7 @@ result["status"] = "verified"
 
 ##### 6.1 — `Analyze.SetActiveDOF`
 
-- [ ] Create file `scripts/wrappers/func_Analyze_SetActiveDOF.py`:
+- [x] Create file `scripts/wrappers/func_Analyze_SetActiveDOF.py`:
 
 ```python
 # ============================================================
@@ -2184,8 +2184,8 @@ result["dof_3d_verified"] = True
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify DOFs match.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify DOFs match.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Analyze.SetActiveDOF`
   - `category`: `Analyze`
   - `description`: `Set active/inactive global degrees of freedom for analysis model`
@@ -2196,7 +2196,7 @@ result["status"] = "verified"
 
 ##### 6.2 — `Analyze.GetActiveDOF`
 
-- [ ] Create file `scripts/wrappers/func_Analyze_GetActiveDOF.py`:
+- [x] Create file `scripts/wrappers/func_Analyze_GetActiveDOF.py`:
 
 ```python
 # ============================================================
@@ -2250,8 +2250,8 @@ result["after_set_2d"] = read_2d
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify default DOFs and 2D DOFs.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify default DOFs and 2D DOFs.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Analyze.GetActiveDOF`
   - `category`: `Analyze`
   - `description`: `Retrieve active global degrees of freedom for analysis model`
@@ -2262,7 +2262,7 @@ result["status"] = "verified"
 
 ##### 6.3 — `Analyze.GetCaseStatus`
 
-- [ ] Create file `scripts/wrappers/func_Analyze_GetCaseStatus.py`:
+- [x] Create file `scripts/wrappers/func_Analyze_GetCaseStatus.py`:
 
 ```python
 # ============================================================
@@ -2346,8 +2346,8 @@ result["finished_cases"] = finished_cases
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify status changes from 1 to 4.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify status changes from 1 to 4.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.Analyze.GetCaseStatus`
   - `category`: `Analyze`
   - `description`: `Retrieve run status for all load cases (1=Not run, 4=Finished)`
@@ -2358,8 +2358,8 @@ result["status"] = "verified"
 
 ##### 6.4 — `File.OpenFile` (verify/update existing)
 
-- [ ] Verify existing wrapper `scripts/wrappers/func_File_OpenFile.py` is in registry.
-- [ ] If not in registry, register via `register_verified_function`:
+- [x] Verify existing wrapper `scripts/wrappers/func_File_OpenFile.py` is in registry.
+- [x] If not in registry, register via `register_verified_function`:
   - `function_path`: `SapModel.File.OpenFile`
   - `category`: `File`
   - `description`: `Open an existing SAP2000 model file (.sdb)`
@@ -2367,11 +2367,11 @@ result["status"] = "verified"
   - `wrapper_script`: `func_File_OpenFile`
 
 ##### Step 6 Verification Checklist
-- [ ] `SetActiveDOF` — 2D DOF array matches set/get round-trip
-- [ ] `GetActiveDOF` — default all-True, 2D setting confirmed
-- [ ] `GetCaseStatus` — status transitions from 1→4 after RunAnalysis
-- [ ] `File.OpenFile` — confirmed in registry
-- [ ] All functions registered in `scripts/registry.json`
+- [x] `SetActiveDOF` — 2D DOF array matches set/get round-trip
+- [x] `GetActiveDOF` — default all-True, 2D setting confirmed
+- [x] `GetCaseStatus` — status transitions from 1→4 after RunAnalysis
+- [x] `File.OpenFile` — confirmed in registry
+- [x] All functions registered in `scripts/registry.json`
 
 #### Step 6 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
