@@ -838,7 +838,7 @@ result["status"] = "verified"
 
 9 wrappers: `DesignSteel.SetComboStrength`, `.GetComboStrength`, `.SetComboDeflection`, `.GetCode`, `.SetCode`, `.DeleteResults`, `DesignConcrete.SetComboStrength`, `.GetCode`, `.SetCode`
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_SetComboStrength.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_SetComboStrength.py`:
 
 ```python
 # ============================================================
@@ -893,7 +893,7 @@ result["combos_deselected"] = ["LRFD_2"]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_GetComboStrength.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_GetComboStrength.py`:
 
 ```python
 # ============================================================
@@ -955,7 +955,7 @@ result["byref_layout"] = "[NumberItems, MyName[], ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_SetComboDeflection.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_SetComboDeflection.py`:
 
 ```python
 # ============================================================
@@ -1002,7 +1002,7 @@ result["function"] = "SapModel.DesignSteel.SetComboDeflection"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_GetCode.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_GetCode.py`:
 
 ```python
 # ============================================================
@@ -1044,7 +1044,7 @@ result["byref_layout"] = "[CodeName, ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_SetCode.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_SetCode.py`:
 
 ```python
 # ============================================================
@@ -1090,7 +1090,7 @@ result["code_verified"] = raw[0]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignSteel_DeleteResults.py`:
+- [x] Create file `scripts/wrappers/func_DesignSteel_DeleteResults.py`:
 
 ```python
 # ============================================================
@@ -1129,7 +1129,7 @@ result["function"] = "SapModel.DesignSteel.DeleteResults"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignConcrete_SetComboStrength.py`:
+- [x] Create file `scripts/wrappers/func_DesignConcrete_SetComboStrength.py`:
 
 ```python
 # ============================================================
@@ -1183,7 +1183,7 @@ result["combos_selected"] = ["CONC_STR1"]
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignConcrete_GetCode.py`:
+- [x] Create file `scripts/wrappers/func_DesignConcrete_GetCode.py`:
 
 ```python
 # ============================================================
@@ -1225,7 +1225,7 @@ result["byref_layout"] = "[CodeName, ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_DesignConcrete_SetCode.py`:
+- [x] Create file `scripts/wrappers/func_DesignConcrete_SetCode.py`:
 
 ```python
 # ============================================================
@@ -1271,14 +1271,14 @@ result["code_verified"] = raw[0]
 result["status"] = "verified"
 ```
 
-- [ ] Register all 9 functions in `scripts/registry.json`
-- [ ] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
+- [x] Register all 9 functions in `scripts/registry.json`
+- [x] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
 
 ##### Step 3 Verification Checklist
-- [ ] All 9 wrappers execute without assertion errors
-- [ ] `GetComboStrength` returns combos set via `SetComboStrength`
-- [ ] `SetCode` → `GetCode` round-trip matches for both steel and concrete
-- [ ] All 9 functions appear in `registry.json` with `verified: true`
+- [x] All 9 wrappers execute without assertion errors
+- [x] `GetComboStrength` returns combos set via `SetComboStrength`
+- [x] `SetCode` → `GetCode` round-trip matches for both steel and concrete
+- [x] All 9 functions appear in `registry.json` with `verified: true`
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
