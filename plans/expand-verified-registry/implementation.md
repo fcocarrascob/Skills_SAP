@@ -996,7 +996,7 @@ result["status"] = "verified"
 
 ##### 3.1 — `GroupDef.SetGroup`
 
-- [ ] Create file `scripts/wrappers/func_GroupDef_SetGroup.py`:
+- [x] Create file `scripts/wrappers/func_GroupDef_SetGroup.py`:
 
 ```python
 # ============================================================
@@ -1062,8 +1062,8 @@ result["all_group_names"] = group_names
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify both groups appear in name list.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify both groups appear in name list.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.GroupDef.SetGroup`
   - `category`: `Groups`
   - `description`: `Create or modify a group definition with properties`
@@ -1074,7 +1074,7 @@ result["status"] = "verified"
 
 ##### 3.2 — `GroupDef.GetNameList`
 
-- [ ] Create file `scripts/wrappers/func_GroupDef_GetNameList.py`:
+- [x] Create file `scripts/wrappers/func_GroupDef_GetNameList.py`:
 
 ```python
 # ============================================================
@@ -1131,8 +1131,8 @@ result["group_names"] = group_names
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `num_groups >= 3`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `num_groups >= 3`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.GroupDef.GetNameList`
   - `category`: `Groups`
   - `description`: `Retrieve names of all defined groups`
@@ -1143,7 +1143,7 @@ result["status"] = "verified"
 
 ##### 3.3 — `FrameObj.SetGroupAssign`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetGroupAssign.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetGroupAssign.py`:
 
 ```python
 # ============================================================
@@ -1222,8 +1222,8 @@ result["object_names"] = obj_names
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `items_in_group == 2`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `items_in_group == 2`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.FrameObj.SetGroupAssign`
   - `category`: `Object_Model`
   - `description`: `Add or remove frame objects from a group`
@@ -1234,7 +1234,7 @@ result["status"] = "verified"
 
 ##### 3.4 — `AreaObj.SetGroupAssign`
 
-- [ ] Create file `scripts/wrappers/func_AreaObj_SetGroupAssign.py`:
+- [x] Create file `scripts/wrappers/func_AreaObj_SetGroupAssign.py`:
 
 ```python
 # ============================================================
@@ -1316,8 +1316,8 @@ result["object_types"] = obj_types
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `items_in_group == 2`, all type=5.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `items_in_group == 2`, all type=5.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.AreaObj.SetGroupAssign`
   - `category`: `Object_Model`
   - `description`: `Add or remove area objects from a group`
@@ -1325,12 +1325,12 @@ result["status"] = "verified"
   - `wrapper_script`: `func_AreaObj_SetGroupAssign`
 
 ##### Step 3 Verification Checklist
-- [ ] All 4 wrappers execute with `ret_code == 0`
-- [ ] `SetGroup` — both groups appear in `GetNameList`
-- [ ] `GetNameList` — returns ALL + custom groups
-- [ ] `FrameObj.SetGroupAssign` — 2 frames confirmed in group via `GetAssignments`
-- [ ] `AreaObj.SetGroupAssign` — 2 areas confirmed in group, type=5
-- [ ] All 4 functions registered in `scripts/registry.json`
+- [x] All 4 wrappers execute with `ret_code == 0`
+- [x] `SetGroup` — both groups appear in `GetNameList`
+- [x] `GetNameList` — returns ALL + custom groups
+- [x] `FrameObj.SetGroupAssign` — 2 frames confirmed in group via `GetAssignments`
+- [x] `AreaObj.SetGroupAssign` — 2 areas confirmed in group, type=5
+- [x] All 4 functions registered in `scripts/registry.json`
 
 #### Step 3 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
