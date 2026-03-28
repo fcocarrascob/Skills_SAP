@@ -2382,7 +2382,7 @@ result["status"] = "verified"
 
 ##### 7.1 — `PropLink.SetLinear`
 
-- [ ] Create file `scripts/wrappers/func_PropLink_SetLinear.py`:
+- [x] Create file `scripts/wrappers/func_PropLink_SetLinear.py`:
 
 ```python
 # ============================================================
@@ -2466,8 +2466,8 @@ result["ke_read"] = read_ke
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify stiffness values match.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify stiffness values match.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.PropLink.SetLinear`
   - `category`: `Properties`
   - `description`: `Define a linear-type link property (stiffness, damping, DOFs)`
@@ -2478,7 +2478,7 @@ result["status"] = "verified"
 
 ##### 7.2 — `LinkObj.AddByPoint`
 
-- [ ] Create file `scripts/wrappers/func_LinkObj_AddByPoint.py`:
+- [x] Create file `scripts/wrappers/func_LinkObj_AddByPoint.py`:
 
 ```python
 # ============================================================
@@ -2559,8 +2559,8 @@ result["link_count"] = count
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `link_count == 2`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `link_count == 2`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.LinkObj.AddByPoint`
   - `category`: `Object_Model`
   - `description`: `Create a link element between two existing points (or grounded single-joint)`
@@ -2571,7 +2571,7 @@ result["status"] = "verified"
 
 ##### 7.3 — `LinkObj.AddByCoord`
 
-- [ ] Create file `scripts/wrappers/func_LinkObj_AddByCoord.py`:
+- [x] Create file `scripts/wrappers/func_LinkObj_AddByCoord.py`:
 
 ```python
 # ============================================================
@@ -2646,8 +2646,8 @@ result["link_count"] = count
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `link_count == 2`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `link_count == 2`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.LinkObj.AddByCoord`
   - `category`: `Object_Model`
   - `description`: `Create a link element by specifying I-End and J-End coordinates`
@@ -2658,7 +2658,7 @@ result["status"] = "verified"
 
 ##### 7.4 — `AreaObj.SetProperty`
 
-- [ ] Create file `scripts/wrappers/func_AreaObj_SetProperty.py`:
+- [x] Create file `scripts/wrappers/func_AreaObj_SetProperty.py`:
 
 ```python
 # ============================================================
@@ -2732,8 +2732,8 @@ result["new_property"] = new_prop
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify property changed from SLAB_15 to SLAB_25.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify property changed from SLAB_15 to SLAB_25.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.AreaObj.SetProperty`
   - `category`: `Object_Model`
   - `description`: `Assign or change area section property on an area object`
@@ -2744,7 +2744,7 @@ result["status"] = "verified"
 
 ##### 7.5 — `PropArea.GetShell_1`
 
-- [ ] Create file `scripts/wrappers/func_PropArea_GetShell_1.py`:
+- [x] Create file `scripts/wrappers/func_PropArea_GetShell_1.py`:
 
 ```python
 # ============================================================
@@ -2822,8 +2822,8 @@ result["bending"] = bending
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `shell_type == 2`, `thickness == 0.30`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `shell_type == 2`, `thickness == 0.30`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.PropArea.GetShell_1`
   - `category`: `Properties`
   - `description`: `Retrieve shell-type area section properties (type, material, thicknesses)`
@@ -2831,13 +2831,13 @@ result["status"] = "verified"
   - `wrapper_script`: `func_PropArea_GetShell_1`
 
 ##### Step 7 Verification Checklist
-- [ ] All 5 wrappers execute with `ret_code == 0`
-- [ ] `PropLink.SetLinear` — stiffness values match on read-back
-- [ ] `LinkObj.AddByPoint` — 2 links created (2-joint + grounded)
-- [ ] `LinkObj.AddByCoord` — 2 links created
-- [ ] `AreaObj.SetProperty` — property changed from SLAB_15 to SLAB_25
-- [ ] `PropArea.GetShell_1` — `shell_type=2`, `thickness=0.30`, `material=CONC_TEST`
-- [ ] All 5 functions registered in `scripts/registry.json`
+- [x] All 5 wrappers execute with `ret_code == 0`
+- [x] `PropLink.SetLinear` — stiffness values match on read-back
+- [x] `LinkObj.AddByPoint` — 2 links created (2-joint + grounded)
+- [x] `LinkObj.AddByCoord` — 2 links created
+- [x] `AreaObj.SetProperty` — property changed from SLAB_15 to SLAB_25
+- [x] `PropArea.GetShell_1` — `shell_type=2`, `thickness=0.30`, `material=CONC_TEST`
+- [x] All 5 functions registered in `scripts/registry.json`
 
 #### Step 7 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
