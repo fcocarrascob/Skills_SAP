@@ -1289,7 +1289,7 @@ result["status"] = "verified"
 
 7 wrappers: `RespCombo.Delete`, `.ChangeName`, `.Count`, `.SetTypeOAPI`, `.GetTypeOAPI`, `.DeleteCase`, `.AddDesignDefaultCombos`
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_Delete.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_Delete.py`:
 
 ```python
 # ============================================================
@@ -1344,7 +1344,7 @@ result["deleted"] = "TEMP_COMBO"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_ChangeName.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_ChangeName.py`:
 
 ```python
 # ============================================================
@@ -1398,7 +1398,7 @@ result["new_name"] = "NEW_NAME"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_Count.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_Count.py`:
 
 ```python
 # ============================================================
@@ -1447,7 +1447,7 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_SetTypeOAPI.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_SetTypeOAPI.py`:
 
 ```python
 # ============================================================
@@ -1494,7 +1494,7 @@ result["new_type"] = 1
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_GetTypeOAPI.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_GetTypeOAPI.py`:
 
 ```python
 # ============================================================
@@ -1552,7 +1552,7 @@ result["byref_layout"] = "[ComboType, ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_DeleteCase.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_DeleteCase.py`:
 
 ```python
 # ============================================================
@@ -1605,7 +1605,7 @@ result["deleted_case"] = "DEAD"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_RespCombo_AddDesignDefaultCombos.py`:
+- [x] Create file `scripts/wrappers/func_RespCombo_AddDesignDefaultCombos.py`:
 
 ```python
 # ============================================================
@@ -1665,16 +1665,16 @@ result["generated_combos"] = combo_names
 result["status"] = "verified"
 ```
 
-- [ ] Register all 7 functions in `scripts/registry.json`
-- [ ] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
+- [x] Register all 7 functions in `scripts/registry.json`
+- [x] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
 
 ##### Step 4 Verification Checklist
-- [ ] All 7 wrappers execute without assertion errors
-- [ ] `Delete` removes combo (confirmed by `GetNameList`)
-- [ ] `ChangeName` renames combo (old gone, new present)
-- [ ] `Count` returns correct count before/after adding
-- [ ] `SetTypeOAPI` → `GetTypeOAPI` round-trip matches
-- [ ] All 7 functions appear in `registry.json` with `verified: true`
+- [x] All 7 wrappers execute without assertion errors
+- [x] `Delete` removes combo (confirmed by `GetNameList`)
+- [x] `ChangeName` renames combo (old gone, new present)
+- [x] `Count` returns correct count before/after adding
+- [x] `SetTypeOAPI` → `GetTypeOAPI` round-trip matches
+- [x] All 7 functions appear in `registry.json` with `verified: true`
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
