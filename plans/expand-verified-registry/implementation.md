@@ -2043,7 +2043,7 @@ result["status"] = "verified"
 
 4 wrappers: `SourceMass.SetMassSource`, `.GetMassSource`, `.GetDefault`, `.Count`
 
-- [ ] Create file `scripts/wrappers/func_SourceMass_SetMassSource.py`:
+- [x] Create file `scripts/wrappers/func_SourceMass_SetMassSource.py`:
 
 ```python
 # ============================================================
@@ -2124,7 +2124,7 @@ result["count"] = count
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_SourceMass_GetMassSource.py`:
+- [x] Create file `scripts/wrappers/func_SourceMass_GetMassSource.py`:
 
 ```python
 # ============================================================
@@ -2191,7 +2191,7 @@ result["byref_layout"] = "[MassFromElements, MassFromMasses, MassFromLoads, IsDe
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_SourceMass_GetDefault.py`:
+- [x] Create file `scripts/wrappers/func_SourceMass_GetDefault.py`:
 
 ```python
 # ============================================================
@@ -2244,7 +2244,7 @@ result["byref_layout"] = "[Name, ret_code]"
 result["status"] = "verified"
 ```
 
-- [ ] Create file `scripts/wrappers/func_SourceMass_Count.py`:
+- [x] Create file `scripts/wrappers/func_SourceMass_Count.py`:
 
 ```python
 # ============================================================
@@ -2293,15 +2293,15 @@ result["count_after"] = count_after
 result["status"] = "verified"
 ```
 
-- [ ] Register all 4 functions in `scripts/registry.json`
-- [ ] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
+- [x] Register all 4 functions in `scripts/registry.json`
+- [x] Execute each wrapper via MCP `run_sap_script` and verify `ret_code == 0`
 
 ##### Step 6 Verification Checklist
-- [ ] All 4 wrappers execute without assertion errors
-- [ ] `SetMassSource` → `GetMassSource` roundtrip produces matching flags/SFs
-- [ ] `GetDefault` returns correct default after setting new default
-- [ ] `Count` increments correctly after adding mass source
-- [ ] All 4 functions appear in `registry.json` with `verified: true`
+- [x] All 4 wrappers execute without assertion errors
+- [x] `SetMassSource` → `GetMassSource` roundtrip produces matching flags/SFs
+- [x] `GetDefault` returns correct default after setting new default
+- [x] `Count` increments correctly after adding mass source
+- [x] All 4 functions appear in `registry.json` with `verified: true`
 
 #### Step 6 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.

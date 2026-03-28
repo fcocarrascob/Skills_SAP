@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T14:14:30.326187+00:00",
-      "verification_count": 120,
+      "last_verified": "2026-03-28T14:38:34.696529+00:00",
+      "verification_count": 124,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -125,8 +125,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-28T14:14:30.317658+00:00",
-      "verification_count": 120,
+      "last_verified": "2026-03-28T14:38:34.687978+00:00",
+      "verification_count": 124,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -141,8 +141,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-28T14:14:30.332199+00:00",
-      "verification_count": 118,
+      "last_verified": "2026-03-28T14:38:34.696529+00:00",
+      "verification_count": 122,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -355,8 +355,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:53:26.742703+00:00",
-      "last_verified": "2026-03-28T14:11:09.262935+00:00",
-      "verification_count": 22,
+      "last_verified": "2026-03-28T14:37:28.424188+00:00",
+      "verification_count": 23,
       "wrapper_script": "func_LoadPatterns_Add",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -2382,11 +2382,67 @@
       "parameter_notes": "Name: str — existing load pattern name; NewName: str — new unique name",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). Verify with GetNameList after renaming."
+    },
+    "SapModel.SourceMass.SetMassSource": {
+      "category": "Mass_Source",
+      "description": "Add or reinitialize a mass source definition specifying which elements and load patterns contribute to model mass. Essential for seismic and modal analysis workflows.",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-28T14:37:28.413968+00:00",
+      "last_verified": "2026-03-28T14:38:52.370382+00:00",
+      "verification_count": 5,
+      "wrapper_script": "func_SourceMass_SetMassSource",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str, MassFromElements: bool, MassFromMasses: bool, MassFromLoads: bool, IsDefault: bool, NumberLoads: int, LoadPat: str[], SF: float[]",
+      "known_errors": [],
+      "notes": "Returns [LoadPat[], SF[], ret_code] — ByRef echo. Use raw[-1] for return code. Verified 2026-03-28."
+    },
+    "SapModel.SourceMass.Count": {
+      "category": "Mass_Source",
+      "description": "Get total number of mass sources defined in the model. Returns integer directly (not ByRef).",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-28T14:37:28.429058+00:00",
+      "last_verified": "2026-03-28T14:39:06.026740+00:00",
+      "verification_count": 3,
+      "wrapper_script": "func_SourceMass_Count",
+      "used_in_scripts": [],
+      "parameter_notes": "No parameters required.",
+      "known_errors": [],
+      "notes": "Returns integer directly. Blank model has 1 default mass source ('MSSSRC1'). Verified 2026-03-28."
+    },
+    "SapModel.SourceMass.GetMassSource": {
+      "category": "Mass_Source",
+      "description": "Retrieve mass source configuration including element/load contributions and scale factors. Returns ByRef layout with all settings.",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-28T14:38:02.604059+00:00",
+      "last_verified": "2026-03-28T14:38:57.517783+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_SourceMass_GetMassSource",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str — Existing mass source name. Pass dummy values for ByRef outputs.",
+      "known_errors": [],
+      "notes": "ByRef layout: [MassFromElements, MassFromMasses, MassFromLoads, IsDefault, NumberLoads, LoadPat(), SF(), ret_code]. Verified 2026-03-28."
+    },
+    "SapModel.SourceMass.GetDefault": {
+      "category": "Mass_Source",
+      "description": "Retrieve the name of the default mass source currently set in the model.",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-28T14:38:19.429288+00:00",
+      "last_verified": "2026-03-28T14:39:01.996520+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_SourceMass_GetDefault",
+      "used_in_scripts": [],
+      "parameter_notes": "Pass empty string '' as placeholder for ByRef Name output.",
+      "known_errors": [],
+      "notes": "ByRef layout: [Name, ret_code]. Default mass source is 'MSSSRC1' in blank models. Verified 2026-03-28."
     }
   },
   "summary": {
-    "total_registered": 169,
-    "total_verified": 169,
-    "last_updated": "2026-03-28T14:30:57.975504+00:00"
+    "total_registered": 173,
+    "total_verified": 173,
+    "last_updated": "2026-03-28T14:39:06.026740+00:00"
   }
 }
