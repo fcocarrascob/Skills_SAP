@@ -648,7 +648,7 @@ result["status"] = "verified"
 
 ##### 2.1 — `FrameObj.SetReleases`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetReleases.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetReleases.py`:
 
 ```python
 # ============================================================
@@ -728,8 +728,8 @@ result["jj_releases"] = read_jj
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify J-End R3 is released.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify J-End R3 is released.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.FrameObj.SetReleases`
   - `category`: `Object_Model`
   - `description`: `Assign end releases (hinges/partial fixity) to frame objects`
@@ -740,7 +740,7 @@ result["status"] = "verified"
 
 ##### 2.2 — `FrameObj.GetReleases`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_GetReleases.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_GetReleases.py`:
 
 ```python
 # ============================================================
@@ -813,8 +813,8 @@ result["end_values"] = read_ev
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify releases match what was set.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify releases match what was set.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.FrameObj.GetReleases`
   - `category`: `Object_Model`
   - `description`: `Retrieve end release and partial fixity assignments from frame objects`
@@ -825,7 +825,7 @@ result["status"] = "verified"
 
 ##### 2.3 — `FrameObj.SetInsertionPoint`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetInsertionPoint.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetInsertionPoint.py`:
 
 ```python
 # ============================================================
@@ -899,8 +899,8 @@ result["cardinal_point"] = cardinal
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `cardinal_point == 8`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `cardinal_point == 8`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.FrameObj.SetInsertionPoint_1`
   - `category`: `Object_Model`
   - `description`: `Assign cardinal point and joint offsets to frame objects`
@@ -911,7 +911,7 @@ result["status"] = "verified"
 
 ##### 2.4 — `FrameObj.SetLocalAxes`
 
-- [ ] Create file `scripts/wrappers/func_FrameObj_SetLocalAxes.py`:
+- [x] Create file `scripts/wrappers/func_FrameObj_SetLocalAxes.py`:
 
 ```python
 # ============================================================
@@ -971,8 +971,8 @@ result["angle_read"] = angle
 result["status"] = "verified"
 ```
 
-- [ ] Execute via `run_sap_script` and verify `angle_read ≈ 45°`.
-- [ ] Register via `register_verified_function`:
+- [x] Execute via `run_sap_script` and verify `angle_read ≈ 45°`.
+- [x] Register via `register_verified_function`:
   - `function_path`: `SapModel.FrameObj.SetLocalAxes`
   - `category`: `Object_Model`
   - `description`: `Assign local axis rotation angle to frame objects`
@@ -980,12 +980,12 @@ result["status"] = "verified"
   - `wrapper_script`: `func_FrameObj_SetLocalAxes`
 
 ##### Step 2 Verification Checklist
-- [ ] All 4 wrappers execute with `ret_code == 0`
-- [ ] `SetReleases` — J-End R3 confirmed released via `GetReleases`
-- [ ] `GetReleases` — I-End R2 and J-End R3 match assigned values
-- [ ] `SetInsertionPoint_1` — cardinal point reads back as 8
-- [ ] `SetLocalAxes` — angle reads back as 45°
-- [ ] All 4 functions registered in `scripts/registry.json`
+- [x] All 4 wrappers execute with `ret_code == 0`
+- [x] `SetReleases` — J-End R3 confirmed released via `GetReleases`
+- [x] `GetReleases` — I-End R2 and J-End R3 match assigned values
+- [x] `SetInsertionPoint_1` — cardinal point reads back as 8
+- [x] `SetLocalAxes` — angle reads back as 45°
+- [x] All 4 functions registered in `scripts/registry.json`
 
 #### Step 2 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
