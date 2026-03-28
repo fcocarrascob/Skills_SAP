@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T04:51:26.905947+00:00",
-      "verification_count": 88,
+      "last_verified": "2026-03-28T13:39:34.433382+00:00",
+      "verification_count": 89,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -23,8 +23,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T04:51:26.922428+00:00",
-      "verification_count": 73,
+      "last_verified": "2026-03-28T13:39:48.086508+00:00",
+      "verification_count": 77,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -39,8 +39,8 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T04:51:26.930369+00:00",
-      "verification_count": 41,
+      "last_verified": "2026-03-28T13:39:48.092497+00:00",
+      "verification_count": 44,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -125,8 +125,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-28T04:51:26.897225+00:00",
-      "verification_count": 87,
+      "last_verified": "2026-03-28T13:39:34.427848+00:00",
+      "verification_count": 88,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -141,8 +141,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-28T04:51:26.922428+00:00",
-      "verification_count": 84,
+      "last_verified": "2026-03-28T13:39:34.439919+00:00",
+      "verification_count": 86,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1878,11 +1878,81 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.PropMaterial.SetOSteel_1": {
+      "category": "PropMaterial",
+      "description": "Set steel design properties (yield/ultimate strengths, stress-strain model)",
+      "signature": "(Name, Fy, Fu, EFy, EFu, SSType, SSHysType, StrainAtHardening, StrainAtMaxStress, StrainAtRupture, FinalSlope) -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-28T00:00:00.000000+00:00",
+      "last_verified": "2026-03-28T13:39:20.418393+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropMaterial_SetOSteel_1",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing steel material); Fy/Fu: float [F/L^2]; EFy/EFu: expected strengths; SSType: 0=User,1=Parametric-Simple; SSHysType: 0=Elastic,1=Kinematic,2=Takeda,3=Pivot; strains: float; FinalSlope: float (negative for softening)",
+      "known_errors": [],
+      "notes": "Prerequisites: material must exist via SetMaterial with MatType=1. Returns ret_code directly (0=success)."
+    },
+    "SapModel.PropMaterial.SetOConcrete_1": {
+      "category": "PropMaterial",
+      "description": "Set concrete design properties (fc, lightweight flag, stress-strain model)",
+      "signature": "(Name, fc, IsLightweight, FcsFactor, SSType, SSHysType, StrainAtfc, StrainUltimate, FinalSlope, FrictionAngle, DilatationalAngle) -> ret_code",
+      "verified": true,
+      "first_verified": "2026-03-28T00:00:00.000000+00:00",
+      "last_verified": "2026-03-28T13:39:34.457220+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropMaterial_SetOConcrete_1",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing concrete material); fc: float [F/L^2]; IsLightweight: bool; FcsFactor: float; SSType: 0=User,1=Parametric-Simple; SSHysType: int; StrainAtfc/StrainUltimate: float; FinalSlope: float (negative); FrictionAngle/DilatationalAngle: float [deg]",
+      "known_errors": [],
+      "notes": "Prerequisites: material must exist via SetMaterial with MatType=2. Returns ret_code directly (0=success)."
+    },
+    "SapModel.PropMaterial.GetMaterial": {
+      "category": "PropMaterial",
+      "description": "Get material type and metadata (MatType, Color, Notes, GUID) for an existing material",
+      "signature": "(Name, MatType, Color, Notes, GUID) -> [MatType, Color, Notes, GUID, ret_code]",
+      "verified": true,
+      "first_verified": "2026-03-28T00:00:00.000000+00:00",
+      "last_verified": "2026-03-28T13:39:41.252470+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropMaterial_GetMaterial",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing material); all other params are ByRef outputs. MatType: 1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum",
+      "known_errors": [],
+      "notes": "ByRef layout: [MatType, Color, Notes, GUID, ret_code]. Pass placeholder values (0, 0, '', '') for ByRef params."
+    },
+    "SapModel.PropMaterial.GetMPIsotropic": {
+      "category": "PropMaterial",
+      "description": "Retrieve isotropic mechanical properties (E, Poisson ratio, thermal expansion coefficient)",
+      "signature": "(Name, E, U, A, Temp) -> [E, poisson, thermal, tempDep, ret_code]",
+      "verified": true,
+      "first_verified": "2026-03-28T00:00:00.000000+00:00",
+      "last_verified": "2026-03-28T13:39:48.097515+00:00",
+      "verification_count": 2,
+      "wrapper_script": "func_PropMaterial_GetMPIsotropic",
+      "used_in_scripts": [],
+      "parameter_notes": "Name: str (existing material); E/U/A/Temp are ByRef outputs. Pass placeholder values (0, 0, 0, 0).",
+      "known_errors": [],
+      "notes": "ByRef layout: [E, poisson, thermal, tempDep, ret_code]. Prerequisites: material must have SetMPIsotropic called first."
+    },
+    "SapModel.PropMaterial.GetNameList": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-28T13:39:20.427010+00:00",
+      "last_verified": "2026-03-28T13:39:34.462878+00:00",
+      "verification_count": 2,
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 133,
-    "total_verified": 133,
-    "last_updated": "2026-03-28T04:51:32.983711+00:00"
+    "total_registered": 138,
+    "total_verified": 138,
+    "last_updated": "2026-03-28T13:39:48.098515+00:00"
   }
 }
