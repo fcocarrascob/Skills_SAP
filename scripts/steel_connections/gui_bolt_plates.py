@@ -1,7 +1,7 @@
 """
-GUI — SAP2000 Conexión Pernada: Placas Washer + Links Gap (Standalone)
-======================================================================
-Genera dos placas anulares (washers) enfrentadas para cada perno,
+GUI — SAP2000 Conexión Pernada: Placas de Conexión + Links Gap (Standalone)
+============================================================================
+Genera dos placas anulares de conexión enfrentadas para cada perno,
 separadas una distancia sep = (t1 + t2) / 2, conectadas nodo a nodo
 mediante elementos Link con propiedad Gap (solo compresión).
 
@@ -151,7 +151,7 @@ class GetCoordsWorker(QThread):
 class BoltPreviewWidget(QWidget):
     """Previsualización en tiempo real: vista superior + vista lateral.
 
-    Vista superior (65 %): malla anular de la placa washer.
+    Vista superior (65 %): malla anular de la placa de conexión.
     Vista lateral  (35 %): esquema de las dos placas separadas por 'sep'
                             con las líneas de los links gap en rojo punteado.
     """
@@ -233,7 +233,7 @@ class BoltPreviewWidget(QWidget):
     # ── Vista superior ────────────────────────────────────────────────────
 
     def _draw_top_view(self, painter, w_px, h_px, d):
-        """Malla anular de la placa washer vista desde arriba."""
+        """Malla anular de la placa de conexión vista desde arriba."""
         outer_s = d.get("outer_shape", "Círculo")
         outer_d = d.get("outer_dim", 80.0)
         inner_d = d.get("bolt_diam", 22.0)
@@ -425,13 +425,13 @@ def _field(label: str, default: str, tooltip: str = "") -> tuple:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class BoltPlatesGUI(QWidget):
-    """Ventana standalone para generación de placas washer + links gap."""
+    """Ventana standalone para generación de placas de conexión + links gap."""
 
     SHAPES = ["Círculo", "Cuadrado"]
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("SAP2000 — Conexión Pernada: Placas Washer + Gap Links")
+        self.setWindowTitle("SAP2000 — Conexión Pernada: Placas de Conexión + Gap Links")
         self.setMinimumWidth(740)
 
         self._conn = SapConnection()
@@ -507,7 +507,7 @@ class BoltPlatesGUI(QWidget):
         g2.addWidget(lbl, 0, 0); g2.addWidget(self._bolt_diam, 0, 1)
 
         lbl, self._outer_dim = _field("Dim. Exterior:", "80.0",
-                                      "Diámetro o lado de la placa washer")
+                                      "Diámetro o lado de la placa de conexión")
         g2.addWidget(lbl, 0, 2); g2.addWidget(self._outer_dim, 0, 3)
 
         lbl_shape = QLabel("Forma exterior:")
@@ -515,8 +515,12 @@ class BoltPlatesGUI(QWidget):
         self._outer_shape = QComboBox()
         self._outer_shape.addItems(self.SHAPES)
         self._outer_shape.setCurrentText("Círculo")
-        self._outer_shape.setToolTip("Forma del contorno exterior de la placa washer")
-        g2.addWidget(lbl_shape, 1, 0); g2.addWidget(self._outer_shape, 1, 1)
+        self._outer_shape.setToolTip("Forma del contorno exterior de la placa de conexión")
+        g2.addWidget(lbl_shape, 2, 0); g2.addWidget(self._outer_shape, 2, 1)
+
+        lbl, self._bolt_material = _field("Material Perno:", "A36",
+                                           "Material SAP2000 para la sección Frame circular del perno")
+        g2.addWidget(lbl, 1, 0); g2.addWidget(self._bolt_material, 1, 1)
 
         params_col.addWidget(grp_bolt)
 
@@ -554,7 +558,7 @@ class BoltPlatesGUI(QWidget):
         self._plane = QComboBox()
         self._plane.addItems(["", "XY", "XZ", "YZ"])
         self._plane.setCurrentIndex(0)
-        self._plane.setToolTip("Plano de las placas washer (la separación es perpendicular)")
+        self._plane.setToolTip("Plano de las placas de conexión (la separación es perpendicular)")
         g4.addWidget(lbl_plane, 1, 2); g4.addWidget(self._plane, 1, 3)
 
         self._btn_get_coords = QPushButton("📍 Obtener Nodo")
@@ -577,11 +581,11 @@ class BoltPlatesGUI(QWidget):
 
         lbl_prop = QLabel("Prop. Área Shell:")
         lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        lbl_prop.setToolTip("Sección Shell para las áreas de las placas washer")
+        lbl_prop.setToolTip("Sección Shell para las áreas de las placas de conexión")
         self._area_prop = QComboBox()
         self._area_prop.setEditable(True)
         self._area_prop.addItem("Default")
-        self._area_prop.setToolTip("Sección Shell para las áreas de las placas washer")
+        self._area_prop.setToolTip("Sección Shell para las áreas de las placas de conexión")
         g5.addWidget(lbl_prop, 0, 0); g5.addWidget(self._area_prop, 0, 1)
 
         lbl, self._gap_name = _field("Nombre Prop. Gap:", "GAP_BOLT",
@@ -608,7 +612,7 @@ class BoltPlatesGUI(QWidget):
         root.addLayout(body)
 
         # ── Botón generar ─────────────────────────────────────────────────
-        self._btn_run = QPushButton("Generar Placas Washer + Links Gap")
+        self._btn_run = QPushButton("Generar Placas de Conexión + Links Gap")
         self._btn_run.setFixedHeight(36)
         self._btn_run.setEnabled(False)
         self._btn_run.clicked.connect(self._on_run)
@@ -702,6 +706,7 @@ class BoltPlatesGUI(QWidget):
             gap_prop_name=self._gap_name.text().strip() or "GAP_BOLT",
             gap_stiffness=float(self._gap_k.text()),
             initial_gap=float(self._gap_dis.text()),
+            bolt_material=self._bolt_material.text().strip() or "A36",
         )
 
     def populate_area_props(self, names: list):
@@ -761,7 +766,7 @@ class BoltPlatesGUI(QWidget):
 
         sep = (config.plate_thickness_1 + config.plate_thickness_2) / 2.0
         self._log_append(
-            f"\n─── Generando placas washer  |  sep = {sep:.4g}  |  "
+            f"\n─── Generando placas de conexión  |  sep = {sep:.4g}  |  "
             f"links = {(config.num_radial + 1) * config.num_angular} ───"
         )
         self._busy(True)
@@ -773,13 +778,19 @@ class BoltPlatesGUI(QWidget):
         self._busy(False)
         if result.get("success"):
             self._log_append("✔ Generado correctamente")
+            bar_info = result.get('bolt_bar') or "—"
+            sec_info = result.get('bolt_section') or "—"
+            body_names = result.get('body_names', [])
+            body_info = ", ".join(body_names) if body_names else "—"
             self._log_append(
-                f"  Áreas creadas : {result.get('num_areas', '?')}\n"
-                f"  Puntos creados: {result.get('num_points', '?')}\n"
-                f"  Links gap     : {result.get('num_links', '?')}\n"
-                f"  Separación    : {result.get('separation', '?'):.4g}\n"
-                f"  Prop. gap     : {result.get('gap_prop', '?')}\n"
-                f"  Plano         : {result.get('plane', '?')}"
+                f"  Áreas creadas      : {result.get('num_areas', '?')}\n"
+                f"  Puntos creados     : {result.get('num_points', '?')}\n"
+                f"  Links gap          : {result.get('num_links', '?')}\n"
+                f"  Barra perno        : {bar_info}  (secc. {sec_info})\n"
+                f"  Body constraints   : {result.get('body_constraints', '?')}  [{body_info}]\n"
+                f"  Separación         : {result.get('separation', '?'):.4g}\n"
+                f"  Prop. gap          : {result.get('gap_prop', '?')}\n"
+                f"  Plano              : {result.get('plane', '?')}"
             )
             self._plane.setCurrentIndex(0)
         else:

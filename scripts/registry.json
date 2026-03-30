@@ -83,13 +83,14 @@
       "signature": "(Name, MatProp, T3, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T14:50:33.572690+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-03-30T20:17:24.280774+00:00",
+      "verification_count": 9,
       "wrapper_script": "func_PropFrame_SetCircle",
       "used_in_scripts": [],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (diameter [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Common for piles, drilled shafts, and circular columns."
+      "notes": "Returns ret_code directly (0=success). Common for piles, drilled shafts, and circular columns.",
+      "verification_type": "auto"
     },
     "SapModel.PropFrame.SetISection": {
       "category": "PropFrame",
@@ -155,8 +156,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.414684+00:00",
-      "last_verified": "2026-03-30T01:52:47.047959+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-03-30T20:32:45.131886+00:00",
+      "verification_count": 14,
       "wrapper_script": "func_PointObj_AddCartesian",
       "used_in_scripts": [
         "test_bolt_plates_inline.py"
@@ -200,13 +201,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.555457+00:00",
-      "last_verified": "2026-03-20T14:42:19.386278+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-03-30T20:17:24.260065+00:00",
+      "verification_count": 3,
       "wrapper_script": "func_FrameObj_AddByPoint",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.Count": {
       "category": "",
@@ -568,13 +570,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T15:14:15.205786+00:00",
-      "last_verified": "2026-03-25T02:44:55.571000+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-03-30T20:32:45.144016+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_ConstraintDef_SetBody",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.PointObj.SetConstraint": {
       "category": "",
@@ -582,13 +585,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T15:14:15.220712+00:00",
-      "last_verified": "2026-03-28T04:18:11.810890+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-03-30T20:32:45.148631+00:00",
+      "verification_count": 10,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.ConstraintDef.GetBody": {
       "category": "",
@@ -708,8 +712,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.743029+00:00",
-      "last_verified": "2026-03-30T01:52:47.094313+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-30T20:32:45.156724+00:00",
+      "verification_count": 20,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
@@ -1806,8 +1810,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:49:06.113339+00:00",
-      "last_verified": "2026-03-30T01:52:47.085708+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-03-30T20:17:24.252727+00:00",
+      "verification_count": 7,
       "wrapper_script": "func_LinkObj_AddByPoint",
       "used_in_scripts": [
         "test_bolt_plates_inline.py"
@@ -2594,8 +2598,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-30T01:49:41.991359+00:00",
-      "last_verified": "2026-03-30T01:52:47.035449+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-03-30T20:17:24.288475+00:00",
+      "verification_count": 5,
       "verification_type": "manual",
       "wrapper_script": "",
       "used_in_scripts": [
@@ -2626,8 +2630,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-30T01:51:29.886285+00:00",
-      "last_verified": "2026-03-30T01:52:47.077393+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-03-30T20:17:24.246574+00:00",
+      "verification_count": 3,
       "verification_type": "auto",
       "wrapper_script": "",
       "used_in_scripts": [
@@ -2636,11 +2640,26 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.ConstraintDef.GetNameList": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-30T20:32:45.138973+00:00",
+      "last_verified": "2026-03-30T20:32:45.138973+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 186,
-    "total_verified": 186,
-    "last_updated": "2026-03-30T01:52:47.094313+00:00"
+    "total_registered": 187,
+    "total_verified": 187,
+    "last_updated": "2026-03-30T20:32:45.156724+00:00"
   }
 }

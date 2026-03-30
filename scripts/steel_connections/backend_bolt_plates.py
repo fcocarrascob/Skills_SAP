@@ -1,7 +1,7 @@
 """
-Backend — SAP2000 Placas Washer + Links Gap (Conexión Pernada)
-==============================================================
-Genera dos placas anulares (tipo washer) enfrentadas para cada perno,
+Backend — SAP2000 Placas de Conexión + Links Gap (Conexión Pernada)
+====================================================================
+Genera dos placas anulares de conexión enfrentadas para cada perno,
 separadas una distancia sep = (t1 + t2) / 2, conectadas nodo a nodo
 mediante elementos Link con propiedad Gap (solo compresión).
 
@@ -138,13 +138,13 @@ def _local_to_global(
 
 @dataclass
 class BoltPlatesConfig:
-    """Parámetros de entrada para las placas washer con links gap."""
+    """Parámetros de entrada para las placas de conexión con links gap."""
 
     # Espesores de las placas conectadas (mismas unidades que el modelo)
     plate_thickness_1: float = 16.0
     plate_thickness_2: float = 16.0
 
-    # Geometría de la placa washer
+    # Geometría de la placa de conexión
     bolt_diameter: float = 22.0        # Diámetro del orificio (= diámetro perno)
     outer_dim: float = 80.0            # Dimensión exterior (lado o diámetro)
     outer_shape: str = "Círculo"       # "Círculo" o "Cuadrado"
@@ -167,13 +167,17 @@ class BoltPlatesConfig:
     gap_stiffness: float = 1.0e6       # Rigidez del gap (unidades del modelo)
     initial_gap: float = 0.0           # Apertura inicial del gap
 
+    # Barra de perno
+    bolt_material: str = "A36"         # Material para la sección Frame circular del perno
+    bolt_section_name: str = ""        # Nombre de sección (auto: "BOLT_{dia}" si vacío)
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Backend
 # ══════════════════════════════════════════════════════════════════════════════
 
 class BoltPlatesBackend:
-    """Backend standalone para generar placas washer con links gap en SAP2000."""
+    """Backend standalone para generar placas de conexión con links gap en SAP2000."""
 
     def __init__(self, connection: SapConnection):
         self._conn = connection
@@ -276,10 +280,73 @@ class BoltPlatesBackend:
             )
         return None
 
+    def _ensure_bolt_section(self, config: "BoltPlatesConfig") -> Optional[str]:
+        """Crea sección Frame circular para la barra del perno."""
+        name = config.bolt_section_name.strip() if config.bolt_section_name else ""
+        if not name:
+            name = f"BOLT_{int(config.bolt_diameter)}"
+        try:
+            ret = self.sap_model.PropFrame.SetCircle(
+                name, config.bolt_material, config.bolt_diameter
+            )
+            if _check_ret(ret):
+                return name
+        except Exception as exc:
+            raise RuntimeError(f"PropFrame.SetCircle falló para '{name}': {exc}")
+        return None
+
+    def _create_frame_bar(
+        self, pt1: str, pt2: str, section: str, tag: str
+    ) -> Optional[str]:
+        """Crea un elemento Frame entre dos puntos."""
+        try:
+            ret = self.sap_model.FrameObj.AddByPoint(pt1, pt2, "", section, tag)
+            if _check_ret(ret) and isinstance(ret, (list, tuple)) and len(ret) > 1:
+                return str(ret[0])
+        except Exception as exc:
+            raise RuntimeError(
+                f"FrameObj.AddByPoint falló entre {pt1} y {pt2}: {exc}"
+            )
+        return None
+
+    def _existing_body_count(self) -> int:
+        """Retorna la cantidad de Body Constraints ya definidos en el modelo."""
+        try:
+            ret = self.sap_model.ConstraintDef.GetNameList(0, [])
+            # ret = [count, [names...], ret_code]
+            if isinstance(ret, (list, tuple)) and int(ret[-1]) == 0:
+                return int(ret[0])
+        except Exception:
+            pass
+        return 0
+
+    def _create_body_constraint(
+        self, name: str, center_pt: str, ring_pts: List[str]
+    ) -> bool:
+        """Crea Body Constraint con todos los GDL restringidos."""
+        dof = [True, True, True, True, True, True]
+        try:
+            ret = self.sap_model.ConstraintDef.SetBody(name, dof, "Global")
+            if not _check_ret(ret):
+                return False
+        except Exception:
+            return False
+        try:
+            self.sap_model.PointObj.SetConstraint(center_pt, name)
+        except Exception:
+            return False
+        for pt in ring_pts:
+            if pt:
+                try:
+                    self.sap_model.PointObj.SetConstraint(pt, name)
+                except Exception:
+                    pass
+        return True
+
     # ── Ejecución principal ──────────────────────────────────────────────
 
     def run(self, config: BoltPlatesConfig) -> dict:
-        """Genera las placas washer y los links gap en el modelo activo.
+        """Genera las placas de conexión y los links gap en el modelo activo.
 
         No inicializa un modelo nuevo; opera sobre el modelo abierto.
 
@@ -305,6 +372,9 @@ class BoltPlatesBackend:
             raise ValueError(f"Plano '{config.plane}' no válido. Use XY, XZ o YZ.")
 
         sep = (config.plate_thickness_1 + config.plate_thickness_2) / 2.0
+
+        # ── Fase 0: Sección Frame del perno ──────────────────────────────
+        bolt_section = self._ensure_bolt_section(config)
 
         # ── Fase 1: Propiedad Link Gap ───────────────────────────────────
         self._ensure_gap_prop(config)
@@ -367,6 +437,24 @@ class BoltPlatesBackend:
             all_rings_p1.append(ring_p1)
             all_rings_p2.append(ring_p2)
 
+        # ── Centro de cada placa (nodo en el centro del orificio) ─────────
+        gx_c1, gy_c1, gz_c1 = _local_to_global(
+            0.0, 0.0,
+            config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+            plane, normal_offset=-sep / 2.0,
+        )
+        gx_c2, gy_c2, gz_c2 = _local_to_global(
+            0.0, 0.0,
+            config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+            plane, normal_offset=+sep / 2.0,
+        )
+        center_p1 = self._create_point(gx_c1, gy_c1, gz_c1)
+        center_p2 = self._create_point(gx_c2, gy_c2, gz_c2)
+        if center_p1:
+            created_points += 1
+        if center_p2:
+            created_points += 1
+
         # ── Fase 3 (cont.): Crear áreas de malla para cada placa ─────────
         created_areas: List[str] = []
 
@@ -407,6 +495,30 @@ class BoltPlatesBackend:
                     if lnk:
                         created_links.append(lnk)
 
+        # ── Fase 6: Barra de perno (Frame circular entre centros de placas) ──
+        bolt_bar_name = None
+        if bolt_section and center_p1 and center_p2:
+            bolt_bar_name = self._create_frame_bar(
+                center_p1, center_p2, bolt_section, "BOLT_BAR"
+            )
+
+        # ── Fase 7: Body constraints (1 por placa) ───────────────────────────
+        # Un único body por placa: nodo central + anillo interno (r=0).
+        # Los nombres usan el contador de constraints existentes para ser únicos
+        # cuando se generan múltiples placas en el mismo modelo.
+        body_constraints_created = 0
+        inner_p1_nodes = [pt for pt in all_rings_p1[0] if pt]
+        inner_p2_nodes = [pt for pt in all_rings_p2[0] if pt]
+        base_idx = self._existing_body_count() + 1
+        name_p1 = f"BODY_P{base_idx}"
+        name_p2 = f"BODY_P{base_idx + 1}"
+        if center_p1:
+            if self._create_body_constraint(name_p1, center_p1, inner_p1_nodes):
+                body_constraints_created += 1
+        if center_p2:
+            if self._create_body_constraint(name_p2, center_p2, inner_p2_nodes):
+                body_constraints_created += 1
+
         # ── Refresh ──────────────────────────────────────────────────────
         try:
             self.sap_model.View.RefreshView(0, False)
@@ -423,6 +535,10 @@ class BoltPlatesBackend:
             "gap_prop": config.gap_prop_name,
             "radial_rings": config.num_radial,
             "angular_divisions": config.num_angular,
+            "bolt_section": bolt_section,
+            "bolt_bar": bolt_bar_name,
+            "body_constraints": body_constraints_created,
+            "body_names": [name_p1, name_p2],
         }
 
 
