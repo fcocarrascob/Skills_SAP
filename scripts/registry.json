@@ -155,13 +155,16 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.414684+00:00",
-      "last_verified": "2026-03-28T14:02:34.677370+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-03-30T01:52:47.047959+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_PointObj_AddCartesian",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_bolt_plates_inline.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.PointObj.Count": {
       "category": "",
@@ -705,15 +708,17 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.743029+00:00",
-      "last_verified": "2026-03-25T02:56:48.131027+00:00",
-      "verification_count": 14,
+      "last_verified": "2026-03-30T01:52:47.094313+00:00",
+      "verification_count": 16,
       "wrapper_script": "",
       "used_in_scripts": [
-        "domo_elipsoidal_parametrico.py"
+        "domo_elipsoidal_parametrico.py",
+        "test_bolt_plates_inline.py"
       ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.File.Save": {
       "category": "",
@@ -1797,17 +1802,20 @@
     },
     "SapModel.LinkObj.AddByPoint": {
       "category": "Object_Model",
-      "description": "Create a link element between two existing points (or grounded single-joint)",
+      "description": "Create a two-joint link element between two existing point objects.",
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:49:06.113339+00:00",
-      "last_verified": "2026-03-28T04:49:11.020970+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-03-30T01:52:47.085708+00:00",
+      "verification_count": 6,
       "wrapper_script": "func_LinkObj_AddByPoint",
-      "used_in_scripts": [],
-      "parameter_notes": "",
+      "used_in_scripts": [
+        "test_bolt_plates_inline.py"
+      ],
+      "parameter_notes": "Order: Point1(str), Point2(str), Name(ByRef str, pass \"\"), IsSingleJoint(bool, False=2-joint), PropName(str), UserName(str). Returns [Name_assigned, ret_code]. NO CSys parameter.",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "manual"
     },
     "SapModel.LinkObj.Count": {
       "category": "",
@@ -1815,13 +1823,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:49:06.113339+00:00",
-      "last_verified": "2026-03-28T04:49:29.363314+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-03-30T01:51:01.316429+00:00",
+      "verification_count": 3,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.LinkObj.AddByCoord": {
       "category": "Object_Model",
@@ -2578,11 +2587,60 @@
       "parameter_notes": "Name: str — name of the material to delete",
       "known_errors": [],
       "notes": "Direct return code. Fails if material is used by any frame or area section."
+    },
+    "SapModel.PropLink.SetGap": {
+      "category": "Properties",
+      "description": "Define a Gap-type nonlinear link property (compression-only). DOF arrays size 6.",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-30T01:49:41.991359+00:00",
+      "last_verified": "2026-03-30T01:52:47.035449+00:00",
+      "verification_count": 4,
+      "verification_type": "manual",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "test_bolt_plates_inline.py"
+      ],
+      "parameter_notes": "Order: Name, DOF[6], Fixed[6], NonLinear[6], Ke[6], Ce[6], k[6], dis[6], dj2, dj3. Returns Long (0=OK). NonLinear MUST come before Ke/Ce.",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PropLink.Count": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-30T01:49:42.000923+00:00",
+      "last_verified": "2026-03-30T01:49:42.000923+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.AreaObj.AddByPoint": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-30T01:51:29.886285+00:00",
+      "last_verified": "2026-03-30T01:52:47.077393+00:00",
+      "verification_count": 2,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "test_bolt_plates_inline.py"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 183,
-    "total_verified": 183,
-    "last_updated": "2026-03-28T14:52:36.505803+00:00"
+    "total_registered": 186,
+    "total_verified": 186,
+    "last_updated": "2026-03-30T01:52:47.094313+00:00"
   }
 }
