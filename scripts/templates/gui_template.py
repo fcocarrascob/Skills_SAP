@@ -1,3 +1,5 @@
+# NOTA: Este template es para GUI standalone con COM directo,
+# NO para scripts ejecutados vía MCP sandbox (run_sap_script).
 """
 GUI Template — SAP2000 Standalone PySide6
 ==========================================

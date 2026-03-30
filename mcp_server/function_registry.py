@@ -37,22 +37,38 @@ class FunctionRegistry:
     def __init__(self, registry_path: Path | None = None):
         self._path = registry_path or REGISTRY_PATH
         self._data: dict | None = None
+        self._last_mtime: float = 0
 
     # ── Persistence ───────────────────────────────────────────────────
 
+    def _reload_if_changed(self) -> None:
+        """Reload from disk if the file was modified externally."""
+        if self._data is None:
+            return
+        try:
+            disk_mtime = self._path.stat().st_mtime
+            if disk_mtime > self._last_mtime:
+                self._data = None  # Force full reload on next _load()
+        except OSError:
+            pass
+
     def _load(self) -> dict:
-        """Load the registry from disk, or return empty if missing."""
+        """Load the registry, respecting external disk changes."""
+        self._reload_if_changed()
         if self._data is not None:
             return self._data
 
         if self._path.exists():
             try:
                 self._data = json.loads(self._path.read_text(encoding="utf-8"))
+                self._last_mtime = self._path.stat().st_mtime
             except (json.JSONDecodeError, OSError) as exc:
                 logger.warning("Failed to read registry, starting empty: %s", exc)
                 self._data = json.loads(json.dumps(_EMPTY_REGISTRY))
+                self._last_mtime = 0
         else:
             self._data = json.loads(json.dumps(_EMPTY_REGISTRY))
+            self._last_mtime = 0
 
         return self._data
 
@@ -69,6 +85,8 @@ class FunctionRegistry:
                 encoding="utf-8",
             )
             tmp_path.replace(self._path)
+            # Update mtime after successful write to avoid unnecessary reload
+            self._last_mtime = self._path.stat().st_mtime
         except OSError as exc:
             logger.exception("Failed to save registry: %s", exc)
             raise
@@ -125,6 +143,9 @@ class FunctionRegistry:
         is_new = function_path not in funcs
         now = datetime.now(timezone.utc).isoformat()
 
+        # Determine verification_type based on registration path
+        v_type = "wrapper" if wrapper_script else "manual"
+
         if is_new:
             funcs[function_path] = {
                 "category": category,
@@ -134,6 +155,7 @@ class FunctionRegistry:
                 "first_verified": None,
                 "last_verified": None,
                 "verification_count": 0,
+                "verification_type": v_type,
                 "wrapper_script": wrapper_script,
                 "used_in_scripts": [],
                 "parameter_notes": parameter_notes,
@@ -154,6 +176,11 @@ class FunctionRegistry:
                 entry["parameter_notes"] = parameter_notes
             if notes:
                 entry["notes"] = notes
+            # Upgrade verification_type (never downgrade)
+            current_type = entry.get("verification_type", "auto")
+            type_rank = {"auto": 0, "manual": 1, "wrapper": 2}
+            if type_rank.get(v_type, 0) > type_rank.get(current_type, 0):
+                entry["verification_type"] = v_type
 
         self._save()
         return {
@@ -198,6 +225,7 @@ class FunctionRegistry:
                 "first_verified": now,
                 "last_verified": now,
                 "verification_count": 1,
+                "verification_type": "auto",
                 "wrapper_script": "",
                 "used_in_scripts": [script_name] if script_name else [],
                 "parameter_notes": "",
@@ -213,6 +241,9 @@ class FunctionRegistry:
                 entry["first_verified"] = now
             if script_name and script_name not in entry.get("used_in_scripts", []):
                 entry.setdefault("used_in_scripts", []).append(script_name)
+            # Only set verification_type to "auto" if not already higher
+            if not entry.get("verification_type"):
+                entry["verification_type"] = "auto"
 
         self._save()
         return {
@@ -283,6 +314,7 @@ class FunctionRegistry:
                 "description": entry.get("description", ""),
                 "verified": entry.get("verified", False),
                 "verification_count": entry.get("verification_count", 0),
+                "verification_type": entry.get("verification_type", "auto"),
                 "wrapper_script": entry.get("wrapper_script", ""),
             })
 
@@ -317,6 +349,7 @@ class FunctionRegistry:
     def reload(self) -> None:
         """Force reload from disk on next access."""
         self._data = None
+        self._last_mtime = 0
 
 
 # Module-level singleton

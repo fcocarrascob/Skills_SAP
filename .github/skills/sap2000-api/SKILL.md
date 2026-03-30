@@ -169,6 +169,32 @@ Cuando un script se ejecuta exitosamente via `run_sap_script`, todas las
 funciones API usadas se detectan y registran automáticamente como verificadas.
 La respuesta incluye una lista `registered_functions` mostrando lo capturado.
 
+### Dos Caminos de Registro
+
+| Camino | Trigger | verification_type | Confianza |
+|--------|---------|-------------------|-----------|
+| Auto-registro | `run_sap_script` exitoso | `auto` | Baja — solo confirma uso sin error |
+| Registro manual | `register_verified_function` | `manual` / `wrapper` | Alta — metadata rica verificada |
+
+**Jerarquía:** wrapper > manual > auto
+
+### Campos del Registry
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `verified` | bool | La función se ejecutó sin error al menos una vez |
+| `verification_count` | int | Número de scripts exitosos que incluyeron esta función |
+| `verification_type` | str | `auto` / `manual` / `wrapper` |
+| `wrapper_script` | str | Nombre del wrapper si existe (fuente de verdad para firma) |
+
+### Naming Convention de Wrappers
+
+```
+API:     SapModel.FrameObj.AddByCoord
+Wrapper: func_FrameObj_AddByCoord.py
+Regla:   Quitar "SapModel.", reemplazar "." por "_", prepend "func_"
+```
+
 ## Unidades
 
 Establecer unidades ANTES de crear geometría:
@@ -205,6 +231,8 @@ ret = SapModel.PropFrame.SetModifiers("R1", ModValue)
 | `Timeout after 120s` | Análisis tomando demasiado tiempo | Simplificar modelo o aumentar timeout |
 | `IndexError` | Layout ByRef incorrecto | Verificar wrapper: `raw[0]` vs `raw[-1]` |
 | `AssertionError` | Validación falló | Leer mensaje del assert, ajustar parámetros |
+
+> Para reglas operacionales completas (DO/DON'T), ver el agente `@sap2000-scripter`.
 
 ## Jerarquía de Objetos
 
