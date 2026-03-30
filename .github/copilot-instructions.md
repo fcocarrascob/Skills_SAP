@@ -14,12 +14,14 @@ cargas, ejecutar análisis y extraer resultados de forma programática.
 | `.github/skills/sap2000-api/SKILL.md` | Referencia técnica API (convenciones, templates, registry) |
 | `.github/skills/sap2000-api/references/api-patterns.md` | Patrones detallados de operaciones comunes |
 | `.github/skills/sap2000-api/references/enum-reference.md` | Enumeraciones completas (eUnits, eMatType, etc.) |
-| `.github/skills/sap2000-api/references/common-workflows.md` | Workflows paso a paso para tareas típicas |
+| `.github/skills/sap2000-api/references/common-workflows.md` | Workflows paso a paso + Patrón Universal de scripts |
 | `.github/skills/sap2000-api/references/script-templates.md` | Templates paramétricos (grid, circular, placa) |
 | `.github/skills/sap2000-api/references/gui-generation.md` | Guía de generación de GUI standalone (PySide6) |
 | `scripts/wrappers/` | Funciones verificadas (fuente de verdad para firmas) |
 | `scripts/templates/` | Templates base para backend y GUI standalone |
 | `scripts/registry.json` | Registry de funciones verificadas |
+
+> ⚠️ NUNCA editar `scripts/registry.json` directamente. Usar `register_verified_function`.
 
 ## Configuración MCP
 
@@ -38,13 +40,17 @@ El servidor MCP se autoconfigura via `.vscode/mcp.json`:
 **Usar para:**
 - Generar scripts de SAP2000 (marcos, áreas, análisis)
 - Automatización estructural completa
-- Workflow: research → código → ejecución → verificación → guardado
+- Workflow: research → **plan → aprobación** → código → ejecución → verificación → guardado
 
 **Capacidades:**
 - Research automático para scripts complejos (via subagent Explore)
+- Planificación pre-generación con clasificación de complejidad
 - Consulta inteligente al registry de funciones verificadas
 - Generación iterativa con testing incremental
 - Oferta de GUI standalone al finalizar
+
+> Para el workflow detallado paso a paso (incluyendo planificación),
+> ver el agente `@sap2000-scripter`.
 
 ### Skill sap2000-api (attachment)
 
@@ -64,4 +70,4 @@ El servidor MCP se autoconfigura via `.vscode/mcp.json`:
 
 1. Activar venv: `.venv/Scripts/Activate.ps1`
 2. Invocar agente: `@sap2000-scripter genera una viga simple con carga muerta`
-3. El agente maneja el resto (conexión, registry, generación, ejecución)
+3. El agente maneja el resto (conexión, registry, planificación, generación, ejecución)

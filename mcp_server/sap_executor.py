@@ -357,5 +357,6 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
             )
     except Exception as exc:
         logger.warning("Auto-registration failed (non-fatal): %s", exc)
+        response["registration_error"] = str(exc)
 
     return response

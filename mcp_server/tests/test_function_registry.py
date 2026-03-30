@@ -4,7 +4,9 @@ Unit tests for the Function Registry.
 Run with: python -m pytest mcp_server/tests/test_function_registry.py -v
 """
 
+import json
 import sys
+import time
 from pathlib import Path
 
 # Add mcp_server to path so imports work
@@ -246,3 +248,123 @@ class TestPersistence:
         reg.reload()
         entry = reg.get_function("SapModel.X.Y")
         assert "error" not in entry  # still there after reload
+
+
+class TestMtimeReload:
+    """Tests for cache invalidation via mtime tracking."""
+
+    def test_detects_external_modification(self, tmp_path):
+        """Registry detects when file is modified externally and reloads."""
+        path = tmp_path / "registry.json"
+        reg = FunctionRegistry(registry_path=path)
+
+        # Write initial data via registry
+        reg.register_function("SapModel.A.B", "Cat1", "original")
+
+        # Simulate external modification: write directly to file
+        time.sleep(0.05)  # Ensure mtime differs
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["functions"]["SapModel.A.B"]["description"] = "externally modified"
+        path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+        # Force mtime detection on next load
+        entry = reg.get_function("SapModel.A.B")
+        assert entry["description"] == "externally modified"
+
+    def test_no_unnecessary_reload(self, tmp_path):
+        """Registry does not reload when file has not changed."""
+        path = tmp_path / "registry.json"
+        reg = FunctionRegistry(registry_path=path)
+
+        reg.register_function("SapModel.A.B", "Cat1", "first")
+
+        # Access again without external change — should return cached data
+        entry = reg.get_function("SapModel.A.B")
+        assert entry["description"] == "first"
+        # _data should still be the same object (not reloaded)
+        assert reg._data is not None
+
+
+class TestVerificationType:
+    """Tests for verification_type field assignment."""
+
+    def test_auto_registration_sets_auto(self, registry):
+        """mark_verified on new function sets verification_type='auto'."""
+        registry.mark_verified("SapModel.NewFunc.A", "test_script")
+        entry = registry.get_function("SapModel.NewFunc.A")
+        assert entry["verification_type"] == "auto"
+
+    def test_manual_registration_sets_manual(self, registry):
+        """register_function without wrapper sets verification_type='manual'."""
+        registry.register_function(
+            "SapModel.Func.B", "Cat", description="test"
+        )
+        entry = registry.get_function("SapModel.Func.B")
+        assert entry["verification_type"] == "manual"
+
+    def test_wrapper_registration_sets_wrapper(self, registry):
+        """register_function with wrapper_script sets verification_type='wrapper'."""
+        registry.register_function(
+            "SapModel.Func.C", "Cat",
+            wrapper_script="func_Func_C"
+        )
+        entry = registry.get_function("SapModel.Func.C")
+        assert entry["verification_type"] == "wrapper"
+
+    def test_auto_does_not_downgrade_manual(self, registry):
+        """mark_verified does not downgrade verification_type from manual to auto."""
+        registry.register_function(
+            "SapModel.Func.D", "Cat", description="test"
+        )
+        assert registry.get_function("SapModel.Func.D")["verification_type"] == "manual"
+
+        registry.mark_verified("SapModel.Func.D", "script_x")
+        entry = registry.get_function("SapModel.Func.D")
+        assert entry["verification_type"] == "manual"  # Not downgraded
+
+    def test_manual_does_not_downgrade_wrapper(self, registry):
+        """register_function without wrapper does not downgrade from wrapper to manual."""
+        registry.register_function(
+            "SapModel.Func.E", "Cat",
+            wrapper_script="func_Func_E"
+        )
+        assert registry.get_function("SapModel.Func.E")["verification_type"] == "wrapper"
+
+        # Re-register without wrapper — should not downgrade
+        registry.register_function(
+            "SapModel.Func.E", "Cat",
+            description="updated desc"
+        )
+        entry = registry.get_function("SapModel.Func.E")
+        assert entry["verification_type"] == "wrapper"  # Not downgraded
+
+    def test_manual_upgrades_to_wrapper(self, registry):
+        """register_function with wrapper upgrades verification_type from manual to wrapper."""
+        registry.register_function(
+            "SapModel.Func.F", "Cat", description="test"
+        )
+        assert registry.get_function("SapModel.Func.F")["verification_type"] == "manual"
+
+        registry.register_function(
+            "SapModel.Func.F", "Cat",
+            wrapper_script="func_Func_F"
+        )
+        entry = registry.get_function("SapModel.Func.F")
+        assert entry["verification_type"] == "wrapper"  # Upgraded
+
+    def test_list_functions_includes_verification_type(self, registry):
+        """list_functions output includes verification_type field."""
+        registry.register_function(
+            "SapModel.Func.G", "Cat",
+            wrapper_script="func_Func_G"
+        )
+        results = registry.list_functions()
+        assert len(results) == 1
+        assert results[0]["verification_type"] == "wrapper"
+
+    def test_get_function_includes_verification_type(self, registry):
+        """get_function output includes verification_type field."""
+        registry.mark_verified("SapModel.Func.H", "test")
+        entry = registry.get_function("SapModel.Func.H")
+        assert "verification_type" in entry
+        assert entry["verification_type"] == "auto"

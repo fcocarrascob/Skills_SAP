@@ -56,3 +56,29 @@ This is the standard SAP2000 verification problem:
 3. Make modifications via script
 4. Save → `File.Save`
 5. Re-run analysis if needed
+
+## Patrón Universal de Scripts SAP2000
+
+Todo script sigue esta secuencia de fases (omitir las que no apliquen):
+
+| # | Fase | Funciones Típicas | Prerequisito |
+|---|------|-------------------|-------------|
+| 1 | Inicialización | InitializeNewModel, File.NewBlank, SetPresentUnits | — |
+| 2 | Materiales | PropMaterial.SetMaterial, SetMPIsotropic | Fase 1 |
+| 3 | Secciones | PropFrame.Set*, PropArea.SetShell_1 | Fase 2 |
+| 4 | Geometría | FrameObj.AddByCoord, AreaObj.AddByCoord | Fase 3 |
+| 5 | Restricciones | PointObj.SetRestraint, ConstraintDef.* | Fase 4 |
+| 6 | Cargas | LoadPatterns.Add, SetLoadDistributed, SetLoadUniform | Fase 4-5 |
+| 7 | Análisis | File.Save, Analyze.SetActiveDOF, RunAnalysis | Fase 5-6 |
+| 8 | Resultados | Results.Setup.*, Results.JointDispl | Fase 7 |
+| 9 | Verificación | Asserts, result{} | Fase 8 |
+
+### Lógica Geométrica Común
+
+| Patrón | Uso | Funciones math |
+|--------|-----|----------------|
+| Grilla rectangular | Pórticos, edificios | `range(nx) × range(ny)` |
+| Circular/anular | Domos, tanques | `sin(θ)`, `cos(θ)` |
+| Helicoidal | Escaleras, rampas | `sin(θ)`, `cos(θ)`, `pitch × θ/(2π)` |
+| Superficie paramétrica | Shells, paraboloides | `f(u,v)` → `(x,y,z)` |
+| Rotación progresiva | Torres twisted | `cos(α)·x - sin(α)·y`, `sin(α)·x + cos(α)·y` |
