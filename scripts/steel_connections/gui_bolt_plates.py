@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
+    QScrollArea,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -429,12 +430,12 @@ class BoltPlatesGUI(QWidget):
 
     SHAPES = ["Círculo", "Cuadrado"]
 
-    def __init__(self):
+    def __init__(self, connection: SapConnection = None):
         super().__init__()
         self.setWindowTitle("SAP2000 — Conexión Pernada: Placas de Conexión + Gap Links")
         self.setMinimumWidth(740)
 
-        self._conn = SapConnection()
+        self._conn = connection or SapConnection()
         self._backend = BoltPlatesBackend(self._conn)
         self._worker = None
         self._run_worker = None
@@ -607,7 +608,15 @@ class BoltPlatesGUI(QWidget):
         self._preview = BoltPreviewWidget()
         self._preview.setMinimumWidth(280)
 
-        body.addLayout(params_col, 1)
+        params_widget = QWidget()
+        params_widget.setLayout(params_col)
+        params_scroll = QScrollArea()
+        params_scroll.setWidgetResizable(True)
+        params_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        params_scroll.setStyleSheet("QScrollArea { border: none; }")
+        params_scroll.setWidget(params_widget)
+
+        body.addWidget(params_scroll, 1)
         body.addWidget(self._preview, 1)
         root.addLayout(body)
 
