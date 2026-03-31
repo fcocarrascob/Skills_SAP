@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-31T14:57:17.196706+00:00",
-      "verification_count": 149,
+      "last_verified": "2026-03-31T17:37:44.434636+00:00",
+      "verification_count": 150,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -24,8 +24,8 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-30T21:51:10.058353+00:00",
-      "verification_count": 102,
+      "last_verified": "2026-03-31T17:37:56.084726+00:00",
+      "verification_count": 105,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -41,8 +41,8 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-30T21:51:10.064347+00:00",
-      "verification_count": 63,
+      "last_verified": "2026-03-31T17:37:56.091834+00:00",
+      "verification_count": 66,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -129,8 +129,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-31T14:57:17.190836+00:00",
-      "verification_count": 145,
+      "last_verified": "2026-03-31T17:37:11.089538+00:00",
+      "verification_count": 148,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -146,8 +146,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-30T22:26:55.492874+00:00",
-      "verification_count": 140,
+      "last_verified": "2026-03-31T17:37:44.442147+00:00",
+      "verification_count": 142,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -161,8 +161,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.414684+00:00",
-      "last_verified": "2026-03-30T21:46:05.718845+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-31T17:38:24.148965+00:00",
+      "verification_count": 21,
       "wrapper_script": "func_PointObj_AddCartesian",
       "used_in_scripts": [
         "test_bolt_plates_inline.py"
@@ -178,8 +178,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.415848+00:00",
-      "last_verified": "2026-03-31T15:38:08.164977+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-03-31T17:37:44.453698+00:00",
+      "verification_count": 10,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -293,8 +293,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:36.155842+00:00",
-      "last_verified": "2026-03-31T14:58:36.045392+00:00",
-      "verification_count": 41,
+      "last_verified": "2026-03-31T17:37:56.097862+00:00",
+      "verification_count": 44,
       "wrapper_script": "func_PropArea_SetShell_1",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -325,8 +325,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:51.092407+00:00",
-      "last_verified": "2026-03-30T22:26:55.497078+00:00",
-      "verification_count": 48,
+      "last_verified": "2026-03-31T17:37:56.104862+00:00",
+      "verification_count": 52,
       "wrapper_script": "func_AreaObj_AddByCoord",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -342,8 +342,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:51.092407+00:00",
-      "last_verified": "2026-03-30T22:26:29.386699+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-03-31T17:37:56.115201+00:00",
+      "verification_count": 19,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1387,13 +1387,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-24T15:03:15.054059+00:00",
-      "last_verified": "2026-03-24T15:03:15.054059+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-03-31T17:37:21.613829+00:00",
+      "verification_count": 2,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.GetLoadDistributed": {
       "category": "Object_Model",
@@ -1555,8 +1556,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:12:10.273007+00:00",
-      "last_verified": "2026-03-30T22:25:37.436867+00:00",
-      "verification_count": 13,
+      "last_verified": "2026-03-31T17:38:24.161719+00:00",
+      "verification_count": 15,
       "wrapper_script": "func_GroupDef_SetGroup",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1612,8 +1613,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:14:09.390165+00:00",
-      "last_verified": "2026-03-30T21:54:33.466009+00:00",
-      "verification_count": 9,
+      "last_verified": "2026-03-31T17:38:24.165723+00:00",
+      "verification_count": 11,
       "wrapper_script": "func_AreaObj_SetGroupAssign",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -2645,8 +2646,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-30T01:51:29.886285+00:00",
-      "last_verified": "2026-03-30T21:46:05.723987+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-03-31T17:38:24.154980+00:00",
+      "verification_count": 7,
       "verification_type": "auto",
       "wrapper_script": "",
       "used_in_scripts": [
@@ -2730,11 +2731,26 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.AreaObj.GetGroupAssign": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-31T17:38:24.170737+00:00",
+      "last_verified": "2026-03-31T17:38:24.170737+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 191,
-    "total_verified": 191,
-    "last_updated": "2026-03-31T15:38:08.173994+00:00"
+    "total_registered": 192,
+    "total_verified": 192,
+    "last_updated": "2026-03-31T17:38:24.170737+00:00"
   }
 }

@@ -139,8 +139,8 @@ class SimplePlateBackend:
                         f"AreaObj.AddByCoord falló en celda ({i},{j}): {ret}"
                     )
 
-                if isinstance(ret, (list, tuple)) and len(ret) > 1:
-                    area_name = str(ret[0])
+                if isinstance(ret, (list, tuple)) and len(ret) > 3:
+                    area_name = str(ret[3])
                     if area_name:
                         created_areas.append(area_name)
                         SapModel.AreaObj.SetGroupAssign(

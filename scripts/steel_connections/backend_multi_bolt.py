@@ -131,7 +131,7 @@ class MultiBoltBackend:
                 len(point_names), point_names, "", prop_name, ""
             )
             if _check_ret(ret) and isinstance(ret, (list, tuple)) and len(ret) > 1:
-                return str(ret[0])
+                return str(ret[1])
         except Exception as exc:
             raise RuntimeError(
                 f"AreaObj.AddByPoint falló con puntos {point_names}: {exc}"
