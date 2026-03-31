@@ -199,7 +199,19 @@ class MultiBoltBackend:
         try:
             ret = self.sap_model.FrameObj.AddByPoint(pt1, pt2, "", section, tag)
             if _check_ret(ret) and isinstance(ret, (list, tuple)) and len(ret) > 1:
-                return str(ret[0])
+                name = str(ret[0])
+                # Solo tracción: límite de compresión = 0
+                tc_ret = self.sap_model.FrameObj.SetTCLimits(
+                    name, True, 0.0, False, 0.0, 0
+                )
+                rc = int(tc_ret[-1]) if isinstance(tc_ret, (list, tuple)) else int(tc_ret)
+                if rc != 0:
+                    raise RuntimeError(
+                        f"FrameObj.SetTCLimits falló con código {rc} en '{name}'."
+                    )
+                return name
+        except RuntimeError:
+            raise
         except Exception as exc:
             raise RuntimeError(
                 f"FrameObj.AddByPoint falló entre {pt1} y {pt2}: {exc}"
