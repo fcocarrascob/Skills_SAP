@@ -153,10 +153,10 @@ class BoltPlatesConfig:
     num_angular: int = 12              # Puntos por anillo (>= 3)
     num_radial: int = 2                # Anillos radiales (>= 1)
 
-    # Centro del perno en coordenadas globales
-    bolt_center_x: float = 0.0
-    bolt_center_y: float = 0.0
-    bolt_center_z: float = 0.0
+    # Nodo de inserción: esquina inferior de la placa delantera (mín U, mín V y normal)
+    start_x: float = 0.0
+    start_y: float = 0.0
+    start_z: float = 0.0
 
     # Plano de la placa
     plane: str = "XY"                  # "XY", "XZ", "YZ"
@@ -373,6 +373,23 @@ class BoltPlatesBackend:
 
         sep = (config.plate_thickness_1 + config.plate_thickness_2) / 2.0
 
+        # ── Nodo de inserción → centro del perno ────────────────────────
+        # La inserción es la esquina inferior (mín U, mín V) de la placa
+        # delantera (offset normal = -sep/2). Se deriva el centro real del perno.
+        half_outer = config.outer_dim / 2.0
+        if plane == "XY":
+            bolt_cx = config.start_x + half_outer
+            bolt_cy = config.start_y + half_outer
+            bolt_cz = config.start_z + sep / 2.0
+        elif plane == "XZ":
+            bolt_cx = config.start_x + half_outer
+            bolt_cy = config.start_y + sep / 2.0
+            bolt_cz = config.start_z + half_outer
+        else:  # YZ
+            bolt_cx = config.start_x + sep / 2.0
+            bolt_cy = config.start_y + half_outer
+            bolt_cz = config.start_z + half_outer
+
         # ── Fase 0: Sección Frame del perno ──────────────────────────────
         bolt_section = self._ensure_bolt_section(config)
 
@@ -415,7 +432,7 @@ class BoltPlatesBackend:
                 # Placa 1 (offset negativo)
                 gx, gy, gz = _local_to_global(
                     u, v,
-                    config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+                    bolt_cx, bolt_cy, bolt_cz,
                     plane, normal_offset=-sep / 2.0,
                 )
                 p1_name = self._create_point(gx, gy, gz)
@@ -426,7 +443,7 @@ class BoltPlatesBackend:
                 # Placa 2 (offset positivo)
                 gx, gy, gz = _local_to_global(
                     u, v,
-                    config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+                    bolt_cx, bolt_cy, bolt_cz,
                     plane, normal_offset=+sep / 2.0,
                 )
                 p2_name = self._create_point(gx, gy, gz)
@@ -440,12 +457,12 @@ class BoltPlatesBackend:
         # ── Centro de cada placa (nodo en el centro del orificio) ─────────
         gx_c1, gy_c1, gz_c1 = _local_to_global(
             0.0, 0.0,
-            config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+            bolt_cx, bolt_cy, bolt_cz,
             plane, normal_offset=-sep / 2.0,
         )
         gx_c2, gy_c2, gz_c2 = _local_to_global(
             0.0, 0.0,
-            config.bolt_center_x, config.bolt_center_y, config.bolt_center_z,
+            bolt_cx, bolt_cy, bolt_cz,
             plane, normal_offset=+sep / 2.0,
         )
         center_p1 = self._create_point(gx_c1, gy_c1, gz_c1)
@@ -562,9 +579,9 @@ if __name__ == "__main__":
             outer_shape="Círculo",
             num_angular=12,
             num_radial=2,
-            bolt_center_x=0.0,
-            bolt_center_y=0.0,
-            bolt_center_z=0.0,
+            start_x=0.0,
+            start_y=0.0,
+            start_z=0.0,
             plane="XY",
             area_prop="Default",
             gap_prop_name="GAP_BOLT",

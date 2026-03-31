@@ -542,16 +542,16 @@ class BoltPlatesGUI(QWidget):
         params_col.addWidget(grp_disc)
 
         # ── Grupo: Ubicación ───────────────────────────────────────────────
-        grp_loc = QGroupBox("Ubicación del Centro del Perno")
+        grp_loc = QGroupBox("Nodo de Inserción")
         g4 = QGridLayout(grp_loc)
         g4.setHorizontalSpacing(12)
         g4.setVerticalSpacing(8)
 
-        lbl, self._cx = _field("Centro X:", "0.0")
+        lbl, self._cx = _field("Inserción X:", "0.0")
         g4.addWidget(lbl, 0, 0); g4.addWidget(self._cx, 0, 1)
-        lbl, self._cy_f = _field("Centro Y:", "0.0")
+        lbl, self._cy_f = _field("Inserción Y:", "0.0")
         g4.addWidget(lbl, 0, 2); g4.addWidget(self._cy_f, 0, 3)
-        lbl, self._cz = _field("Centro Z:", "0.0")
+        lbl, self._cz = _field("Inserción Z:", "0.0")
         g4.addWidget(lbl, 1, 0); g4.addWidget(self._cz, 1, 1)
 
         lbl_plane = QLabel("Plano:")
@@ -567,7 +567,7 @@ class BoltPlatesGUI(QWidget):
         self._btn_get_coords.setEnabled(False)
         self._btn_get_coords.setToolTip(
             "Lee las coordenadas del nodo seleccionado en SAP2000 "
-            "y las carga como centro del perno."
+            "y las carga como nodo de inserción (esquina inferior de la placa delantera)."
         )
         self._btn_get_coords.clicked.connect(self._on_get_coords)
         g4.addWidget(self._btn_get_coords, 2, 0, 1, 4)
@@ -707,9 +707,9 @@ class BoltPlatesGUI(QWidget):
             outer_shape=self._outer_shape.currentText(),
             num_angular=int(self._n_angular.text()),
             num_radial=int(self._n_radial.text()),
-            bolt_center_x=float(self._cx.text()),
-            bolt_center_y=float(self._cy_f.text()),
-            bolt_center_z=float(self._cz.text()),
+            start_x=float(self._cx.text()),
+            start_y=float(self._cy_f.text()),
+            start_z=float(self._cz.text()),
             plane=plane,
             area_prop=self._area_prop.currentText().strip() or "Default",
             gap_prop_name=self._gap_name.text().strip() or "GAP_BOLT",
