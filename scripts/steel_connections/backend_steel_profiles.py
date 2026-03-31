@@ -72,7 +72,7 @@ class SteelProfileConfig:
     n_width: int = 2                  # Divisiones a lo ancho de cada placa
 
     # Propiedad SAP2000
-    area_prop: str = "Default"        # Nombre de propiedad Shell existente
+    material: str = "A36"             # Material del perfil
 
     # Grupo
     group_name: str = "STEEL_PROFILE" # Grupo para identificar las áreas creadas
@@ -263,12 +263,37 @@ class SteelProfileBackend:
         ret = SapModel.GroupDef.SetGroup(config.group_name)
         assert _check_ret(ret), f"GroupDef.SetGroup failed: {ret}"
 
+        # ── Task 3b: Auto-crear propiedades Shell por espesor único ─────
+        # Mapea espesor real de cada placa a un Shell prop auto-creado
+        shell_prop_cache: dict = {}  # thickness -> prop_name
+        for plate_name, cd, cw, plate_h, plate_w in plates:
+            # Determinar el espesor real de esta placa
+            if plate_h > plate_w:
+                plate_thickness = plate_w   # placa vertical (alma): ancho = espesor
+            else:
+                plate_thickness = plate_h   # placa horizontal (ala): alto = espesor
+            t_mm = plate_thickness  # ya en mm (unidades del config)
+            if t_mm not in shell_prop_cache:
+                prop_name = f"PLATE_{config.material}_{t_mm:.1f}"
+                SapModel.PropArea.SetShell_1(
+                    prop_name, 1, False, config.material, 0.0, t_mm, t_mm
+                )
+                shell_prop_cache[t_mm] = prop_name
+
         # ── Task 4: Generar placas ──────────────────────────────────────
         dl = config.length / config.n_length  # paso longitudinal
         total_areas = 0
         area_names = []
 
         for plate_name, cd, cw, plate_h, plate_w in plates:
+            # Determinar la propiedad Shell para esta placa
+            if plate_h > plate_w:
+                plate_thickness = plate_w
+            else:
+                plate_thickness = plate_h
+            t_mm = plate_thickness  # ya en mm
+            plate_shell_prop = shell_prop_cache.get(t_mm, "Default")
+
             # Divisiones en ancho de esta placa
             dw = plate_w / config.n_width
 
@@ -314,7 +339,7 @@ class SteelProfileBackend:
                         zs = [p00[2], p10[2], p11[2], p01[2]]
 
                         raw = SapModel.AreaObj.AddByCoord(
-                            4, xs, ys, zs, "", config.area_prop, ""
+                            4, xs, ys, zs, "", plate_shell_prop, ""
                         )
                         if not _check_ret(raw):
                             raise RuntimeError(
@@ -350,7 +375,7 @@ class SteelProfileBackend:
                         zs = [p00[2], p10[2], p11[2], p01[2]]
 
                         raw = SapModel.AreaObj.AddByCoord(
-                            4, xs, ys, zs, "", config.area_prop, ""
+                            4, xs, ys, zs, "", plate_shell_prop, ""
                         )
                         if not _check_ret(raw):
                             raise RuntimeError(
@@ -389,6 +414,7 @@ class SteelProfileBackend:
         result["plane"] = config.plane
         result["length"] = config.length
         result["group"] = config.group_name
+        result["shell_props"] = {f"{t:.1f}mm": name for t, name in shell_prop_cache.items()}
         return result
 
 
@@ -412,7 +438,7 @@ if __name__ == "__main__":
         origin_x=0.0, origin_y=0.0, origin_z=0.0,
         plane="XZ", angle=0.0,
         n_length=6, n_width=2,
-        area_prop="Default",
+        material="A36",
         group_name="PROFILE_W_TEST",
     )
 

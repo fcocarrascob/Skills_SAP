@@ -7,8 +7,8 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-30T22:26:55.485643+00:00",
-      "verification_count": 148,
+      "last_verified": "2026-03-31T14:57:17.196706+00:00",
+      "verification_count": 149,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -129,8 +129,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-03-30T21:54:12.696419+00:00",
-      "verification_count": 144,
+      "last_verified": "2026-03-31T14:57:17.190836+00:00",
+      "verification_count": 145,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -291,8 +291,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:36.155842+00:00",
-      "last_verified": "2026-03-30T21:51:10.069885+00:00",
-      "verification_count": 40,
+      "last_verified": "2026-03-31T14:58:36.045392+00:00",
+      "verification_count": 41,
       "wrapper_script": "func_PropArea_SetShell_1",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py"
@@ -308,8 +308,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T14:47:36.155842+00:00",
-      "last_verified": "2026-03-30T21:51:31.222818+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-03-31T14:58:36.056454+00:00",
+      "verification_count": 8,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1966,13 +1966,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T13:39:20.427010+00:00",
-      "last_verified": "2026-03-28T14:50:49.172333+00:00",
-      "verification_count": 3,
+      "last_verified": "2026-03-31T14:57:50.383134+00:00",
+      "verification_count": 5,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.PropFrame.SetAngle": {
       "category": "PropFrame",
@@ -2697,11 +2698,41 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.PropMaterial.AddMaterial": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-31T14:57:17.196706+00:00",
+      "last_verified": "2026-03-31T14:57:50.377084+00:00",
+      "verification_count": 2,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PropMaterial.GetTypeOAPI": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-03-31T14:57:17.211901+00:00",
+      "last_verified": "2026-03-31T14:57:50.389254+00:00",
+      "verification_count": 2,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 189,
-    "total_verified": 189,
-    "last_updated": "2026-03-30T22:26:55.502132+00:00"
+    "total_registered": 191,
+    "total_verified": 191,
+    "last_updated": "2026-03-31T14:58:36.056454+00:00"
   }
 }

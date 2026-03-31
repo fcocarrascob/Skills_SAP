@@ -192,6 +192,28 @@ class ConnectWorker(QThread):
                     result["shell_props"] = []
             except Exception:
                 result["shell_props"] = []
+            # Leer materiales Steel (eMatType = 1) desde el modelo
+            try:
+                ret = self._conn.sap_model.PropMaterial.GetNameList(0, [])
+                if isinstance(ret, (list, tuple)) and int(ret[-1]) == 0 and int(ret[0]) > 0:
+                    all_names = list(ret[1])
+                    steel_names = []
+                    for mat_name in all_names:
+                        try:
+                            ret_type = self._conn.sap_model.PropMaterial.GetTypeOAPI(mat_name, 0)
+                            if isinstance(ret_type, (list, tuple)):
+                                mat_type = int(ret_type[0])
+                            else:
+                                mat_type = int(ret_type)
+                            if mat_type == 1:  # 1 = Steel
+                                steel_names.append(mat_name)
+                        except Exception:
+                            pass
+                    result["materials"] = steel_names
+                else:
+                    result["materials"] = []
+            except Exception:
+                result["materials"] = []
         self.finished.emit(result)
 
 

@@ -41,10 +41,8 @@ class SimplePlateConfig:
     angle: float = 0.0             # Rotación dentro del plano (grados)
 
     # ── Propiedades SAP2000 ─────────────────────────────────────────────
-    prop_name: str = "Default"     # Propiedad de área (Shell)
-    material: str = "A36"          # Material (para auto-crear Shell prop)
+    material: str = "A36"          # Material de la placa
     thickness: float = 16.0        # Espesor de la placa (mm)
-    auto_prop: bool = False        # Si True, crea ShellThin con espesor dado
 
     # ── Grupo ───────────────────────────────────────────────────────────
     group_name: str = "SIMPLE_PLATE"
@@ -98,17 +96,14 @@ class SimplePlateBackend:
         d_u = config.width / config.nx
         d_v = config.height / config.ny
 
-        # ── Auto-crear propiedad Shell si se solicita ───────────────────
-        shell_prop = config.prop_name
-        if config.auto_prop:
-            prop_name = f"PLATE_{config.material}_{config.thickness:.0f}"
-            # ShellThin: SetShell_1(Name, ShellType, MatProp, Thickness, ...)
-            #   ShellType=1 → Shell-Thin
-            ret = SapModel.PropArea.SetShell_1(
-                prop_name, 1, config.material, 0.0, config.thickness, config.thickness
-            )
-            if _check_ret(ret):
-                shell_prop = prop_name
+        # ── Auto-crear propiedad Shell ───────────────────────────────────
+        shell_prop = f"PLATE_{config.material}_{config.thickness:.0f}"
+        ret = SapModel.PropArea.SetShell_1(
+            shell_prop, 1, False, config.material, 0.0,
+            config.thickness, config.thickness
+        )
+        if not _check_ret(ret):
+            shell_prop = "Default"
 
         # ── Grupo ───────────────────────────────────────────────────────
         ret = SapModel.GroupDef.SetGroup(config.group_name)
@@ -189,10 +184,8 @@ if __name__ == "__main__":
             nx=5, ny=5,
             origin_x=0.0, origin_y=0.0, origin_z=0.0,
             plane="XZ", angle=30.0,
-            prop_name="Default",
             material="A36",
             thickness=16.0,
-            auto_prop=False,
             group_name="PLATE_TEST",
         )
         try:

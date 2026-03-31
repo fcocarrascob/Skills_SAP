@@ -178,11 +178,13 @@ class MultiBoltPreviewWidget(QWidget):
         # Si hay ángulo, el bounding box rotado es mayor
         theta = math.radians(angle)
         cos_a, sin_a = math.cos(theta), math.sin(theta)
-        # Bounding box rotado: considerar las 4 esquinas del patrón
-        hw, hh = total_w / 2.0, total_h / 2.0
-        corners = [(-hw, -hh), (hw, -hh), (hw, hh), (-hw, hh)]
-        rot_corners = [(c[0] * cos_a - c[1] * sin_a,
-                        c[0] * sin_a + c[1] * cos_a) for c in corners]
+        # Bounding box rotado: esquinas del patrón (origen inf-izq)
+        pattern_corners = [(0, 0), (total_w, 0), (total_w, total_h), (0, total_h)]
+        # Centro del patrón en coordenadas locales
+        pc_u, pc_v = total_w / 2.0, total_h / 2.0
+        rot_corners = [((c[0] - pc_u) * cos_a - (c[1] - pc_v) * sin_a,
+                        (c[0] - pc_u) * sin_a + (c[1] - pc_v) * cos_a)
+                       for c in pattern_corners]
         min_ru = min(c[0] for c in rot_corners)
         max_ru = max(c[0] for c in rot_corners)
         min_rv = min(c[1] for c in rot_corners)
@@ -197,13 +199,15 @@ class MultiBoltPreviewWidget(QWidget):
         cx = w_px / 2.0
         cy = h_px / 2.0 + 7  # compensar etiqueta
 
-        # Generar centros
-        centers = _generate_grid_centers(n_rows, n_cols, spacing_h, spacing_v)
+        # Generar centros (origen en esquina inferior izquierda)
+        centers = _generate_grid_centers(n_rows, n_cols, spacing_h, spacing_v,
+                                         outer_dim)
 
-        # Transformar a píxeles (con rotación)
+        # Transformar a píxeles (centrado en pantalla, con rotación)
         def to_px(u, v):
-            ru = u * cos_a - v * sin_a
-            rv = u * sin_a + v * cos_a
+            du, dv = u - pc_u, v - pc_v
+            ru = du * cos_a - dv * sin_a
+            rv = du * sin_a + dv * cos_a
             return cx + ru * scale, cy - rv * scale
 
         # Dibujar líneas de grilla (conectar filas y columnas)
@@ -259,6 +263,12 @@ class MultiBoltPreviewWidget(QWidget):
             painter.setPen(Qt.NoPen)
             painter.setBrush(QBrush(QColor(30, 60, 150)))
             painter.drawEllipse(QPointF(bx, by), 2, 2)
+
+        # ── Punto de inserción (esquina inferior izquierda) ──────────────
+        ix, iy = to_px(0, 0)
+        painter.setPen(QPen(Qt.red, 1))
+        painter.setBrush(QBrush(Qt.red))
+        painter.drawEllipse(QPointF(ix, iy), 4, 4)
 
         # ── Cotas ────────────────────────────────────────────────────────
         if n_cols >= 2:
@@ -518,11 +528,13 @@ class MultiBoltGUI(QWidget):
         self._outer_shape.setCurrentText("Círculo")
         g2.addWidget(lbl_shape, 1, 0); g2.addWidget(self._outer_shape, 1, 1)
 
-        lbl, self._bolt_material = _field(
-            "Material Perno:", "A36",
-            "Material SAP2000 para la sección Frame circular del perno",
-        )
-        g2.addWidget(lbl, 1, 2); g2.addWidget(self._bolt_material, 1, 3)
+        lbl_bmat = QLabel("Material Perno:")
+        lbl_bmat.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lbl_bmat.setToolTip("Material SAP2000 para la sección Frame circular del perno")
+        self._bolt_material = QComboBox()
+        self._bolt_material.setEditable(True)
+        self._bolt_material.addItem("A36")
+        g2.addWidget(lbl_bmat, 1, 2); g2.addWidget(self._bolt_material, 1, 3)
 
         params_col.addWidget(grp_bolt)
 
@@ -540,12 +552,26 @@ class MultiBoltGUI(QWidget):
                                 "Espesor de la placa 2 (unidades del modelo)")
         g3.addWidget(lbl, 0, 2); g3.addWidget(self._t2, 0, 3)
 
+        lbl_mat1 = QLabel("Material Placa 1:")
+        lbl_mat1.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._plate_mat_1 = QComboBox()
+        self._plate_mat_1.setEditable(True)
+        self._plate_mat_1.addItem("A36")
+        g3.addWidget(lbl_mat1, 1, 0); g3.addWidget(self._plate_mat_1, 1, 1)
+
+        lbl_mat2 = QLabel("Material Placa 2:")
+        lbl_mat2.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        self._plate_mat_2 = QComboBox()
+        self._plate_mat_2.setEditable(True)
+        self._plate_mat_2.addItem("A36")
+        g3.addWidget(lbl_mat2, 1, 2); g3.addWidget(self._plate_mat_2, 1, 3)
+
         lbl_sep = QLabel("Separación (sep):")
         lbl_sep.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
         lbl_sep.setToolTip("sep = (t1 + t2) / 2  — calculado automáticamente")
         self._sep_lbl = QLabel("16.0")
         self._sep_lbl.setStyleSheet("color: #1a6e1a; font-weight: bold;")
-        g3.addWidget(lbl_sep, 1, 0); g3.addWidget(self._sep_lbl, 1, 1)
+        g3.addWidget(lbl_sep, 2, 0); g3.addWidget(self._sep_lbl, 2, 1)
 
         params_col.addWidget(grp_plates)
 
@@ -588,7 +614,7 @@ class MultiBoltGUI(QWidget):
         params_col.addWidget(grp_orient)
 
         # ── Grupo: Ubicación ──────────────────────────────────────────────
-        grp_loc = QGroupBox("Ubicación (centro del patrón)")
+        grp_loc = QGroupBox("Ubicación (esquina inferior izquierda)")
         g6 = QGridLayout(grp_loc)
         g6.setHorizontalSpacing(12)
         g6.setVerticalSpacing(8)
@@ -618,28 +644,21 @@ class MultiBoltGUI(QWidget):
         g7.setHorizontalSpacing(12)
         g7.setVerticalSpacing(8)
 
-        lbl_prop = QLabel("Prop. Área Shell:")
-        lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._area_prop = QComboBox()
-        self._area_prop.setEditable(True)
-        self._area_prop.addItem("Default")
-        g7.addWidget(lbl_prop, 0, 0); g7.addWidget(self._area_prop, 0, 1)
-
         lbl, self._gap_name = _field("Nombre Prop. Gap:", "GAP_BOLT",
                                      "Nombre de la propiedad Link Gap")
-        g7.addWidget(lbl, 0, 2); g7.addWidget(self._gap_name, 0, 3)
+        g7.addWidget(lbl, 0, 0); g7.addWidget(self._gap_name, 0, 1)
 
         lbl, self._gap_k = _field("Rigidez Gap:", "1e6",
                                   "Rigidez axial del gap")
-        g7.addWidget(lbl, 1, 0); g7.addWidget(self._gap_k, 1, 1)
+        g7.addWidget(lbl, 0, 2); g7.addWidget(self._gap_k, 0, 3)
 
         lbl, self._gap_dis = _field("Apertura Inicial:", "0.0",
                                     "Distancia inicial del gap")
-        g7.addWidget(lbl, 1, 2); g7.addWidget(self._gap_dis, 1, 3)
+        g7.addWidget(lbl, 1, 0); g7.addWidget(self._gap_dis, 1, 1)
 
         lbl, self._group_name = _field("Grupo:", "MULTI_BOLT",
                                        "Nombre del grupo SAP2000")
-        g7.addWidget(lbl, 2, 0); g7.addWidget(self._group_name, 2, 1)
+        g7.addWidget(lbl, 1, 2); g7.addWidget(self._group_name, 1, 3)
 
         params_col.addWidget(grp_sap)
         params_col.addStretch()
@@ -773,21 +792,26 @@ class MultiBoltGUI(QWidget):
             origin_z=float(self._oz.text()),
             plane=plane,
             angle=float(self._angle.text()),
-            area_prop=self._area_prop.currentText().strip() or "Default",
+            plate_material_1=self._plate_mat_1.currentText().strip() or "A36",
+            plate_material_2=self._plate_mat_2.currentText().strip() or "A36",
             gap_prop_name=self._gap_name.text().strip() or "GAP_BOLT",
             gap_stiffness=float(self._gap_k.text()),
             initial_gap=float(self._gap_dis.text()),
-            bolt_material=self._bolt_material.text().strip() or "A36",
+            bolt_material=self._bolt_material.currentText().strip() or "A36",
             group_name=self._group_name.text().strip() or "MULTI_BOLT",
         )
 
+    def populate_materials(self, names: list):
+        for combo in (self._bolt_material, self._plate_mat_1, self._plate_mat_2):
+            current = combo.currentText()
+            combo.clear()
+            items = list(names) if names else ["A36"]
+            combo.addItems(items)
+            idx = combo.findText(current)
+            combo.setCurrentIndex(idx if idx >= 0 else 0)
+
     def populate_area_props(self, names: list):
-        current = self._area_prop.currentText()
-        self._area_prop.clear()
-        items = list(names) if names else ["Default"]
-        self._area_prop.addItems(items)
-        idx = self._area_prop.findText(current)
-        self._area_prop.setCurrentIndex(idx if idx >= 0 else 0)
+        pass  # Ya no se usa — las propiedades Shell se auto-crean
 
     # ── Slots ─────────────────────────────────────────────────────────────
 
@@ -802,13 +826,13 @@ class MultiBoltGUI(QWidget):
         if result.get("connected"):
             ver = result.get("version", "?")
             path = result.get("model_path") or "(sin modelo)"
-            props = result.get("shell_props", [])
+            materials = result.get("materials", [])
             self._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
-            self.populate_area_props(props)
-            if props:
-                self._log_append(f"  Propiedades Shell cargadas: {len(props)}")
+            self.populate_materials(materials)
+            if materials:
+                self._log_append(f"  Materiales Steel cargados: {len(materials)}")
             else:
-                self._log_append("  Sin propiedades Shell en el modelo (usando 'Default')")
+                self._log_append("  Sin materiales Steel en el modelo (usando 'A36')")
             self._set_connected(True)
         else:
             err = result.get("error", "Error desconocido")
@@ -824,7 +848,7 @@ class MultiBoltGUI(QWidget):
     def _on_disconnect_done(self, result: dict):
         self._busy(False)
         self._log_append("✔ Desconectado de SAP2000")
-        self.populate_area_props([])
+        self.populate_materials([])
         self._set_connected(False)
 
     def _on_run(self):
@@ -863,6 +887,8 @@ class MultiBoltGUI(QWidget):
                 f"  Plano               : {result.get('plane', '?')}\n"
                 f"  Prop. gap           : {result.get('gap_prop', '?')}\n"
                 f"  Sección perno       : {result.get('bolt_section', '?')}\n"
+                f"  Shell placa 1       : {result.get('shell_prop_1', '?')}\n"
+                f"  Shell placa 2       : {result.get('shell_prop_2', '?')}\n"
                 f"  Grupo               : {result.get('group', '?')}"
             )
             self._plane.setCurrentIndex(0)

@@ -155,15 +155,15 @@ class SteelConnectionsWindow(QWidget):
         if result.get("connected"):
             ver = result.get("version", "?")
             path = result.get("model_path") or "(sin modelo)"
-            props = result.get("shell_props", [])
+            mats = result.get("materials", [])
 
             self._set_connected(True)
 
-            # Propagar propiedades Shell a todos los tabs
-            self._bolt_gui.populate_area_props(props)
-            self._profiles_gui.populate_area_props(props)
-            self._multi_bolt_gui.populate_area_props(props)
-            self._plate_gui.populate_area_props(props)
+            # Propagar materiales Steel a todos los tabs
+            self._bolt_gui.populate_materials(mats)
+            self._profiles_gui.populate_materials(mats)
+            self._multi_bolt_gui.populate_materials(mats)
+            self._plate_gui.populate_materials(mats)
 
             # Log en todos los tabs
             msg = f"✔ Conectado — versión {ver}  |  modelo: {path}"
@@ -171,8 +171,8 @@ class SteelConnectionsWindow(QWidget):
             self._profiles_gui._log_append(msg)
             self._multi_bolt_gui._log_append(msg)
             self._plate_gui._log_append(msg)
-            if props:
-                info = f"  Propiedades Shell cargadas: {len(props)}"
+            if mats:
+                info = f"  Materiales Steel cargados: {len(mats)}"
                 self._bolt_gui._log_append(info)
                 self._profiles_gui._log_append(info)
                 self._multi_bolt_gui._log_append(info)
@@ -194,10 +194,10 @@ class SteelConnectionsWindow(QWidget):
     def _on_disconnect_done(self, result: dict):
         self._busy(False)
         self._set_connected(False)
-        self._bolt_gui.populate_area_props([])
-        self._profiles_gui.populate_area_props([])
-        self._multi_bolt_gui.populate_area_props([])
-        self._plate_gui.populate_area_props([])
+        self._bolt_gui.populate_materials([])
+        self._profiles_gui.populate_materials([])
+        self._multi_bolt_gui.populate_materials([])
+        self._plate_gui.populate_materials([])
         self._bolt_gui._log_append("✔ Desconectado de SAP2000")
         self._profiles_gui._log_append("✔ Desconectado de SAP2000")
         self._multi_bolt_gui._log_append("✔ Desconectado de SAP2000")
@@ -212,25 +212,32 @@ class SteelConnectionsWindow(QWidget):
     def _on_base_model_done(self, result: dict):
         self._busy(False)
         if result.get("success"):
-            mats = result.get("materials_created", 0)
-            msg = f"✔ Modelo base creado — {mats} materiales (N-mm-C)"
+            mats_created = result.get("materials_created", 0)
+            msg = f"✔ Modelo base creado — {mats_created} materiales (N-mm-C)"
             self._bolt_gui._log_append(msg)
             self._profiles_gui._log_append(msg)
             self._multi_bolt_gui._log_append(msg)
             self._plate_gui._log_append(msg)
 
-            # Recargar propiedades Shell del nuevo modelo
-            props = []
+            # Recargar materiales Steel del nuevo modelo
+            mats = []
             try:
-                ret = self._conn.sap_model.PropArea.GetNameList(0, [])
+                SapModel = self._conn.sap_model
+                ret = SapModel.PropMaterial.GetNameList(0, [])
                 if isinstance(ret, (list, tuple)) and int(ret[-1]) == 0 and int(ret[0]) > 0:
-                    props = list(ret[1])
+                    for name in ret[1]:
+                        try:
+                            t_ret = SapModel.PropMaterial.GetTypeOAPI(name, 0)
+                            if isinstance(t_ret, (list, tuple)) and int(t_ret[0]) == 1:
+                                mats.append(name)
+                        except Exception:
+                            pass
             except Exception:
                 pass
-            self._bolt_gui.populate_area_props(props)
-            self._profiles_gui.populate_area_props(props)
-            self._multi_bolt_gui.populate_area_props(props)
-            self._plate_gui.populate_area_props(props)
+            self._bolt_gui.populate_materials(mats)
+            self._profiles_gui.populate_materials(mats)
+            self._multi_bolt_gui.populate_materials(mats)
+            self._plate_gui.populate_materials(mats)
 
             errors = result.get("errors", [])
             if errors:

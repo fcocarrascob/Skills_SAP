@@ -29,7 +29,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont, QPainter, QPen, QColor, QBrush
 from PySide6.QtWidgets import (
     QApplication,
-    QCheckBox,
     QComboBox,
     QGridLayout,
     QGroupBox,
@@ -390,31 +389,22 @@ class SimplePlateGUI(QWidget):
         g5.setHorizontalSpacing(12)
         g5.setVerticalSpacing(8)
 
-        lbl_prop = QLabel("Prop. Área Shell:")
-        lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._area_prop = QComboBox()
-        self._area_prop.setEditable(True)
-        self._area_prop.addItem("Default")
-        g5.addWidget(lbl_prop, 0, 0); g5.addWidget(self._area_prop, 0, 1)
-
-        lbl, self._material = _field("Material:", "A36",
-                                     "Material para auto-crear propiedad Shell")
-        g5.addWidget(lbl, 0, 2); g5.addWidget(self._material, 0, 3)
+        lbl_mat = QLabel("Material:")
+        lbl_mat.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lbl_mat.setToolTip("Material para auto-crear propiedad Shell")
+        self._material = QComboBox()
+        self._material.setEditable(True)
+        self._material.addItem("A36")
+        self._material.setToolTip("Material para auto-crear propiedad Shell")
+        g5.addWidget(lbl_mat, 0, 0); g5.addWidget(self._material, 0, 1)
 
         lbl, self._thickness = _field("Espesor (mm):", "16.0",
                                       "Espesor de la placa")
-        g5.addWidget(lbl, 1, 0); g5.addWidget(self._thickness, 1, 1)
-
-        self._auto_prop = QCheckBox("Auto-crear propiedad Shell")
-        self._auto_prop.setToolTip(
-            "Si marcado, crea una propiedad ShellThin con el material y "
-            "espesor indicados. Si no, usa la propiedad seleccionada arriba."
-        )
-        g5.addWidget(self._auto_prop, 1, 2, 1, 2)
+        g5.addWidget(lbl, 0, 2); g5.addWidget(self._thickness, 0, 3)
 
         lbl, self._group_name = _field("Grupo:", "SIMPLE_PLATE",
                                        "Nombre del grupo SAP2000")
-        g5.addWidget(lbl, 2, 0); g5.addWidget(self._group_name, 2, 1)
+        g5.addWidget(lbl, 1, 0); g5.addWidget(self._group_name, 1, 1)
 
         params_col.addWidget(grp_sap)
         params_col.addStretch()
@@ -527,20 +517,22 @@ class SimplePlateGUI(QWidget):
             origin_z=float(self._oz.text()),
             plane=plane,
             angle=float(self._angle.text()),
-            prop_name=self._area_prop.currentText().strip() or "Default",
-            material=self._material.text().strip() or "A36",
+            material=self._material.currentText().strip() or "A36",
             thickness=float(self._thickness.text()),
-            auto_prop=self._auto_prop.isChecked(),
             group_name=self._group_name.text().strip() or "SIMPLE_PLATE",
         )
 
+    def populate_materials(self, names: list):
+        """Llena el combo de material con la lista de materiales Steel."""
+        current = self._material.currentText()
+        self._material.clear()
+        items = list(names) if names else ["A36"]
+        self._material.addItems(items)
+        idx = self._material.findText(current)
+        self._material.setCurrentIndex(idx if idx >= 0 else 0)
+
     def populate_area_props(self, names: list):
-        current = self._area_prop.currentText()
-        self._area_prop.clear()
-        items = list(names) if names else ["Default"]
-        self._area_prop.addItems(items)
-        idx = self._area_prop.findText(current)
-        self._area_prop.setCurrentIndex(idx if idx >= 0 else 0)
+        pass  # backward compat — no-op
 
     # ── Slots ─────────────────────────────────────────────────────────────
 
@@ -555,13 +547,13 @@ class SimplePlateGUI(QWidget):
         if result.get("connected"):
             ver = result.get("version", "?")
             path = result.get("model_path") or "(sin modelo)"
-            props = result.get("shell_props", [])
+            mats = result.get("materials", [])
             self._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
-            self.populate_area_props(props)
-            if props:
-                self._log_append(f"  Propiedades Shell cargadas: {len(props)}")
+            self.populate_materials(mats)
+            if mats:
+                self._log_append(f"  Materiales Steel cargados: {len(mats)}")
             else:
-                self._log_append("  Sin propiedades Shell en el modelo (usando 'Default')")
+                self._log_append("  Sin materiales Steel en el modelo (usando 'A36')")
             self._set_connected(True)
         else:
             err = result.get("error", "Error desconocido")
@@ -577,7 +569,7 @@ class SimplePlateGUI(QWidget):
     def _on_disconnect_done(self, result: dict):
         self._busy(False)
         self._log_append("✔ Desconectado de SAP2000")
-        self.populate_area_props([])
+        self.populate_materials([])
         self._set_connected(False)
 
     def _on_run(self):

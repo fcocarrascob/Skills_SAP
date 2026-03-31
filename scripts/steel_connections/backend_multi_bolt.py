@@ -24,21 +24,22 @@ from shared import SapConnection, _check_ret, _shape_coords_2d, _build_axes, _lo
 
 def _generate_grid_centers(
     n_rows: int, n_cols: int, spacing_h: float, spacing_v: float,
+    outer_dim: float = 0.0,
 ) -> List[Tuple[float, float]]:
     """Genera centros de pernos en coordenadas locales 2D (u, v).
 
-    El patrón se centra en (0, 0):
+    El origen (0, 0) corresponde a la esquina inferior izquierda
+    del bounding box del patrón (incluyendo arandelas).
       u = dirección horizontal (columnas)
       v = dirección vertical (filas)
     """
     centers: List[Tuple[float, float]] = []
-    total_w = (n_cols - 1) * spacing_h
-    total_h = (n_rows - 1) * spacing_v
+    r = outer_dim / 2.0
 
     for row in range(n_rows):
         for col in range(n_cols):
-            u = col * spacing_h - total_w / 2.0
-            v = row * spacing_v - total_h / 2.0
+            u = col * spacing_h + r
+            v = row * spacing_v + r
             centers.append((u, v))
 
     return centers
@@ -71,7 +72,7 @@ class MultiBoltConfig:
     num_angular: int = 12              # Puntos por anillo (>= 3)
     num_radial: int = 2                # Anillos radiales (>= 1)
 
-    # ── Ubicación (centro del patrón) ───────────────────────────────────
+    # ── Ubicación (esquina inferior izquierda del patrón) ───────────────
     origin_x: float = 0.0
     origin_y: float = 0.0
     origin_z: float = 0.0
@@ -80,12 +81,15 @@ class MultiBoltConfig:
     plane: str = "XZ"                  # Plano de la placa: "XZ", "YZ", "XY"
     angle: float = 0.0                 # Inclinación en grados dentro del plano
 
+    # ── Materiales ──────────────────────────────────────────────────────
+    plate_material_1: str = "A36"       # Material de la placa 1
+    plate_material_2: str = "A36"       # Material de la placa 2
+    bolt_material: str = "A36"          # Material del perno (sección Frame)
+
     # ── Propiedades SAP2000 ─────────────────────────────────────────────
-    area_prop: str = "Default"
     gap_prop_name: str = "GAP_BOLT"
     gap_stiffness: float = 1.0e6
     initial_gap: float = 0.0
-    bolt_material: str = "A36"
     bolt_section_name: str = ""
 
     # ── Grupo ────────────────────────────────────────────────────────────
@@ -275,13 +279,26 @@ class MultiBoltBackend:
         bolt_section = self._ensure_bolt_section(config)
         self._ensure_gap_prop(config)
 
+        # ── Auto-crear propiedades Shell para cada placa ────────────────
+        shell_prop_1 = f"PLATE_{config.plate_material_1}_{config.plate_thickness_1:.0f}"
+        shell_prop_2 = f"PLATE_{config.plate_material_2}_{config.plate_thickness_2:.0f}"
+        self.sap_model.PropArea.SetShell_1(
+            shell_prop_1, 1, False, config.plate_material_1,
+            0.0, config.plate_thickness_1, config.plate_thickness_1,
+        )
+        self.sap_model.PropArea.SetShell_1(
+            shell_prop_2, 1, False, config.plate_material_2,
+            0.0, config.plate_thickness_2, config.plate_thickness_2,
+        )
+
         ret = self.sap_model.GroupDef.SetGroup(config.group_name)
         if not _check_ret(ret):
             raise RuntimeError(f"GroupDef.SetGroup falló: {ret}")
 
         # ── Centros de pernos en coordenadas locales 2D ─────────────────
         centers = _generate_grid_centers(
-            config.n_rows, config.n_cols, config.spacing_h, config.spacing_v
+            config.n_rows, config.n_cols, config.spacing_h, config.spacing_v,
+            config.outer_dim,
         )
 
         # Coordenadas de anillos base (relativas al centro del perno)
@@ -371,7 +388,7 @@ class MultiBoltBackend:
                     pts1 = [inner_r_p1[i], inner_r_p1[j],
                             outer_r_p1[j], outer_r_p1[i]]
                     if all(pts1):
-                        a = self._create_area(pts1, config.area_prop)
+                        a = self._create_area(pts1, shell_prop_1)
                         if a:
                             total_areas += 1
                             self.sap_model.AreaObj.SetGroupAssign(
@@ -382,7 +399,7 @@ class MultiBoltBackend:
                     pts2 = [inner_r_p2[i], inner_r_p2[j],
                             outer_r_p2[j], outer_r_p2[i]]
                     if all(pts2):
-                        a = self._create_area(pts2, config.area_prop)
+                        a = self._create_area(pts2, shell_prop_2)
                         if a:
                             total_areas += 1
                             self.sap_model.AreaObj.SetGroupAssign(
@@ -444,6 +461,8 @@ class MultiBoltBackend:
             "body_constraints": body_constraints_created,
             "pattern": f"{config.n_rows}×{config.n_cols}",
             "group": config.group_name,
+            "shell_prop_1": shell_prop_1,
+            "shell_prop_2": shell_prop_2,
         }
 
 
@@ -469,7 +488,7 @@ if __name__ == "__main__":
             num_angular=12, num_radial=2,
             origin_x=0.0, origin_y=0.0, origin_z=0.0,
             plane="XZ", angle=0.0,
-            area_prop="Default",
+            plate_material_1="A36", plate_material_2="A36",
             gap_prop_name="GAP_MULTI",
             gap_stiffness=1.0e6,
             initial_gap=0.0,

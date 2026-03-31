@@ -126,10 +126,10 @@ class ProfilePreviewWidget(QWidget):
     def _get_plates(self, ptype, dims):
         """Retorna lista de (nombre, cd, cw, plate_h, plate_w)."""
         if ptype == "W":
-            d = dims.get("d", 0.3)
-            bf = dims.get("bf", 0.15)
-            tf = dims.get("tf", 0.01)
-            tw = dims.get("tw", 0.007)
+            d = dims.get("d", 300.0)
+            bf = dims.get("bf", 150.0)
+            tf = dims.get("tf", 10.0)
+            tw = dims.get("tw", 7.0)
             hw = d - 2 * tf
             return [
                 ("Ala sup.", d / 2 - tf / 2, 0.0, tf, bf),
@@ -137,9 +137,9 @@ class ProfilePreviewWidget(QWidget):
                 ("Ala inf.", -d / 2 + tf / 2, 0.0, tf, bf),
             ]
         elif ptype == "HSS":
-            B = dims.get("B", 0.2)
-            H = dims.get("H", 0.2)
-            t = dims.get("t_hss", 0.008)
+            B = dims.get("B", 200.0)
+            H = dims.get("H", 200.0)
+            t = dims.get("t_hss", 8.0)
             hw = H - 2 * t
             return [
                 ("Top", H / 2 - t / 2, 0.0, t, B),
@@ -148,18 +148,18 @@ class ProfilePreviewWidget(QWidget):
                 ("Right", 0.0, B / 2 - t / 2, hw, t),
             ]
         elif ptype == "L":
-            b1 = dims.get("b1", 0.1)
-            b2 = dims.get("b2", 0.1)
-            t = dims.get("t_angle", 0.01)
+            b1 = dims.get("b1", 100.0)
+            b2 = dims.get("b2", 100.0)
+            t = dims.get("t_angle", 10.0)
             return [
                 ("Vert.", b1 / 2, t / 2, b1, t),
                 ("Horiz.", t / 2, b2 / 2, t, b2),
             ]
         else:  # C
-            d = dims.get("d", 0.25)
-            bf = dims.get("bf", 0.1)
-            tf = dims.get("tf", 0.012)
-            tw = dims.get("tw", 0.006)
+            d = dims.get("d", 250.0)
+            bf = dims.get("bf", 100.0)
+            tf = dims.get("tf", 12.0)
+            tw = dims.get("tw", 6.0)
             hw = d - 2 * tf
             return [
                 ("Alma", 0.0, -bf / 2 + tw / 2, hw, tw),
@@ -262,11 +262,11 @@ class ProfilePreviewWidget(QWidget):
 
         # Calcular peralte del perfil
         if ptype == "W" or ptype == "C":
-            prof_d = dims.get("d", 0.3)
+            prof_d = dims.get("d", 300.0)
         elif ptype == "HSS":
-            prof_d = dims.get("H", 0.2)
+            prof_d = dims.get("H", 200.0)
         else:
-            prof_d = dims.get("b1", 0.1)
+            prof_d = dims.get("b1", 100.0)
 
         margin = 30
         avail_w = w_px - 2 * margin
@@ -356,26 +356,26 @@ PROFILE_TYPES = ["W", "HSS", "L", "C"]
 # Definición de campos por tipo de perfil: (key, label, default, tooltip)
 PROFILE_FIELDS = {
     "W": [
-        ("d",  "Peralte d:",  "0.300", "Peralte total del perfil (m)"),
-        ("bf", "Ancho ala bf:", "0.150", "Ancho del ala (m)"),
-        ("tf", "Espesor ala tf:", "0.010", "Espesor del ala (m)"),
-        ("tw", "Espesor alma tw:", "0.007", "Espesor del alma (m)"),
+        ("d",  "Peralte d:",  "300.0", "Peralte total del perfil (mm)"),
+        ("bf", "Ancho ala bf:", "150.0", "Ancho del ala (mm)"),
+        ("tf", "Espesor ala tf:", "10.0", "Espesor del ala (mm)"),
+        ("tw", "Espesor alma tw:", "7.0", "Espesor del alma (mm)"),
     ],
     "HSS": [
-        ("B",     "Ancho B:",    "0.200", "Ancho del HSS (m)"),
-        ("H",     "Alto H:",     "0.200", "Alto del HSS (m)"),
-        ("t_hss", "Espesor t:",  "0.008", "Espesor de las paredes (m)"),
+        ("B",     "Ancho B:",    "200.0", "Ancho del HSS (mm)"),
+        ("H",     "Alto H:",     "200.0", "Alto del HSS (mm)"),
+        ("t_hss", "Espesor t:",  "8.0", "Espesor de las paredes (mm)"),
     ],
     "L": [
-        ("b1",      "Ala vert. b1:", "0.100", "Largo del ala vertical (m)"),
-        ("b2",      "Ala horiz. b2:", "0.100", "Largo del ala horizontal (m)"),
-        ("t_angle", "Espesor t:",    "0.010", "Espesor del ángulo (m)"),
+        ("b1",      "Ala vert. b1:", "100.0", "Largo del ala vertical (mm)"),
+        ("b2",      "Ala horiz. b2:", "100.0", "Largo del ala horizontal (mm)"),
+        ("t_angle", "Espesor t:",    "10.0", "Espesor del ángulo (mm)"),
     ],
     "C": [
-        ("d",  "Peralte d:",  "0.250", "Peralte total del canal (m)"),
-        ("bf", "Ancho ala bf:", "0.100", "Ancho del ala (m)"),
-        ("tf", "Espesor ala tf:", "0.012", "Espesor del ala (m)"),
-        ("tw", "Espesor alma tw:", "0.006", "Espesor del alma (m)"),
+        ("d",  "Peralte d:",  "250.0", "Peralte total del canal (mm)"),
+        ("bf", "Ancho ala bf:", "100.0", "Ancho del ala (mm)"),
+        ("tf", "Espesor ala tf:", "12.0", "Espesor del ala (mm)"),
+        ("tw", "Espesor alma tw:", "6.0", "Espesor del alma (mm)"),
     ],
 }
 
@@ -470,7 +470,7 @@ class SteelProfilesGUI(QWidget):
         g_orient.setHorizontalSpacing(12)
         g_orient.setVerticalSpacing(8)
 
-        lbl, self._length = _field("Largo:", "3.0", "Largo del perfil (m)")
+        lbl, self._length = _field("Largo:", "3000.0", "Largo del perfil (mm)")
         g_orient.addWidget(lbl, 0, 0); g_orient.addWidget(self._length, 0, 1)
 
         lbl_plane = QLabel("Plano:")
@@ -533,12 +533,14 @@ class SteelProfilesGUI(QWidget):
         g_sap.setHorizontalSpacing(12)
         g_sap.setVerticalSpacing(8)
 
-        lbl_prop = QLabel("Prop. Área Shell:")
-        lbl_prop.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
-        self._area_prop = QComboBox()
-        self._area_prop.setEditable(True)
-        self._area_prop.addItem("Default")
-        g_sap.addWidget(lbl_prop, 0, 0); g_sap.addWidget(self._area_prop, 0, 1)
+        lbl_mat = QLabel("Material:")
+        lbl_mat.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+        lbl_mat.setToolTip("Material SAP2000 para las Shell de cada placa")
+        self._material = QComboBox()
+        self._material.setEditable(True)
+        self._material.addItem("A36")
+        self._material.setToolTip("Material SAP2000 para las Shell de cada placa")
+        g_sap.addWidget(lbl_mat, 0, 0); g_sap.addWidget(self._material, 0, 1)
 
         lbl, self._group_name = _field("Grupo:", "STEEL_PROFILE",
                                        "Nombre del grupo SAP2000 para las áreas")
@@ -683,7 +685,7 @@ class SteelProfilesGUI(QWidget):
             angle=float(self._angle.text()),
             n_length=int(self._n_length.text()),
             n_width=int(self._n_width.text()),
-            area_prop=self._area_prop.currentText().strip() or "Default",
+            material=self._material.currentText().strip() or "A36",
             group_name=self._group_name.text().strip() or "STEEL_PROFILE",
         )
 
@@ -704,13 +706,17 @@ class SteelProfilesGUI(QWidget):
 
         return cfg
 
+    def populate_materials(self, names: list):
+        """Llena el combo de material con la lista de materiales Steel."""
+        current = self._material.currentText()
+        self._material.clear()
+        items = list(names) if names else ["A36"]
+        self._material.addItems(items)
+        idx = self._material.findText(current)
+        self._material.setCurrentIndex(idx if idx >= 0 else 0)
+
     def populate_area_props(self, names: list):
-        current = self._area_prop.currentText()
-        self._area_prop.clear()
-        items = list(names) if names else ["Default"]
-        self._area_prop.addItems(items)
-        idx = self._area_prop.findText(current)
-        self._area_prop.setCurrentIndex(idx if idx >= 0 else 0)
+        pass  # backward compat — no-op
 
     # ── Slots ────────────────────────────────────────────────────────────
 
@@ -725,13 +731,13 @@ class SteelProfilesGUI(QWidget):
         if result.get("connected"):
             ver = result.get("version", "?")
             path = result.get("model_path") or "(sin modelo)"
-            props = result.get("shell_props", [])
+            mats = result.get("materials", [])
             self._log_append(f"✔ Conectado — versión {ver}  |  modelo: {path}")
-            self.populate_area_props(props)
-            if props:
-                self._log_append(f"  Propiedades Shell cargadas: {len(props)}")
+            self.populate_materials(mats)
+            if mats:
+                self._log_append(f"  Materiales Steel cargados: {len(mats)}")
             else:
-                self._log_append("  Sin propiedades Shell en el modelo (usando 'Default')")
+                self._log_append("  Sin materiales Steel en el modelo (usando 'A36')")
             self._set_connected(True)
         else:
             err = result.get("error", "Error desconocido")
@@ -747,7 +753,7 @@ class SteelProfilesGUI(QWidget):
     def _on_disconnect_done(self, result: dict):
         self._busy(False)
         self._log_append("✔ Desconectado de SAP2000")
-        self.populate_area_props([])
+        self.populate_materials([])
         self._set_connected(False)
 
     def _on_run(self):
@@ -771,12 +777,15 @@ class SteelProfilesGUI(QWidget):
         self._busy(False)
         if result.get("success"):
             self._log_append("✔ Perfil generado correctamente")
+            shell_props = result.get('shell_props', {})
+            sp_info = ", ".join(f"{k}: {v}" for k, v in shell_props.items()) if shell_props else "—"
             self._log_append(
                 f"  Tipo perfil        : {result.get('profile_type', '?')}\n"
                 f"  Placas generadas   : {result.get('num_plates', '?')}  "
                 f"{result.get('plate_names', [])}\n"
                 f"  Áreas creadas      : {result.get('num_areas', '?')}\n"
                 f"  Áreas por placa    : {result.get('areas_per_plate', '?')}\n"
+                f"  Shell props        : {sp_info}\n"
                 f"  Largo              : {result.get('length', '?')}m\n"
                 f"  Ángulo             : {result.get('angle', '?')}°\n"
                 f"  Plano              : {result.get('plane', '?')}\n"
