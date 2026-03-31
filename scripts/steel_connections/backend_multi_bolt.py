@@ -337,20 +337,20 @@ class MultiBoltBackend:
                     u_local = u_in + (u_out - u_in) * fraction
                     v_local = v_in + (v_out - v_in) * fraction
 
-                    # Placa 1 (offset normal negativo)
+                    # Placa 1 (en el plano de inserción)
                     gx, gy, gz = _local_to_global_axes(
                         origin, e_u, e_v, e_n,
-                        u_bolt + u_local, v_bolt + v_local, -sep / 2.0,
+                        u_bolt + u_local, v_bolt + v_local, 0.0,
                     )
                     p1 = self._create_point(gx, gy, gz)
                     ring_p1.append(p1 or "")
                     if p1:
                         total_points += 1
 
-                    # Placa 2 (offset normal positivo)
+                    # Placa 2 (offset normal = +sep)
                     gx, gy, gz = _local_to_global_axes(
                         origin, e_u, e_v, e_n,
-                        u_bolt + u_local, v_bolt + v_local, +sep / 2.0,
+                        u_bolt + u_local, v_bolt + v_local, +sep,
                     )
                     p2 = self._create_point(gx, gy, gz)
                     ring_p2.append(p2 or "")
@@ -362,10 +362,10 @@ class MultiBoltBackend:
 
             # ── Centro de cada placa ────────────────────────────────────
             cx1, cy1, cz1 = _local_to_global_axes(
-                origin, e_u, e_v, e_n, u_bolt, v_bolt, -sep / 2.0,
+                origin, e_u, e_v, e_n, u_bolt, v_bolt, 0.0,
             )
             cx2, cy2, cz2 = _local_to_global_axes(
-                origin, e_u, e_v, e_n, u_bolt, v_bolt, +sep / 2.0,
+                origin, e_u, e_v, e_n, u_bolt, v_bolt, +sep,
             )
             center_p1 = self._create_point(cx1, cy1, cz1)
             center_p2 = self._create_point(cx2, cy2, cz2)
