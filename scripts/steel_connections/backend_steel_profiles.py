@@ -15,7 +15,7 @@ import comtypes.client
 from dataclasses import dataclass
 from typing import List, Tuple
 
-from backend_bolt_plates import SapConnection
+from shared import SapConnection
 
 
 # ══════════════════════════════════════════════════════════════════════════════

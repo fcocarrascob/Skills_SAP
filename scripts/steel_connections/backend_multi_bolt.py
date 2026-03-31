@@ -15,54 +15,7 @@ import math
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
-from backend_bolt_plates import SapConnection, _check_ret, _shape_coords_2d
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Sistema de coordenadas con orientación arbitraria
-# ══════════════════════════════════════════════════════════════════════════════
-
-def _build_axes(plane: str, angle_deg: float):
-    """Construye los 3 ejes unitarios del plano de la conexión.
-
-    Returns:
-        (e_u, e_v, e_n) — vectores unitarios (tuple de 3 floats cada uno)
-        e_u: dirección horizontal del patrón (columnas)
-        e_v: dirección vertical del patrón (filas)
-        e_n: normal al plano (dirección de separación entre placas)
-    """
-    theta = math.radians(angle_deg)
-    c, s = math.cos(theta), math.sin(theta)
-
-    if plane == "XZ":
-        e_u = (c, 0.0, s)
-        e_v = (-s, 0.0, c)
-        e_n = (0.0, 1.0, 0.0)
-    elif plane == "YZ":
-        e_u = (0.0, c, s)
-        e_v = (0.0, -s, c)
-        e_n = (1.0, 0.0, 0.0)
-    else:  # XY
-        e_u = (c, s, 0.0)
-        e_v = (-s, c, 0.0)
-        e_n = (0.0, 0.0, 1.0)
-
-    return e_u, e_v, e_n
-
-
-def _local_to_global(
-    origin: Tuple[float, float, float],
-    e_u: Tuple[float, float, float],
-    e_v: Tuple[float, float, float],
-    e_n: Tuple[float, float, float],
-    u: float, v: float, n: float,
-) -> Tuple[float, float, float]:
-    """P_global = origin + u·ê_u + v·ê_v + n·ê_n"""
-    return (
-        origin[0] + u * e_u[0] + v * e_v[0] + n * e_n[0],
-        origin[1] + u * e_u[1] + v * e_v[1] + n * e_n[1],
-        origin[2] + u * e_u[2] + v * e_v[2] + n * e_n[2],
-    )
+from shared import SapConnection, _check_ret, _shape_coords_2d, _build_axes, _local_to_global_axes
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -368,7 +321,7 @@ class MultiBoltBackend:
                     v_local = v_in + (v_out - v_in) * fraction
 
                     # Placa 1 (offset normal negativo)
-                    gx, gy, gz = _local_to_global(
+                    gx, gy, gz = _local_to_global_axes(
                         origin, e_u, e_v, e_n,
                         u_bolt + u_local, v_bolt + v_local, -sep / 2.0,
                     )
@@ -378,7 +331,7 @@ class MultiBoltBackend:
                         total_points += 1
 
                     # Placa 2 (offset normal positivo)
-                    gx, gy, gz = _local_to_global(
+                    gx, gy, gz = _local_to_global_axes(
                         origin, e_u, e_v, e_n,
                         u_bolt + u_local, v_bolt + v_local, +sep / 2.0,
                     )
@@ -391,10 +344,10 @@ class MultiBoltBackend:
                 all_rings_p2.append(ring_p2)
 
             # ── Centro de cada placa ────────────────────────────────────
-            cx1, cy1, cz1 = _local_to_global(
+            cx1, cy1, cz1 = _local_to_global_axes(
                 origin, e_u, e_v, e_n, u_bolt, v_bolt, -sep / 2.0,
             )
-            cx2, cy2, cz2 = _local_to_global(
+            cx2, cy2, cz2 = _local_to_global_axes(
                 origin, e_u, e_v, e_n, u_bolt, v_bolt, +sep / 2.0,
             )
             center_p1 = self._create_point(cx1, cy1, cz1)

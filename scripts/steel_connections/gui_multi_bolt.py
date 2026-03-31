@@ -42,108 +42,14 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from backend_bolt_plates import SapConnection
+from shared import (
+    SapConnection,
+    ConnectWorker,
+    DisconnectWorker,
+    RunWorker,
+    GetCoordsWorker,
+)
 from backend_multi_bolt import MultiBoltBackend, MultiBoltConfig, _generate_grid_centers
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Workers — operaciones SAP2000 fuera del hilo GUI
-# ══════════════════════════════════════════════════════════════════════════════
-
-class ConnectWorker(QThread):
-    finished = Signal(dict)
-
-    def __init__(self, connection: SapConnection):
-        super().__init__()
-        self._conn = connection
-
-    def run(self):
-        result = self._conn.connect(attach_to_existing=True)
-        if result.get("connected"):
-            try:
-                ret = self._conn.sap_model.PropArea.GetNameList(0, [])
-                if isinstance(ret, (list, tuple)) and int(ret[-1]) == 0 and int(ret[0]) > 0:
-                    result["shell_props"] = list(ret[1])
-                else:
-                    result["shell_props"] = []
-            except Exception:
-                result["shell_props"] = []
-        self.finished.emit(result)
-
-
-class DisconnectWorker(QThread):
-    finished = Signal(dict)
-
-    def __init__(self, connection: SapConnection):
-        super().__init__()
-        self._conn = connection
-
-    def run(self):
-        self.finished.emit(self._conn.disconnect())
-
-
-class RunWorker(QThread):
-    finished = Signal(dict)
-
-    def __init__(self, backend: MultiBoltBackend, config: MultiBoltConfig):
-        super().__init__()
-        self._backend = backend
-        self._config = config
-
-    def run(self):
-        try:
-            self.finished.emit(self._backend.run(self._config))
-        except Exception as exc:
-            self.finished.emit({"success": False, "error": str(exc)})
-
-
-class GetCoordsWorker(QThread):
-    """Obtiene las coordenadas del primer nodo seleccionado en SAP2000."""
-    finished = Signal(dict)
-
-    def __init__(self, connection: SapConnection):
-        super().__init__()
-        self._conn = connection
-
-    def run(self):
-        try:
-            SapModel = self._conn.sap_model
-            ret_sel = SapModel.SelectObj.GetSelected(0, [], [])
-            if not (isinstance(ret_sel, (list, tuple)) and int(ret_sel[-1]) == 0):
-                self.finished.emit({"success": False, "error": "GetSelected falló."})
-                return
-            num_items = int(ret_sel[0])
-            if num_items == 0:
-                self.finished.emit({"success": False,
-                                    "error": "No hay objetos seleccionados en SAP2000."})
-                return
-            obj_types = ret_sel[1]
-            obj_names = ret_sel[2]
-            point_name = None
-            for i in range(num_items):
-                if int(obj_types[i]) == 1:
-                    point_name = obj_names[i]
-                    break
-            if not point_name:
-                self.finished.emit({"success": False,
-                                    "error": "Ningún nodo (PointObject) seleccionado."})
-                return
-            ret_coord = SapModel.PointObj.GetCoordCartesian(
-                point_name, 0.0, 0.0, 0.0, "Global"
-            )
-            if not (isinstance(ret_coord, (list, tuple)) and int(ret_coord[-1]) == 0):
-                self.finished.emit({"success": False,
-                                    "error": "GetCoordCartesian falló."})
-                return
-            self.finished.emit({
-                "success": True,
-                "name": str(point_name),
-                "x": float(ret_coord[0]),
-                "y": float(ret_coord[1]),
-                "z": float(ret_coord[2]),
-            })
-        except Exception as exc:
-            self.finished.emit({"success": False, "error": str(exc)})
 
 
 # ══════════════════════════════════════════════════════════════════════════════
