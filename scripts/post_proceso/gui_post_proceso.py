@@ -40,10 +40,14 @@ from PySide6.QtWidgets import (
     QSplitter,
     QFileDialog,
     QAbstractItemView,
+    QMessageBox,
+    QDoubleSpinBox,
+    QComboBox,
 )
 
 from backend_estabilidad import SapConnection, EstabilidadBackend
 from backend_shells import ShellsBackend
+from backend_mod_fund import ModFundBackend
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -158,6 +162,95 @@ class GetShellForcesWorker(QThread):
     def run(self):
         try:
             self.finished.emit(self._b.get_shell_forces(self._areas, self._combos))
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+# ── Workers: Mod FUND ─────────────────────────────────────────────────────────
+
+class CheckAnalysisWorker(QThread):
+    finished = Signal(dict)
+
+    def __init__(self, backend: ModFundBackend):
+        super().__init__()
+        self._b = backend
+
+    def run(self):
+        try:
+            self.finished.emit(self._b.check_analysis_done())
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+class GetReactionsWorker(QThread):
+    """Obtiene nodos restringidos, load cases, secciones y reacciones en un solo paso."""
+    finished = Signal(dict)
+
+    def __init__(self, backend: ModFundBackend):
+        super().__init__()
+        self._b = backend
+
+    def run(self):
+        try:
+            joints_r = self._b.get_restricted_joints()
+            if not joints_r["success"]:
+                self.finished.emit(joints_r)
+                return
+
+            cases_r = self._b.get_load_cases_no_modal()
+            if not cases_r["success"]:
+                self.finished.emit(cases_r)
+                return
+
+            secs_r = self._b.get_frame_sections()
+
+            react_r = self._b.get_joint_reactions(
+                joints_r["joint_names"], cases_r["case_names"]
+            )
+            if not react_r["success"]:
+                self.finished.emit(react_r)
+                return
+
+            self.finished.emit({
+                "success": True,
+                "joint_names":    joints_r["joint_names"],
+                "joint_count":    joints_r["count"],
+                "case_names":     cases_r["case_names"],
+                "case_count":     cases_r["count"],
+                "section_names":  secs_r.get("section_names", []),
+                "rows":           react_r["rows"],
+                "num_results":    react_r["num_results"],
+                "skipped_joints": react_r.get("skipped_joints", []),
+            })
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+class BuildFoundationWorker(QThread):
+    finished = Signal(dict)
+
+    def __init__(
+        self,
+        backend: ModFundBackend,
+        joint_names: list,
+        reactions_rows: list,
+        section_name: str,
+        pile_depth: float,
+    ):
+        super().__init__()
+        self._b = backend
+        self._joints = joint_names
+        self._rows = reactions_rows
+        self._section = section_name
+        self._depth = pile_depth
+
+    def run(self):
+        try:
+            self.finished.emit(
+                self._b.build_foundation_model(
+                    self._joints, self._rows, self._section, self._depth
+                )
+            )
         except Exception as exc:
             self.finished.emit({"success": False, "error": str(exc)})
 
@@ -983,6 +1076,421 @@ class ShellsTab(QWidget):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Tab: Mod FUND
+# ══════════════════════════════════════════════════════════════════════════════
+
+class ModFundTab(QWidget):
+    """
+    Pestaña Mod FUND: genera un modelo de fundación a partir de un modelo
+    estructural ya analizado.
+
+    Flujo:
+        1. Clic "1. Verificar Análisis" → confirma que el modelo está bloqueado
+        2. Clic "2. Obtener Reacciones" → lee nodos restringidos, load cases
+           (sin MODAL), secciones disponibles y reacciones nodales
+        3. Seleccionar sección y profundidad de pila
+        4. Clic "3. Construir Modelo Fundación" → confirmación → ejecuta:
+           - Desbloquea modelo
+           - Crea frames hacia Z- desde cada nodo restringido
+           - Elimina estructura superior (frames + áreas)
+           - Crea load patterns RF_<case> y asigna reacciones como fuerzas
+    """
+
+    log_message = Signal(str)
+
+    def __init__(self, conn: SapConnection, parent=None):
+        super().__init__(parent)
+        self._conn = conn
+        self._backend = ModFundBackend(conn)
+        self._worker = None
+
+        # Estado interno
+        self._analysis_ok: bool = False
+        self._joint_names: list = []
+        self._case_names: list = []
+        self._reaction_rows: list = []
+
+        self._build_ui()
+
+    # ── Construcción de la UI ─────────────────────────────────────────────────
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setSpacing(8)
+        layout.setContentsMargins(8, 8, 8, 8)
+
+        # ── Paso 1: Verificar análisis ────────────────────────────────────────
+        row1 = QHBoxLayout()
+
+        self._btn_check = QPushButton("1. Verificar Análisis")
+        self._btn_check.setFixedHeight(32)
+        self._btn_check.setFixedWidth(170)
+        self._btn_check.setEnabled(False)
+        self._btn_check.setToolTip(
+            "Verifica que el análisis fue ejecutado.\n"
+            "SAP2000 bloquea el modelo al completar el análisis."
+        )
+        self._btn_check.clicked.connect(self._on_check_analysis)
+        row1.addWidget(self._btn_check)
+
+        self._analysis_lbl = QLabel("Estado: sin verificar")
+        self._analysis_lbl.setStyleSheet("color: #7f8c8d; font-weight: bold;")
+        row1.addWidget(self._analysis_lbl)
+        row1.addStretch()
+        layout.addLayout(row1)
+
+        # ── Paso 2: Obtener reacciones ────────────────────────────────────────
+        row2 = QHBoxLayout()
+
+        self._btn_get = QPushButton("2. Obtener Reacciones")
+        self._btn_get.setFixedHeight(32)
+        self._btn_get.setFixedWidth(190)
+        self._btn_get.setEnabled(False)
+        self._btn_get.setToolTip(
+            "Lee nodos con restricciones, load cases (sin MODAL),\n"
+            "secciones disponibles y extrae las reacciones nodales."
+        )
+        self._btn_get.clicked.connect(self._on_get_reactions)
+        row2.addWidget(self._btn_get)
+        row2.addStretch()
+        layout.addLayout(row2)
+
+        # ── Splitter: nodos | load cases | tabla reacciones ───────────────────
+        splitter = QSplitter(Qt.Horizontal)
+
+        self._joints_box = QGroupBox("Nodos Restringidos (0)")
+        joints_lyt = QVBoxLayout(self._joints_box)
+        self._joints_list = QListWidget()
+        self._joints_list.setToolTip("Nodos con al menos un DOF restringido")
+        joints_lyt.addWidget(self._joints_list)
+        splitter.addWidget(self._joints_box)
+
+        self._cases_box = QGroupBox("Load Cases (0)")
+        cases_lyt = QVBoxLayout(self._cases_box)
+        self._cases_list = QListWidget()
+        self._cases_list.setToolTip("Load cases del modelo (tipo MODAL excluido)")
+        cases_lyt.addWidget(self._cases_list)
+        splitter.addWidget(self._cases_box)
+
+        react_box = QGroupBox("Reacciones (0 filas)")
+        react_lyt = QVBoxLayout(react_box)
+        self._react_table = QTableWidget()
+        self._react_table.setColumnCount(9)
+        self._react_table.setHorizontalHeaderLabels([
+            "Nodo", "Load Case", "Paso",
+            "F1", "F2", "F3",
+            "M1", "M2", "M3",
+        ])
+        self._react_table.horizontalHeader().setSectionResizeMode(
+            QHeaderView.ResizeToContents
+        )
+        self._react_table.horizontalHeader().setStretchLastSection(True)
+        self._react_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self._react_table.setAlternatingRowColors(True)
+        self._react_table.setSortingEnabled(True)
+        self._react_table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        react_lyt.addWidget(self._react_table)
+        splitter.addWidget(react_box)
+
+        splitter.setSizes([140, 140, 620])
+        layout.addWidget(splitter, 1)
+
+        # ── Configuración: sección y profundidad ──────────────────────────────
+        cfg_box = QGroupBox("Configuración")
+        cfg_lyt = QVBoxLayout(cfg_box)
+        cfg_lyt.setContentsMargins(8, 6, 8, 6)
+        cfg_lyt.setSpacing(6)
+
+        sec_row = QHBoxLayout()
+        sec_row.addWidget(QLabel("Sección Frame:"))
+        self._section_combo = QComboBox()
+        self._section_combo.setMinimumWidth(200)
+        self._section_combo.setToolTip(
+            "Sección a asignar a los frames tipo pila.\n"
+            "Se pobla al completar el Paso 2."
+        )
+        sec_row.addWidget(self._section_combo)
+        sec_row.addStretch()
+        cfg_lyt.addLayout(sec_row)
+
+        depth_row = QHBoxLayout()
+        depth_row.addWidget(QLabel("Profundidad pila (hacia Z-):"))
+        self._depth_spin = QDoubleSpinBox()
+        self._depth_spin.setRange(0.01, 9999.0)
+        self._depth_spin.setValue(5.0)
+        self._depth_spin.setDecimals(2)
+        self._depth_spin.setSingleStep(0.5)
+        self._depth_spin.setFixedWidth(100)
+        self._depth_spin.setToolTip(
+            "Longitud del elemento pila en dirección Z-.\n"
+            "El frame se crea desde el nodo restringido hacia abajo."
+        )
+        depth_row.addWidget(self._depth_spin)
+        depth_row.addWidget(QLabel("[unidades del modelo]"))
+        depth_row.addStretch()
+        cfg_lyt.addLayout(depth_row)
+
+        layout.addWidget(cfg_box)
+
+        # ── Advertencia y botón de construcción ───────────────────────────────
+        warn_lbl = QLabel(
+            "\u26a0  IRREVERSIBLE: Esta operación modifica el modelo SAP2000 abierto. "
+            "Se eliminarán todos los frames y áreas de la estructura superior. "
+            "Guarde una copia del modelo antes de continuar."
+        )
+        warn_lbl.setWordWrap(True)
+        warn_lbl.setStyleSheet(
+            "background: #fff3cd; color: #856404; "
+            "border: 1px solid #ffc107; border-radius: 4px; padding: 6px;"
+        )
+        layout.addWidget(warn_lbl)
+
+        self._btn_build = QPushButton("3. Construir Modelo Fundación")
+        self._btn_build.setFixedHeight(38)
+        self._btn_build.setEnabled(False)
+        self._btn_build.setStyleSheet(
+            "QPushButton { background-color: #e74c3c; color: white; "
+            "font-weight: bold; border-radius: 4px; } "
+            "QPushButton:hover { background-color: #c0392b; } "
+            "QPushButton:disabled { background-color: #bdc3c7; color: #7f8c8d; }"
+        )
+        self._btn_build.setToolTip(
+            "Desbloquea el modelo, crea frames pila hacia Z-, "
+            "elimina la estructura superior y asigna las reacciones como fuerzas."
+        )
+        self._btn_build.clicked.connect(self._on_build_foundation)
+        layout.addWidget(self._btn_build)
+
+    # ── API pública ───────────────────────────────────────────────────────────
+
+    def set_connected(self, connected: bool):
+        """Habilita/deshabilita controles según estado de conexión."""
+        self._btn_check.setEnabled(connected)
+        if not connected:
+            self._analysis_ok = False
+            self._btn_get.setEnabled(False)
+            self._btn_build.setEnabled(False)
+            self._analysis_lbl.setText("Estado: sin verificar")
+            self._analysis_lbl.setStyleSheet("color: #7f8c8d; font-weight: bold;")
+
+    # ── Helpers internos ──────────────────────────────────────────────────────
+
+    def _busy(self, is_busy: bool):
+        connected = self._conn.is_connected
+        self._btn_check.setEnabled(not is_busy and connected)
+        self._btn_get.setEnabled(not is_busy and connected and self._analysis_ok)
+        can_build = (
+            not is_busy
+            and connected
+            and bool(self._reaction_rows)
+            and bool(self._section_combo.currentText())
+        )
+        self._btn_build.setEnabled(can_build)
+
+    def _log(self, msg: str):
+        self.log_message.emit(msg)
+
+    # ── Paso 1: Verificar análisis ────────────────────────────────────────────
+
+    def _on_check_analysis(self):
+        self._log("Verificando estado del análisis...")
+        self._busy(True)
+        self._worker = CheckAnalysisWorker(self._backend)
+        self._worker.finished.connect(self._on_check_done)
+        self._worker.start()
+
+    def _on_check_done(self, result: dict):
+        self._busy(False)
+        if not result.get("success"):
+            err = result.get("error", "desconocido")
+            self._analysis_lbl.setText(f"✘ Error: {err}")
+            self._analysis_lbl.setStyleSheet("color: #c0392b; font-weight: bold;")
+            self._log(f"✘ Error al verificar análisis: {err}")
+            return
+
+        if result["locked"]:
+            self._analysis_ok = True
+            self._analysis_lbl.setText("✔ Análisis completado (modelo bloqueado)")
+            self._analysis_lbl.setStyleSheet("color: #27ae60; font-weight: bold;")
+            self._log("✔ Análisis verificado — el modelo está bloqueado.")
+            self._btn_get.setEnabled(self._conn.is_connected)
+        else:
+            self._analysis_ok = False
+            self._analysis_lbl.setText("⚠ Sin análisis — ejecute el análisis en SAP2000")
+            self._analysis_lbl.setStyleSheet("color: #e67e22; font-weight: bold;")
+            self._log(
+                "⚠ El modelo NO está bloqueado. "
+                "Ejecute el análisis en SAP2000 (Analyze → Run All) y vuelva a verificar."
+            )
+
+    # ── Paso 2: Obtener reacciones ────────────────────────────────────────────
+
+    def _on_get_reactions(self):
+        self._log("\n─── Obteniendo nodos, load cases y reacciones... ───")
+        self._busy(True)
+        self._worker = GetReactionsWorker(self._backend)
+        self._worker.finished.connect(self._on_reactions_done)
+        self._worker.start()
+
+    def _on_reactions_done(self, result: dict):
+        self._busy(False)
+        if not result.get("success"):
+            self._log(f"✘ Error: {result.get('error', 'desconocido')}")
+            return
+
+        self._joint_names  = result["joint_names"]
+        self._case_names   = result["case_names"]
+        self._reaction_rows = result["rows"]
+
+        # Poblar lista de nodos
+        jc = result["joint_count"]
+        self._joints_box.setTitle(f"Nodos Restringidos ({jc})")
+        self._joints_list.clear()
+        for name in self._joint_names:
+            self._joints_list.addItem(name)
+
+        # Poblar lista de load cases
+        cc = result["case_count"]
+        self._cases_box.setTitle(f"Load Cases ({cc})")
+        self._cases_list.clear()
+        for name in self._case_names:
+            self._cases_list.addItem(name)
+
+        # Poblar secciones en el combo
+        sections = result.get("section_names", [])
+        prev = self._section_combo.currentText()
+        self._section_combo.clear()
+        self._section_combo.addItems(sections)
+        if prev in sections:
+            self._section_combo.setCurrentText(prev)
+
+        # Poblar tabla de reacciones
+        n = result["num_results"]
+        self._react_table.setObjectName("react_table")
+        self._react_table.parentWidget().setTitle(f"Reacciones ({n} filas)") \
+            if self._react_table.parentWidget() else None
+        # Actualizar título del groupbox directamente
+        for i in range(self.layout().count()):
+            item = self.layout().itemAt(i)
+            w = item.widget() if item else None
+            if isinstance(w, QSplitter):
+                gb = w.widget(2)
+                if isinstance(gb, QGroupBox):
+                    gb.setTitle(f"Reacciones ({n} filas)")
+                break
+        self._populate_react_table(self._reaction_rows)
+
+        skipped = result.get("skipped_joints", [])
+        if skipped:
+            self._log(f"⚠ Nodos sin resultados: {', '.join(skipped)}")
+
+        self._log(
+            f"✔ {jc} nodo(s), {cc} load case(s), {n} fila(s) de reacciones"
+        )
+        # Habilitar botón de construcción si hay secciones
+        self._busy(False)
+
+    def _populate_react_table(self, rows: list):
+        self._react_table.setSortingEnabled(False)
+        self._react_table.setRowCount(len(rows))
+
+        for r, row in enumerate(rows):
+            def _str_item(val: str) -> QTableWidgetItem:
+                item = QTableWidgetItem(str(val))
+                item.setTextAlignment(Qt.AlignCenter)
+                return item
+
+            def _num_item(val: float) -> QTableWidgetItem:
+                item = QTableWidgetItem(f"{val:.4f}")
+                item.setData(Qt.UserRole, val)
+                item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                return item
+
+            self._react_table.setItem(r, 0, _str_item(row["joint"]))
+            self._react_table.setItem(r, 1, _str_item(row["load_case"]))
+            self._react_table.setItem(r, 2, _str_item(row["step_type"]))
+            self._react_table.setItem(r, 3, _num_item(row["F1"]))
+            self._react_table.setItem(r, 4, _num_item(row["F2"]))
+            self._react_table.setItem(r, 5, _num_item(row["F3"]))
+            self._react_table.setItem(r, 6, _num_item(row["M1"]))
+            self._react_table.setItem(r, 7, _num_item(row["M2"]))
+            self._react_table.setItem(r, 8, _num_item(row["M3"]))
+
+        self._react_table.setSortingEnabled(True)
+        self._react_table.resizeColumnsToContents()
+
+    # ── Paso 3: Construir modelo de fundación ─────────────────────────────────
+
+    def _on_build_foundation(self):
+        section = self._section_combo.currentText()
+        if not section:
+            self._log("⚠ Selecciona una sección de Frame antes de construir.")
+            return
+        if not self._reaction_rows:
+            self._log("⚠ Primero obtén las reacciones (Paso 2).")
+            return
+
+        depth = self._depth_spin.value()
+
+        msg = QMessageBox(self)
+        msg.setWindowTitle("Confirmar construcción")
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText(
+            "Esta operación modificará permanentemente el modelo SAP2000.\n\n"
+            f"  • Sección pila: {section}\n"
+            f"  • Profundidad: {depth} [unidades del modelo]\n"
+            f"  • Nodos a procesar: {len(self._joint_names)}\n"
+            f"  • Load cases: {len(self._case_names)}\n\n"
+            "Se eliminarán TODOS los frames y áreas de la estructura superior.\n"
+            "¿Desea continuar?"
+        )
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Cancel)
+        if msg.exec() != QMessageBox.Yes:
+            return
+
+        self._log(
+            f"\n─── Construyendo modelo fundación — sección={section}, "
+            f"profundidad={depth} ───"
+        )
+        self._busy(True)
+        self._worker = BuildFoundationWorker(
+            self._backend,
+            self._joint_names,
+            self._reaction_rows,
+            section,
+            depth,
+        )
+        self._worker.finished.connect(self._on_build_done)
+        self._worker.start()
+
+    def _on_build_done(self, result: dict):
+        self._busy(False)
+        if not result.get("success"):
+            self._log(f"✘ Error al construir: {result.get('error', 'desconocido')}")
+            return
+
+        cf  = result["created_frames"]
+        df  = result["deleted_frames"]
+        da  = result["deleted_areas"]
+        cp  = len(result["created_patterns"])
+        af  = result["assigned_forces"]
+        pats = ", ".join(result["created_patterns"][:5])
+        if len(result["created_patterns"]) > 5:
+            pats += "..."
+        saved = result.get("saved_path", "")
+        saved_line = f"\n   Guardado como: {saved}" if saved else ""
+        self._log(
+            f"✔ Modelo de fundación construido:\n"
+            f"   Frames pila creados: {cf}\n"
+            f"   Frames superiores eliminados: {df}\n"
+            f"   Áreas eliminadas: {da}\n"
+            f"   Load patterns creados: {cp} ({pats})\n"
+            f"   Fuerzas asignadas: {af}{saved_line}"
+        )
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Ventana Principal
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -1041,6 +1549,10 @@ class MainWindow(QMainWindow):
         self._tab_shells.log_message.connect(self._log_append)
         self._tabs.addTab(self._tab_shells, "Shells")
 
+        self._tab_mod_fund = ModFundTab(self._conn)
+        self._tab_mod_fund.log_message.connect(self._log_append)
+        self._tabs.addTab(self._tab_mod_fund, "Mod FUND")
+
         root.addWidget(self._tabs, 1)
 
         # ── Log compartido ────────────────────────────────────────────────────
@@ -1064,6 +1576,7 @@ class MainWindow(QMainWindow):
         self._btn_disconnect.setEnabled(connected)
         self._tab_estabilidad.set_connected(connected)
         self._tab_shells.set_connected(connected)
+        self._tab_mod_fund.set_connected(connected)
         if connected:
             self._status_lbl.setText("Estado: conectado ✔")
             self._status_lbl.setStyleSheet("color: #27ae60; font-weight: bold; font-size: 13px;")
