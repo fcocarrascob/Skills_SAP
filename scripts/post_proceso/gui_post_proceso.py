@@ -48,6 +48,7 @@ from PySide6.QtWidgets import (
 from backend_estabilidad import SapConnection, EstabilidadBackend
 from backend_shells import ShellsBackend
 from backend_mod_fund import ModFundBackend
+from backend_modal_analysis import ModalAnalysisBackend
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -250,6 +251,40 @@ class BuildFoundationWorker(QThread):
                 self._b.build_foundation_model(
                     self._joints, self._rows, self._section, self._depth
                 )
+            )
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+# ── Workers: Análisis Modal ───────────────────────────────────────────────────
+
+class LoadRsCasesWorker(QThread):
+    finished = Signal(dict)
+
+    def __init__(self, backend: ModalAnalysisBackend):
+        super().__init__()
+        self._b = backend
+
+    def run(self):
+        try:
+            self.finished.emit(self._b.get_rs_cases())
+        except Exception as exc:
+            self.finished.emit({"success": False, "error": str(exc)})
+
+
+class ComputeModalWorker(QThread):
+    finished = Signal(dict)
+
+    def __init__(self, backend: ModalAnalysisBackend, rs_case: str, component: str):
+        super().__init__()
+        self._b = backend
+        self._rs_case = rs_case
+        self._component = component
+
+    def run(self):
+        try:
+            self.finished.emit(
+                self._b.compute_contributions(self._rs_case, self._component)
             )
         except Exception as exc:
             self.finished.emit({"success": False, "error": str(exc)})
@@ -1491,6 +1526,313 @@ class ModFundTab(QWidget):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Tab: Análisis Modal
+# ══════════════════════════════════════════════════════════════════════════════
+
+class ModalAnalysisTab(QWidget):
+    """
+    Pestaña de Análisis Modal: calcula y visualiza las contribuciones de cada
+    modo a la reacción de base para un caso de espectro de respuesta.
+
+    Flujo:
+        1. Al conectar → detecta automáticamente los casos RS del modelo
+        2. Usuario elige Caso RS + Componente
+        3. Clic "Calcular" → muestra tabla de contribuciones + resumen SRSS/CQC
+        4. Clic "Exportar CSV" → guarda tabla ordenada por modo
+    """
+
+    log_message = Signal(str)
+
+    def __init__(self, conn: SapConnection, parent=None):
+        super().__init__(parent)
+        self._conn    = conn
+        self._backend = ModalAnalysisBackend(conn)
+        self._worker  = None
+        self._rows:        list = []
+        self._result_meta: dict = {}
+        self._build_ui()
+
+    # ── Construcción de la UI ─────────────────────────────────────────────────
+
+    def _build_ui(self):
+        layout = QVBoxLayout(self)
+        layout.setSpacing(8)
+        layout.setContentsMargins(8, 8, 8, 8)
+
+        # ── Fila de controles ─────────────────────────────────────────────────
+        ctrl = QHBoxLayout()
+
+        ctrl.addWidget(QLabel("Caso RS:"))
+        self._cb_case = QComboBox()
+        self._cb_case.setMinimumWidth(120)
+        self._cb_case.setToolTip("Casos de espectro de respuesta disponibles en el modelo")
+        ctrl.addWidget(self._cb_case)
+
+        ctrl.addSpacing(12)
+        ctrl.addWidget(QLabel("Componente:"))
+        self._cb_comp = QComboBox()
+        for comp in ["FX", "FY", "FZ", "MX", "MY", "MZ"]:
+            self._cb_comp.addItem(comp)
+        self._cb_comp.setFixedWidth(80)
+        self._cb_comp.setToolTip("Componente de reacción de base a analizar")
+        ctrl.addWidget(self._cb_comp)
+
+        self._btn_calc = QPushButton("Calcular")
+        self._btn_calc.setFixedHeight(32)
+        self._btn_calc.setFixedWidth(100)
+        self._btn_calc.setEnabled(False)
+        self._btn_calc.setToolTip(
+            "Calcula la contribución de cada modo a la reacción de base\n"
+            "usando la fórmula: Contrib_n = Amplitud_n × F_modal_n"
+        )
+        self._btn_calc.clicked.connect(self._on_calculate)
+        ctrl.addWidget(self._btn_calc)
+
+        ctrl.addStretch()
+
+        self._btn_export = QPushButton("Exportar CSV")
+        self._btn_export.setFixedHeight(32)
+        self._btn_export.setEnabled(False)
+        self._btn_export.clicked.connect(self._on_export_csv)
+        ctrl.addWidget(self._btn_export)
+
+        self._btn_clear = QPushButton("Limpiar")
+        self._btn_clear.setFixedHeight(32)
+        self._btn_clear.setEnabled(False)
+        self._btn_clear.setToolTip("Borra los resultados para reiniciar el flujo.")
+        self._btn_clear.clicked.connect(self._on_clear)
+        ctrl.addWidget(self._btn_clear)
+
+        layout.addLayout(ctrl)
+
+        # ── Panel de resumen ──────────────────────────────────────────────────
+        summ_box = QGroupBox("Resumen")
+        summ_lyt = QHBoxLayout(summ_box)
+        summ_lyt.setContentsMargins(12, 4, 12, 4)
+
+        self._lbl_dir    = QLabel("Dirección activa: —")
+        self._lbl_srss   = QLabel("SRSS: —")
+        self._lbl_cqc    = QLabel("CQC (SAP2000): —")
+        self._lbl_factor = QLabel("Factor CQC/SRSS: —")
+
+        for lbl in (self._lbl_dir, self._lbl_srss, self._lbl_cqc, self._lbl_factor):
+            lbl.setStyleSheet("font-weight: bold; padding: 0 10px;")
+            summ_lyt.addWidget(lbl)
+
+        summ_lyt.addStretch()
+        layout.addWidget(summ_box)
+
+        # ── Tabla de contribuciones ───────────────────────────────────────────
+        self._table_box = QGroupBox("Contribuciones por Modo (0)")
+        table_lyt = QVBoxLayout(self._table_box)
+
+        self._table = QTableWidget()
+        self._table.setColumnCount(7)
+        self._table.setHorizontalHeaderLabels([
+            "Modo", "T [s]", "Amplitud", "F_modal", "Contrib.", "% Contrib.", "% Acum."
+        ])
+        self._table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self._table.horizontalHeader().setStretchLastSection(True)
+        self._table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self._table.setAlternatingRowColors(True)
+        self._table.setSortingEnabled(True)
+        self._table.setSelectionBehavior(QAbstractItemView.SelectRows)
+        table_lyt.addWidget(self._table)
+
+        layout.addWidget(self._table_box, 1)
+
+    # ── API pública ───────────────────────────────────────────────────────────
+
+    def set_connected(self, connected: bool):
+        """Habilita controles y carga casos RS al conectar."""
+        if connected:
+            self._load_rs_cases()
+        else:
+            self._cb_case.clear()
+            self._btn_calc.setEnabled(False)
+            self._btn_export.setEnabled(False)
+            self._btn_clear.setEnabled(False)
+
+    # ── Helpers internos ──────────────────────────────────────────────────────
+
+    def _busy(self, is_busy: bool):
+        connected  = self._conn.is_connected
+        has_cases  = self._cb_case.count() > 0
+        self._btn_calc.setEnabled(not is_busy and connected and has_cases)
+        self._btn_export.setEnabled(not is_busy and bool(self._rows))
+        self._btn_clear.setEnabled(not is_busy and bool(self._rows))
+
+    def _log(self, msg: str):
+        self.log_message.emit(msg)
+
+    # ── Carga de casos RS ─────────────────────────────────────────────────────
+
+    def _load_rs_cases(self):
+        self._worker = LoadRsCasesWorker(self._backend)
+        self._worker.finished.connect(self._on_rs_cases_loaded)
+        self._worker.start()
+
+    def _on_rs_cases_loaded(self, result: dict):
+        if not result.get("success"):
+            self._log(f"⚠ No se pudieron detectar casos RS: {result.get('error', '')}")
+            return
+        cases = result.get("rs_cases", [])
+        self._cb_case.clear()
+        self._cb_case.addItems(cases)
+        if cases:
+            self._btn_calc.setEnabled(True)
+            self._log(f"✔ Casos RS detectados: {', '.join(cases)}")
+        else:
+            self._log("⚠ No se encontraron casos de espectro de respuesta en el modelo.")
+
+    # ── Acción: Calcular ──────────────────────────────────────────────────────
+
+    def _on_calculate(self):
+        rs_case   = self._cb_case.currentText()
+        component = self._cb_comp.currentText()
+        if not rs_case:
+            self._log("⚠ Selecciona un caso RS.")
+            return
+        self._log(
+            f"\n─── Calculando contribuciones modales — {rs_case} / {component} ───"
+        )
+        self._busy(True)
+        self._worker = ComputeModalWorker(self._backend, rs_case, component)
+        self._worker.finished.connect(self._on_calc_done)
+        self._worker.start()
+
+    def _on_calc_done(self, result: dict):
+        self._busy(False)
+        if not result.get("success"):
+            self._log(f"✘ Error: {result.get('error', 'desconocido')}")
+            return
+
+        self._rows        = result["rows"]
+        self._result_meta = result
+
+        # Actualizar resumen
+        amp_dir    = result["amp_direction"]
+        srss_total = result["srss_total"]
+        rs_total   = result["rs_total"]
+        component  = result["component"]
+        rs_case    = result["rs_case"]
+        units      = "kN" if component.startswith("F") else "kN·m"
+        factor_str = (
+            f"{rs_total / srss_total:.3f}" if srss_total > 0 else "—"
+        )
+
+        self._lbl_dir.setText(f"Dir. activa: {amp_dir}")
+        self._lbl_srss.setText(f"SRSS: {srss_total:.4f} {units}")
+        self._lbl_cqc.setText(f"CQC (SAP2000): {rs_total:.4f} {units}")
+        self._lbl_factor.setText(f"Factor CQC/SRSS: {factor_str}")
+
+        self._populate_table(self._rows, component)
+        self._table_box.setTitle(f"Contribuciones por Modo ({len(self._rows)})")
+        self._log(
+            f"✔ {len(self._rows)} modo(s) — "
+            f"SRSS={srss_total:.4f} | CQC={rs_total:.4f} {units}"
+        )
+
+    def _populate_table(self, rows: list, component: str):
+        from PySide6.QtGui import QFont as _QFont
+        bold = _QFont()
+        bold.setBold(True)
+
+        units = "kN" if component.startswith("F") else "kN·m"
+        self._table.setHorizontalHeaderLabels([
+            "Modo", "T [s]", "Amplitud",
+            f"F_modal [{units}]", f"Contrib. [{units}]",
+            "% Contrib.", "% Acum.",
+        ])
+
+        self._table.setSortingEnabled(False)
+        self._table.setRowCount(len(rows))
+
+        for r, row in enumerate(rows):
+            is_top5 = r < 5
+
+            # Modo (int — ordenable numéricamente)
+            mode_item = QTableWidgetItem()
+            mode_item.setData(Qt.DisplayRole, row["mode"])
+            mode_item.setData(Qt.UserRole, row["mode"])
+            mode_item.setTextAlignment(Qt.AlignCenter)
+
+            def _sci(val: float) -> QTableWidgetItem:
+                item = QTableWidgetItem(f"{val:.4e}")
+                item.setData(Qt.UserRole, val)
+                item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                return item
+
+            def _num(val: float, dec: int = 4) -> QTableWidgetItem:
+                item = QTableWidgetItem(f"{val:.{dec}f}")
+                item.setData(Qt.UserRole, val)
+                item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                return item
+
+            def _pct(val: float) -> QTableWidgetItem:
+                item = QTableWidgetItem(f"{val:.2f}%")
+                item.setData(Qt.UserRole, val)
+                item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+                return item
+
+            items = [
+                mode_item,
+                _num(row["T"], 4),
+                _sci(row["amplitude"]),
+                _sci(row["F_modal"]),
+                _num(row["contrib"], 4),
+                _pct(row["pct_contrib"]),
+                _pct(row["pct_acum"]),
+            ]
+
+            for col, item in enumerate(items):
+                if is_top5:
+                    item.setFont(bold)
+                self._table.setItem(r, col, item)
+
+        self._table.setSortingEnabled(True)
+        self._table.resizeColumnsToContents()
+
+    # ── Acción: Limpiar ───────────────────────────────────────────────────────
+
+    def _on_clear(self):
+        self._rows        = []
+        self._result_meta = {}
+        self._table.setRowCount(0)
+        self._table_box.setTitle("Contribuciones por Modo (0)")
+        self._lbl_dir.setText("Dirección activa: —")
+        self._lbl_srss.setText("SRSS: —")
+        self._lbl_cqc.setText("CQC (SAP2000): —")
+        self._lbl_factor.setText("Factor CQC/SRSS: —")
+        self._busy(False)
+        self._log("↺ Datos limpiados.")
+
+    # ── Acción: Exportar CSV ──────────────────────────────────────────────────
+
+    def _on_export_csv(self):
+        if not self._rows:
+            return
+        meta = self._result_meta
+        default_name = (
+            f"modal_{meta.get('rs_case', '')}_{meta.get('component', '')}_"
+            f"{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        )
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Guardar contribuciones como CSV", default_name, "CSV Files (*.csv)"
+        )
+        if not path:
+            return
+
+        fields = ["mode", "T", "amplitude", "F_modal", "contrib", "pct_contrib", "pct_acum"]
+        with open(path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(sorted(self._rows, key=lambda x: x["mode"]))
+
+        self._log(f"✔ CSV exportado: {path}")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Ventana Principal
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -1553,6 +1895,10 @@ class MainWindow(QMainWindow):
         self._tab_mod_fund.log_message.connect(self._log_append)
         self._tabs.addTab(self._tab_mod_fund, "Mod FUND")
 
+        self._tab_modal = ModalAnalysisTab(self._conn)
+        self._tab_modal.log_message.connect(self._log_append)
+        self._tabs.addTab(self._tab_modal, "Análisis Modal")
+
         root.addWidget(self._tabs, 1)
 
         # ── Log compartido ────────────────────────────────────────────────────
@@ -1577,6 +1923,7 @@ class MainWindow(QMainWindow):
         self._tab_estabilidad.set_connected(connected)
         self._tab_shells.set_connected(connected)
         self._tab_mod_fund.set_connected(connected)
+        self._tab_modal.set_connected(connected)
         if connected:
             self._status_lbl.setText("Estado: conectado ✔")
             self._status_lbl.setStyleSheet("color: #27ae60; font-weight: bold; font-size: 13px;")

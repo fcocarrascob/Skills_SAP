@@ -778,8 +778,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.260504+00:00",
-      "last_verified": "2026-04-01T20:45:48.523168+00:00",
-      "verification_count": 17,
+      "last_verified": "2026-04-02T14:29:29.314764+00:00",
+      "verification_count": 19,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -793,8 +793,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.418469+00:00",
-      "last_verified": "2026-04-01T20:45:48.532191+00:00",
-      "verification_count": 17,
+      "last_verified": "2026-04-02T14:29:29.321916+00:00",
+      "verification_count": 19,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -893,13 +893,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-24T14:10:23.263893+00:00",
-      "last_verified": "2026-03-24T14:11:20.287192+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-04-02T14:27:24.577933+00:00",
+      "verification_count": 3,
       "wrapper_script": "func_DatabaseTables_GetAvailableTables",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": "ByRef outputs: raw[0]=NumberTables, raw[1]=TableKey[], raw[2]=TableName[], raw[3]=ImportType[], raw[-1]=ret_code. Returns only non-empty tables (subset of GetAllTables)."
+      "notes": "ByRef outputs: raw[0]=NumberTables, raw[1]=TableKey[], raw[2]=TableName[], raw[3]=ImportType[], raw[-1]=ret_code. Returns only non-empty tables (subset of GetAllTables).",
+      "verification_type": "auto"
     },
     "SapModel.DatabaseTables.GetAllFieldsInTable": {
       "category": "Database_Tables",
@@ -991,13 +992,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-24T14:19:47.260598+00:00",
-      "last_verified": "2026-03-24T15:03:15.038210+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-04-02T14:29:29.339943+00:00",
+      "verification_count": 12,
       "wrapper_script": "func_DatabaseTables_GetTableForDisplayArray",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": "raw[0]=FieldKeyList (echoed input), raw[1]=TableVersion, raw[2]=FieldKeysIncluded[], raw[3]=NumberRecords, raw[4]=TableData[], raw[-1]=ret_code. Note offset vs GetTableForEditingArray due to echoed FieldKeyList at raw[0]."
+      "notes": "raw[0]=FieldKeyList (echoed input), raw[1]=TableVersion, raw[2]=FieldKeysIncluded[], raw[3]=NumberRecords, raw[4]=TableData[], raw[-1]=ret_code. Note offset vs GetTableForEditingArray due to echoed FieldKeyList at raw[0].",
+      "verification_type": "auto"
     },
     "SapModel.DatabaseTables.GetTableForDisplayCSVFile": {
       "category": "Database_Tables",
@@ -1454,13 +1456,14 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-03-28T04:00:45.144453+00:00",
-      "last_verified": "2026-03-28T04:26:58.568763+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-04-02T14:29:29.329391+00:00",
+      "verification_count": 8,
       "wrapper_script": "func_Results_BaseReact",
       "used_in_scripts": [],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.AreaObj.SetLoadGravity": {
       "category": "Object_Model",
@@ -2883,6 +2886,6 @@
   "summary": {
     "total_registered": 200,
     "total_verified": 200,
-    "last_updated": "2026-04-01T20:46:04.891582+00:00"
+    "last_updated": "2026-04-02T14:29:29.339943+00:00"
   }
 }
