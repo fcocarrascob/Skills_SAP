@@ -1376,7 +1376,7 @@ git commit -m "feat(blockly): professional HTML editor with dark theme and dynam
 
 Reescribir la GUI con: carga desde archivo HTML (no inline), Open Project funcional, keyboard shortcuts, toolbar con iconos, panel colapsable, y comunicación mejorada.
 
-- [ ] Reemplazar el contenido completo de `scripts/blockly/blockly_gui.py` con:
+- [x] Reemplazar el contenido completo de `scripts/blockly/blockly_gui.py` con:
 
 ```python
 """
@@ -1874,15 +1874,15 @@ if __name__ == "__main__":
 ```
 
 ##### Step 4 Verification Checklist
-- [ ] `python scripts/blockly/blockly_gui.py` abre sin errores
-- [ ] El editor carga `index.html` desde archivo (no inline) — se ve el tema oscuro
+- [x] `python scripts/blockly/blockly_gui.py` abre sin errores
+- [x] El editor carga `index.html` desde archivo (no inline) — se ve el tema oscuro
 - [ ] Los bloques aparecen en el toolbox con campos editables
-- [ ] El Python preview se actualiza al arrastrar bloques (~500ms delay)
-- [ ] Ctrl+S abre Save dialog, Ctrl+O abre Open dialog, Ctrl+R ejecuta
-- [ ] Open Project carga bloques visualmente en el workspace (no solo XML)
-- [ ] La barra de estado muestra conteo de bloques y estado SAP2000
-- [ ] El botón Run se deshabilita durante la ejecución (evita doble-click)
-- [ ] Recent Projects menu muestra últimos proyectos abiertos/guardados
+- [x] El Python preview se actualiza al arrastrar bloques (~500ms delay)
+- [x] Ctrl+S abre Save dialog, Ctrl+O abre Open dialog, Ctrl+R ejecuta
+- [x] Open Project carga bloques visualmente en el workspace (no solo XML)
+- [x] La barra de estado muestra conteo de bloques y estado SAP2000
+- [x] El botón Run se deshabilita durante la ejecución (evita doble-click)
+- [x] Recent Projects menu muestra últimos proyectos abiertos/guardados
 
 #### Step 4 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
