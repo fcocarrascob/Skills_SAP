@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xml id="toolbox" style="display: none">
+  <category name="Inicializar (1)" colour="0">
+  </category>
+  <category name="Materiales (2)" colour="45">
+  </category>
+  <category name="Secciones (3)" colour="90">
+  </category>
+  <category name="Geometría (4)" colour="120">
+  </category>
+  <category name="Restricciones (5)" colour="150">
+  </category>
+  <category name="Cargas (6)" colour="180">
+  </category>
+  <category name="Análisis (7)" colour="210">
+  </category>
+  <category name="Resultados (8)" colour="240">
+  </category>
+  <category name="Diseño (9)" colour="270">
+  </category>
+  <category name="Utilidades" colour="300">
+    <block type="sap_Select_All"></block>
+    <block type="sap_Select_ClearSelection"></block>
+  </category>
+</xml>
