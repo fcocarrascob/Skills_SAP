@@ -225,6 +225,7 @@ def register_verified_function(
     function_path: str,
     category: str,
     description: str = "",
+    signature: str = "",
     wrapper_script: str = "",
     parameter_notes: str = "",
     notes: str = "",
@@ -238,6 +239,8 @@ def register_verified_function(
     function_path: Dot-path like "SapModel.FrameObj.AddByCoord"
     category: API category (e.g. "Object_Model", "Properties", "Analyze")
     description: What the function does
+    signature: API signature string, e.g. "(Name, MatType) -> ret_code". Required
+               for Blockly block generation — parameters are parsed from this field.
     wrapper_script: Name of wrapper script (without .py) in scripts/wrappers/
     parameter_notes: Brief parameter documentation
     notes: Extra notes (e.g. ByRef output layout)
@@ -248,6 +251,7 @@ def register_verified_function(
         function_path=function_path,
         category=category,
         description=description,
+        signature=signature,
         wrapper_script=wrapper_script,
         parameter_notes=parameter_notes,
         notes=notes,

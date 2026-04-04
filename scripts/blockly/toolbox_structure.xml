@@ -2,7 +2,11 @@
 <xml id="toolbox" style="display: none">
   <category name="Inicializar" colour="0">
     <block type="sap_SapModel_File_NewBlank"></block>
+    <block type="sap_SapModel_InitializeNewModel"></block>
+    <block type="sap_SapModel_File_Save"></block>
     <block type="sap_SapModel_File_OpenFile"></block>
+    <block type="sap_SapModel_File_New2DFrame"></block>
+    <block type="sap_SapModel_GetModelFilename"></block>
   </category>
   <category name="Materiales" colour="30">
     <block type="sap_SapModel_PropMaterial_SetMaterial"></block>
@@ -12,9 +16,12 @@
     <block type="sap_SapModel_PropMaterial_SetOConcrete_1"></block>
     <block type="sap_SapModel_PropMaterial_GetMaterial"></block>
     <block type="sap_SapModel_PropMaterial_GetMPIsotropic"></block>
+    <block type="sap_SapModel_PropMaterial_GetNameList"></block>
     <block type="sap_SapModel_PropMaterial_ChangeName"></block>
     <block type="sap_SapModel_PropMaterial_Count"></block>
     <block type="sap_SapModel_PropMaterial_Delete"></block>
+    <block type="sap_SapModel_PropMaterial_AddMaterial"></block>
+    <block type="sap_SapModel_PropMaterial_GetTypeOAPI"></block>
   </category>
   <category name="Secciones" colour="60">
     <block type="sap_SapModel_PropFrame_SetRectangle"></block>
@@ -22,7 +29,10 @@
     <block type="sap_SapModel_PropFrame_SetISection"></block>
     <block type="sap_SapModel_PropFrame_SetTube"></block>
     <block type="sap_SapModel_PropArea_SetShell_1"></block>
+    <block type="sap_SapModel_PropArea_GetNameList"></block>
+    <block type="sap_SapModel_PropFrame_GetNameList"></block>
     <block type="sap_SapModel_PropLink_SetLinear"></block>
+    <block type="sap_SapModel_PropLink_GetLinear"></block>
     <block type="sap_SapModel_PropArea_GetShell_1"></block>
     <block type="sap_SapModel_PropFrame_SetAngle"></block>
     <block type="sap_SapModel_PropFrame_SetChannel"></block>
@@ -36,16 +46,25 @@
     <block type="sap_SapModel_PropFrame_Count"></block>
     <block type="sap_SapModel_PropFrame_Delete"></block>
     <block type="sap_SapModel_PropLink_SetGap"></block>
+    <block type="sap_SapModel_PropLink_Count"></block>
   </category>
   <category name="Geometría" colour="120">
     <block type="sap_SapModel_PointObj_AddCartesian"></block>
+    <block type="sap_SapModel_PointObj_Count"></block>
+    <block type="sap_SapModel_PointObj_GetCoordCartesian"></block>
     <block type="sap_SapModel_FrameObj_AddByPoint"></block>
+    <block type="sap_SapModel_FrameObj_Count"></block>
+    <block type="sap_SapModel_FrameObj_GetPoints"></block>
     <block type="sap_SapModel_FrameObj_AddByCoord"></block>
     <block type="sap_SapModel_FrameObj_SetSection"></block>
+    <block type="sap_SapModel_FrameObj_GetSection"></block>
     <block type="sap_SapModel_AreaObj_AddByCoord"></block>
+    <block type="sap_SapModel_AreaObj_Count"></block>
     <block type="sap_SapModel_AreaObj_SetSpring"></block>
     <block type="sap_SapModel_EditArea_Divide"></block>
+    <block type="sap_SapModel_PointObj_SetConstraint"></block>
     <block type="sap_SapModel_FrameObj_SetTCLimits"></block>
+    <block type="sap_SapModel_FrameObj_GetTCLimits"></block>
     <block type="sap_SapModel_PointObj_SetRestraint"></block>
     <block type="sap_SapModel_FrameObj_SetLoadDistributed"></block>
     <block type="sap_SapModel_PointObj_SetLoadForce"></block>
@@ -56,29 +75,54 @@
     <block type="sap_SapModel_FrameObj_SetReleases"></block>
     <block type="sap_SapModel_FrameObj_GetReleases"></block>
     <block type="sap_SapModel_FrameObj_SetInsertionPoint_1"></block>
+    <block type="sap_SapModel_FrameObj_GetInsertionPoint_1"></block>
     <block type="sap_SapModel_FrameObj_SetLocalAxes"></block>
+    <block type="sap_SapModel_FrameObj_GetLocalAxes"></block>
     <block type="sap_SapModel_FrameObj_SetGroupAssign"></block>
     <block type="sap_SapModel_AreaObj_SetGroupAssign"></block>
+    <block type="sap_SapModel_AreaObj_GetPoints"></block>
+    <block type="sap_SapModel_PointObj_GetNameList"></block>
     <block type="sap_SapModel_LinkObj_AddByPoint"></block>
+    <block type="sap_SapModel_LinkObj_Count"></block>
     <block type="sap_SapModel_LinkObj_AddByCoord"></block>
+    <block type="sap_SapModel_AreaObj_GetProperty"></block>
     <block type="sap_SapModel_AreaObj_SetProperty"></block>
     <block type="sap_SapModel_FrameObj_SetModifiers"></block>
     <block type="sap_SapModel_FrameObj_GetModifiers"></block>
+    <block type="sap_SapModel_AreaObj_AddByPoint"></block>
+    <block type="sap_SapModel_AreaObj_GetNameList"></block>
+    <block type="sap_SapModel_AreaObj_GetGroupAssign"></block>
+    <block type="sap_SapModel_PointObj_GetRestraint"></block>
+    <block type="sap_SapModel_FrameObj_GetNameList"></block>
+    <block type="sap_SapModel_FrameObj_Delete"></block>
+    <block type="sap_SapModel_AreaObj_Delete"></block>
+    <block type="sap_SapModel_PointObj_GetLoadForce"></block>
   </category>
   <category name="Restricciones / Grupos" colour="160">
+    <block type="sap_SapModel_SelectObj_ClearSelection"></block>
     <block type="sap_SapModel_SelectObj_CoordinateRange"></block>
+    <block type="sap_SapModel_SelectObj_GetSelected"></block>
     <block type="sap_SapModel_ConstraintDef_SetBody"></block>
+    <block type="sap_SapModel_ConstraintDef_GetBody"></block>
     <block type="sap_SapModel_GroupDef_SetGroup"></block>
     <block type="sap_SapModel_GroupDef_GetNameList"></block>
+    <block type="sap_SapModel_GroupDef_GetAssignments"></block>
     <block type="sap_SapModel_ConstraintDef_SetDiaphragm"></block>
     <block type="sap_SapModel_ConstraintDef_GetDiaphragm"></block>
+    <block type="sap_SapModel_ConstraintDef_GetNameList"></block>
   </category>
   <category name="Cargas" colour="200">
     <block type="sap_SapModel_LoadPatterns_Add"></block>
+    <block type="sap_SapModel_LoadCases_ResponseSpectrum_SetCase"></block>
     <block type="sap_SapModel_LoadCases_ResponseSpectrum_SetLoads"></block>
+    <block type="sap_SapModel_LoadCases_ResponseSpectrum_GetLoads"></block>
+    <block type="sap_SapModel_LoadCases_GetNameList"></block>
     <block type="sap_SapModel_RespCombo_Add"></block>
+    <block type="sap_SapModel_RespCombo_GetNameList"></block>
     <block type="sap_SapModel_RespCombo_SetCaseList"></block>
     <block type="sap_SapModel_RespCombo_GetCaseList"></block>
+    <block type="sap_SapModel_LoadPatterns_GetNameList"></block>
+    <block type="sap_SapModel_LoadPatterns_SetSelfWTMultiplier"></block>
     <block type="sap_SapModel_RespCombo_Delete"></block>
     <block type="sap_SapModel_RespCombo_ChangeName"></block>
     <block type="sap_SapModel_RespCombo_Count"></block>
@@ -97,13 +141,21 @@
     <block type="sap_SapModel_SourceMass_Count"></block>
     <block type="sap_SapModel_SourceMass_GetMassSource"></block>
     <block type="sap_SapModel_SourceMass_GetDefault"></block>
+    <block type="sap_SapModel_LoadCases_GetTypeOAPI"></block>
   </category>
   <category name="Análisis" colour="230">
+    <block type="sap_SapModel_Analyze_RunAnalysis"></block>
     <block type="sap_SapModel_Analyze_SetActiveDOF"></block>
     <block type="sap_SapModel_Analyze_GetActiveDOF"></block>
     <block type="sap_SapModel_Analyze_GetCaseStatus"></block>
   </category>
   <category name="Resultados" colour="270">
+    <block type="sap_SapModel_Results_Setup_DeselectAllCasesAndCombosForOutput"></block>
+    <block type="sap_SapModel_Results_Setup_SetCaseSelectedForOutput"></block>
+    <block type="sap_SapModel_Results_JointDispl"></block>
+    <block type="sap_SapModel_Results_FrameForce"></block>
+    <block type="sap_SapModel_Results_JointReact"></block>
+    <block type="sap_SapModel_Results_Setup_SetComboSelectedForOutput"></block>
     <block type="sap_SapModel_DatabaseTables_GetAllTables"></block>
     <block type="sap_SapModel_DatabaseTables_GetAvailableTables"></block>
     <block type="sap_SapModel_DatabaseTables_GetAllFieldsInTable"></block>
@@ -159,6 +211,13 @@
     <block type="sap_SapModel_DesignConcrete_SetCode"></block>
   </category>
   <category name="Utilidades" colour="210">
+    <block type="sap_SapModel_SetPresentUnits"></block>
     <block type="sap_SapModel_Func_FuncRS_SetUser"></block>
+    <block type="sap_SapModel_Func_FuncRS_GetUser"></block>
+    <block type="sap_SapModel_View_RefreshView"></block>
+    <block type="sap_SapModel_GetModelIsLocked"></block>
+    <block type="sap_SapModel_GetVersion"></block>
+    <block type="sap_SapModel_GetPresentUnits"></block>
+    <block type="sap_SapModel_SetModelIsLocked"></block>
   </category>
 </xml>

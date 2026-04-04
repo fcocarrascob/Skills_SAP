@@ -145,7 +145,11 @@ class BlocklyBlockGenerator:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         self.block_specs = self._build_block_specs()
-        print(f"📦 {len(self.block_specs)} bloques parseados del registry")
+        print(f"{len(self.block_specs)} bloques parseados del registry")
+        skipped_count = len(self.registry.get("functions", {})) - len(self.block_specs)
+        if skipped_count:
+            print(f"AVISO: {skipped_count} funciones omitidas (sin signature/description/parameter_notes)")
+            print("   Usa register_verified_function con el campo 'signature' para incluirlas en Blockly.")
 
         defs_js = self._generate_block_definitions_js()
         toolbox_xml = self._generate_toolbox_xml()
@@ -155,7 +159,7 @@ class BlocklyBlockGenerator:
         (self.output_dir / "toolbox_structure.xml").write_text(toolbox_xml, encoding="utf-8")
         (self.output_dir / "generators.js").write_text(gens_js, encoding="utf-8")
 
-        print(f"✅ Generados en {self.output_dir}:")
+        print(f"Generados en {self.output_dir}:")
         print(f"   block_definitions.js  ({len(defs_js):,} bytes)")
         print(f"   toolbox_structure.xml ({len(toolbox_xml):,} bytes)")
         print(f"   generators.js         ({len(gens_js):,} bytes)")
@@ -164,6 +168,7 @@ class BlocklyBlockGenerator:
 
     def _build_block_specs(self) -> List[BlockSpec]:
         specs = []
+        skipped = []
         functions = self.registry.get("functions", {})
 
         for func_path, info in functions.items():
@@ -172,7 +177,9 @@ class BlocklyBlockGenerator:
 
             signature = info.get("signature", "")
             description = info.get("description", "") or info.get("docstring", "")
-            if not signature and not description:
+            parameter_notes_check = info.get("parameter_notes", "") or ""
+            if not signature and not description and not parameter_notes_check:
+                skipped.append(func_path)
                 continue
 
             block_type = "sap_" + func_path.replace(".", "_")
