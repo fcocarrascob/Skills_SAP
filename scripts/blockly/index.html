@@ -1,99 +1,149 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <title>SAP2000 Visual Scripter — Blockly</title>
-    
-    <!-- Blockly CSS -->
+
+    <!-- Blockly Core -->
     <link rel="stylesheet" href="https://unpkg.com/blockly/blockly_compressed.css">
-    
-    <!-- Blockly JS -->
     <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
     <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
-    <script src="https://unpkg.com/blockly/en.js"></script>
+    <script src="https://unpkg.com/blockly/msg/en.js"></script>
     <script src="https://unpkg.com/blockly/python_compressed.js"></script>
-    
-    <!-- Qt WebChannel (para comunicación PySide6) -->
-    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
-    
+
+    <!-- Generated files -->
+    <script src="block_definitions.js"></script>
+    <script src="generators.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            background: #f5f5f5;
+            background: #1e1e1e;
+            color: #ccc;
         }
-        
         #blockly-workspace {
             width: 100%;
             height: 100%;
         }
-        
-        .blockly-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+        #loading {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: #1e1e1e; z-index: 9999;
+            flex-direction: column; gap: 12px;
+        }
+        #loading.hidden { display: none; }
+        #loading p { font-size: 16px; color: #aaa; }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #333; border-top-color: #4FC3F7;
+            border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Validation overlays */
+        .blocklyDraggable.block-warning .blocklyPath {
+            stroke: #FFC107 !important; stroke-width: 3px;
+        }
+        .blocklyDraggable.block-error .blocklyPath {
+            stroke: #F44336 !important; stroke-width: 3px;
         }
     </style>
 </head>
 <body>
-<div class="blockly-container">
-    <div id="blockly-workspace"></div>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <p>Cargando Blockly...</p>
 </div>
 
-<!-- Definiciones de bloques (inyectadas por Python) -->
-<script id="block-definitions"></script>
+<div id="blockly-workspace"></div>
 
-<!-- Workspace JavaScript -->
 <script>
+// ═══════════════════════════════════════════════════════════════
+// SAP2000 Visual Scripter — Blockly Editor
+// ═══════════════════════════════════════════════════════════════
+
 let workspace = null;
-let bridge = null;
+let blocklyReady = false;
 let pythonGenerator = null;
 
-// Esperar a que se cargue la página
-window.addEventListener('load', () => {
-    // Conectar con Qt WebChannel
-    if (typeof qt !== 'undefined' && qt.webChannelTransport) {
-        new QWebChannel(qt.webChannelTransport, (channel) => {
-            bridge = channel.objects.bridge;
-            console.log("WebChannel conectado");
-            initBlockly();
-        });
-    } else {
-        console.warn("Qt WebChannel no disponible (probable: navegador/testing)");
-        // Para testing sin Qt
-        initBlockly();
-    }
-});
+// ─── Initialization ────────────────────────────────────────────
 
 function initBlockly() {
-    console.log("Inicializando Blockly...");
-    
-    // Toolbox XML (será inyectado)
-    const toolboxXml = document.getElementById('toolbox-xml') || createDefaultToolbox();
-    
-    // Inyectar Blockly
+    if (typeof Blockly === 'undefined') {
+        setTimeout(initBlockly, 100);
+        return;
+    }
+
+    console.log('Blockly loaded, initializing...');
+
+    // Register SAP2000 blocks (from block_definitions.js)
+    if (typeof registerSAP2000Blocks === 'function') {
+        registerSAP2000Blocks();
+    } else {
+        console.warn('block_definitions.js not loaded — using empty block set');
+    }
+
+    // Initialize Python generator
+    pythonGenerator = Blockly.Python || python;
+
+    // Register SAP2000 generators (from generators.js)
+    if (typeof registerSAP2000Generators === 'function' && pythonGenerator) {
+        registerSAP2000Generators(pythonGenerator);
+    } else {
+        console.warn('generators.js not loaded — code generation disabled');
+    }
+
+    // Load toolbox from generated XML file (or use embedded fallback)
+    loadToolboxAndInject();
+}
+
+function loadToolboxAndInject() {
+    // Try loading toolbox_structure.xml
+    fetch('toolbox_structure.xml')
+        .then(resp => {
+            if (!resp.ok) throw new Error('Not found');
+            return resp.text();
+        })
+        .then(xmlText => {
+            injectWorkspace(xmlText);
+        })
+        .catch(() => {
+            console.warn('toolbox_structure.xml not found, using fallback');
+            injectWorkspace(getFallbackToolbox());
+        });
+}
+
+function injectWorkspace(toolboxXml) {
     workspace = Blockly.inject('blockly-workspace', {
         toolbox: toolboxXml,
         grid: {
             spacing: 20,
             length: 3,
-            colour: '#ccc',
+            colour: '#444',
             snap: true
         },
         trashcan: true,
         maxTrashcanContents: 64,
+        renderer: 'zelos',
+        theme: Blockly.Theme.defineTheme('sap2000_dark', {
+            base: Blockly.Themes.Classic,
+            componentStyles: {
+                workspaceBackgroundColour: '#1e1e1e',
+                toolboxBackgroundColour: '#252526',
+                toolboxForegroundColour: '#ccc',
+                flyoutBackgroundColour: '#2d2d30',
+                flyoutForegroundColour: '#ccc',
+                flyoutOpacity: 0.95,
+                scrollbarColour: '#555',
+                scrollbarOpacity: 0.6,
+                insertionMarkerColour: '#4FC3F7',
+            }
+        }),
         move: {
-            scrollbars: {
-                horizontal: true,
-                vertical: true
-            },
+            scrollbars: { horizontal: true, vertical: true },
             drag: true,
             wheel: true
         },
@@ -106,70 +156,98 @@ function initBlockly() {
             scaleSpeed: 1.2
         }
     });
-    
+
     // Listeners
     workspace.addChangeListener(onWorkspaceChange);
-    console.log("Blockly inicializado");
+
+    // Hide loading
+    document.getElementById('loading').classList.add('hidden');
+    blocklyReady = true;
+    console.log('✅ Blockly editor ready');
 }
 
-function createDefaultToolbox() {
-    // Toolbox de ejemplo mientras se carga el real
+function getFallbackToolbox() {
     return `
         <xml id="toolbox" style="display: none">
             <category name="Inicializar (1)" colour="0">
                 <block type="sap_File_NewBlank"></block>
             </category>
-            <category name="Materiales (2)" colour="45">
-                <block type="sap_PropMaterial_SetMaterial"></block>
-            </category>
-            <category name="Secciones (3)" colour="90">
-                <block type="sap_PropFrame_SetRectangle"></block>
-            </category>
+            <category name="Materiales (2)" colour="30"></category>
+            <category name="Secciones (3)" colour="60"></category>
+            <category name="Geometría (4)" colour="120"></category>
         </xml>
     `;
 }
 
+// ─── Workspace Events ──────────────────────────────────────────
+
 function onWorkspaceChange(event) {
-    // Notificar a Python que el workspace cambió
-    const xml = Blockly.Xml.workspaceToDom(workspace);
-    const xmlStr = new XMLSerializer().serializeToString(xml);
-    
-    if (bridge && bridge.on_workspace_update) {
-        bridge.on_workspace_update(xmlStr);
-    }
-    
-    console.log("Workspace actualizado");
+    if (!workspace || !blocklyReady) return;
+    // Update cached XML
+    window._cachedXml = getWorkspaceXml();
 }
 
+// ─── Public API (called from PySide6 / console) ────────────────
+
 function getWorkspaceXml() {
-    if (!workspace) return null;
-    const xml = Blockly.Xml.workspaceToDom(workspace);
+    if (!workspace) return '<xml></xml>';
+    var xml = Blockly.Xml.workspaceToDom(workspace);
     return new XMLSerializer().serializeToString(xml);
 }
 
 function generatePython() {
-    if (!workspace) return "";
-    const pythonCode = Blockly.Python.workspaceToCode(workspace);
-    return pythonCode;
+    if (!workspace || !pythonGenerator) return '';
+    try {
+        return pythonGenerator.workspaceToCode(workspace) || '';
+    } catch (e) {
+        console.error('Python generation error:', e);
+        return '# Error: ' + e.message + '\n';
+    }
+}
+
+function loadWorkspaceXml(xmlStr) {
+    if (!workspace || !xmlStr) return false;
+    try {
+        workspace.clear();
+        var parser = new DOMParser();
+        var dom = parser.parseFromString(xmlStr, 'text/xml');
+        Blockly.Xml.domToWorkspace(dom.documentElement, workspace);
+        return true;
+    } catch (e) {
+        console.error('Load XML error:', e);
+        return false;
+    }
 }
 
 function clearWorkspace() {
-    if (workspace) {
-        workspace.clear();
-    }
+    if (workspace) workspace.clear();
 }
 
-// Funciones globales para PySide6 (pyqtSlot puede invocar)
+function getBlockCount() {
+    if (!workspace) return 0;
+    return workspace.getAllBlocks(false).length;
+}
+
+// Expose global API
 window.pyQtGetWorkspaceXml = getWorkspaceXml;
 window.pyQtGeneratePython = generatePython;
 window.pyQtClearWorkspace = clearWorkspace;
-window.pyQtLoadXml = function(xmlStr) {
-    if (workspace && xmlStr) {
-        const xml = new DOMParser().parseFromString(xmlStr, 'text/xml');
-        Blockly.Xml.domToWorkspace(xml.documentElement, workspace);
-    }
-};
-</script>
+window.pyQtLoadXml = loadWorkspaceXml;
+window.pyQtGetBlockCount = getBlockCount;
 
+// Aliases for cleaner access
+window.getWorkspaceXml = getWorkspaceXml;
+window.loadWorkspaceXml = loadWorkspaceXml;
+window.generatePython = generatePython;
+window.clearWorkspace = clearWorkspace;
+
+// ─── Start ─────────────────────────────────────────────────────
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBlockly);
+} else {
+    initBlockly();
+}
+</script>
 </body>
 </html>

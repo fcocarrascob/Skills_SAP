@@ -1095,7 +1095,7 @@ git commit -m "feat(blockly): data-driven transpiler using registry metadata"
 
 Limpiar el HTML, integrar los archivos generados (block_definitions.js, generators.js, toolbox_structure.xml), y añadir UX profesional.
 
-- [ ] Reemplazar el contenido completo de `scripts/blockly/index.html` con:
+- [x] Reemplazar el contenido completo de `scripts/blockly/index.html` con:
 
 ```html
 <!DOCTYPE html>
