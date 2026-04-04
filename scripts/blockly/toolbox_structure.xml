@@ -1,25 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xml id="toolbox" style="display: none">
-  <category name="Inicializar (1)" colour="0">
+  <category name="Inicializar" colour="0">
+    <block type="sap_SapModel_File_NewBlank"></block>
+    <block type="sap_SapModel_File_OpenFile"></block>
   </category>
-  <category name="Materiales (2)" colour="45">
+  <category name="Materiales" colour="30">
+    <block type="sap_SapModel_PropMaterial_SetMaterial"></block>
+    <block type="sap_SapModel_PropMaterial_SetMPIsotropic"></block>
+    <block type="sap_SapModel_PropMaterial_SetWeightAndMass"></block>
+    <block type="sap_SapModel_PropMaterial_SetOSteel_1"></block>
+    <block type="sap_SapModel_PropMaterial_SetOConcrete_1"></block>
+    <block type="sap_SapModel_PropMaterial_GetMaterial"></block>
+    <block type="sap_SapModel_PropMaterial_GetMPIsotropic"></block>
+    <block type="sap_SapModel_PropMaterial_ChangeName"></block>
+    <block type="sap_SapModel_PropMaterial_Count"></block>
+    <block type="sap_SapModel_PropMaterial_Delete"></block>
   </category>
-  <category name="Secciones (3)" colour="90">
+  <category name="Secciones" colour="60">
+    <block type="sap_SapModel_PropFrame_SetRectangle"></block>
+    <block type="sap_SapModel_PropFrame_SetCircle"></block>
+    <block type="sap_SapModel_PropFrame_SetISection"></block>
+    <block type="sap_SapModel_PropFrame_SetTube"></block>
+    <block type="sap_SapModel_PropArea_SetShell_1"></block>
+    <block type="sap_SapModel_PropLink_SetLinear"></block>
+    <block type="sap_SapModel_PropArea_GetShell_1"></block>
+    <block type="sap_SapModel_PropFrame_SetAngle"></block>
+    <block type="sap_SapModel_PropFrame_SetChannel"></block>
+    <block type="sap_SapModel_PropFrame_SetPipe"></block>
+    <block type="sap_SapModel_PropFrame_GetRectangle"></block>
+    <block type="sap_SapModel_PropFrame_GetCircle"></block>
+    <block type="sap_SapModel_PropFrame_GetISection"></block>
+    <block type="sap_SapModel_PropArea_SetModifiers"></block>
+    <block type="sap_SapModel_PropArea_GetModifiers"></block>
+    <block type="sap_SapModel_PropFrame_ChangeName"></block>
+    <block type="sap_SapModel_PropFrame_Count"></block>
+    <block type="sap_SapModel_PropFrame_Delete"></block>
+    <block type="sap_SapModel_PropLink_SetGap"></block>
   </category>
-  <category name="Geometría (4)" colour="120">
+  <category name="GeometrÃ­a" colour="120">
+    <block type="sap_SapModel_PointObj_AddCartesian"></block>
+    <block type="sap_SapModel_FrameObj_AddByPoint"></block>
+    <block type="sap_SapModel_FrameObj_AddByCoord"></block>
+    <block type="sap_SapModel_FrameObj_SetSection"></block>
+    <block type="sap_SapModel_AreaObj_AddByCoord"></block>
+    <block type="sap_SapModel_AreaObj_SetSpring"></block>
+    <block type="sap_SapModel_EditArea_Divide"></block>
+    <block type="sap_SapModel_FrameObj_SetTCLimits"></block>
+    <block type="sap_SapModel_PointObj_SetRestraint"></block>
+    <block type="sap_SapModel_FrameObj_SetLoadDistributed"></block>
+    <block type="sap_SapModel_PointObj_SetLoadForce"></block>
+    <block type="sap_SapModel_FrameObj_GetLoadDistributed"></block>
+    <block type="sap_SapModel_FrameObj_SetLoadPoint"></block>
+    <block type="sap_SapModel_AreaObj_SetLoadUniform"></block>
+    <block type="sap_SapModel_AreaObj_SetLoadGravity"></block>
+    <block type="sap_SapModel_FrameObj_SetReleases"></block>
+    <block type="sap_SapModel_FrameObj_GetReleases"></block>
+    <block type="sap_SapModel_FrameObj_SetInsertionPoint_1"></block>
+    <block type="sap_SapModel_FrameObj_SetLocalAxes"></block>
+    <block type="sap_SapModel_FrameObj_SetGroupAssign"></block>
+    <block type="sap_SapModel_AreaObj_SetGroupAssign"></block>
+    <block type="sap_SapModel_LinkObj_AddByPoint"></block>
+    <block type="sap_SapModel_LinkObj_AddByCoord"></block>
+    <block type="sap_SapModel_AreaObj_SetProperty"></block>
+    <block type="sap_SapModel_FrameObj_SetModifiers"></block>
+    <block type="sap_SapModel_FrameObj_GetModifiers"></block>
   </category>
-  <category name="Restricciones (5)" colour="150">
+  <category name="Restricciones / Grupos" colour="160">
+    <block type="sap_SapModel_SelectObj_CoordinateRange"></block>
+    <block type="sap_SapModel_ConstraintDef_SetBody"></block>
+    <block type="sap_SapModel_GroupDef_SetGroup"></block>
+    <block type="sap_SapModel_GroupDef_GetNameList"></block>
+    <block type="sap_SapModel_ConstraintDef_SetDiaphragm"></block>
+    <block type="sap_SapModel_ConstraintDef_GetDiaphragm"></block>
   </category>
-  <category name="Cargas (6)" colour="180">
+  <category name="Cargas" colour="200">
+    <block type="sap_SapModel_LoadPatterns_Add"></block>
+    <block type="sap_SapModel_LoadCases_ResponseSpectrum_SetLoads"></block>
+    <block type="sap_SapModel_RespCombo_Add"></block>
+    <block type="sap_SapModel_RespCombo_SetCaseList"></block>
+    <block type="sap_SapModel_RespCombo_GetCaseList"></block>
+    <block type="sap_SapModel_RespCombo_Delete"></block>
+    <block type="sap_SapModel_RespCombo_ChangeName"></block>
+    <block type="sap_SapModel_RespCombo_Count"></block>
+    <block type="sap_SapModel_RespCombo_SetTypeOAPI"></block>
+    <block type="sap_SapModel_RespCombo_GetTypeOAPI"></block>
+    <block type="sap_SapModel_RespCombo_DeleteCase"></block>
+    <block type="sap_SapModel_RespCombo_AddDesignDefaultCombos"></block>
+    <block type="sap_SapModel_LoadCases_ResponseSpectrum_SetDampConstant"></block>
+    <block type="sap_SapModel_LoadCases_Count"></block>
+    <block type="sap_SapModel_LoadCases_Delete"></block>
+    <block type="sap_SapModel_LoadCases_ChangeName"></block>
+    <block type="sap_SapModel_LoadPatterns_Count"></block>
+    <block type="sap_SapModel_LoadPatterns_Delete"></block>
+    <block type="sap_SapModel_LoadPatterns_ChangeName"></block>
+    <block type="sap_SapModel_SourceMass_SetMassSource"></block>
+    <block type="sap_SapModel_SourceMass_Count"></block>
+    <block type="sap_SapModel_SourceMass_GetMassSource"></block>
+    <block type="sap_SapModel_SourceMass_GetDefault"></block>
   </category>
-  <category name="Análisis (7)" colour="210">
+  <category name="AnÃ¡lisis" colour="230">
+    <block type="sap_SapModel_Analyze_SetActiveDOF"></block>
+    <block type="sap_SapModel_Analyze_GetActiveDOF"></block>
+    <block type="sap_SapModel_Analyze_GetCaseStatus"></block>
   </category>
-  <category name="Resultados (8)" colour="240">
+  <category name="Resultados" colour="270">
+    <block type="sap_SapModel_DatabaseTables_GetAllTables"></block>
+    <block type="sap_SapModel_DatabaseTables_GetAvailableTables"></block>
+    <block type="sap_SapModel_DatabaseTables_GetAllFieldsInTable"></block>
+    <block type="sap_SapModel_DatabaseTables_GetObsoleteTableKeyList"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForEditingArray"></block>
+    <block type="sap_SapModel_DatabaseTables_CancelTableEditing"></block>
+    <block type="sap_SapModel_DatabaseTables_SetTableForEditingArray"></block>
+    <block type="sap_SapModel_DatabaseTables_ApplyEditedTables"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForDisplayArray"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForDisplayCSVFile"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForDisplayCSVString"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForDisplayXMLString"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForEditingCSVFile"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableForEditingCSVString"></block>
+    <block type="sap_SapModel_DatabaseTables_SetTableForEditingCSVFile"></block>
+    <block type="sap_SapModel_DatabaseTables_SetTableForEditingCSVString"></block>
+    <block type="sap_SapModel_DatabaseTables_GetLoadCasesSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetLoadCasesSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetLoadCombinationsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetLoadCombinationsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetLoadPatternsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetLoadPatternsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetElementVirtualWorkNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetElementVirtualWorkNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetGeneralizedDisplacementsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetGeneralizedDisplacementsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetJointResponseSpectraNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetJointResponseSpectraNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetPlotFunctionTracesNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetPlotFunctionTracesNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetPushoverNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetPushoverNamedSetsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetSectionCutsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetSectionCutsSelectedForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_GetTableOutputOptionsForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_SetTableOutputOptionsForDisplay"></block>
+    <block type="sap_SapModel_DatabaseTables_ShowTablesInExcel"></block>
+    <block type="sap_SapModel_Results_BaseReact"></block>
+    <block type="sap_SapModel_Results_AreaStressShell"></block>
+    <block type="sap_SapModel_Results_ModalPeriod"></block>
+    <block type="sap_SapModel_Results_ModalParticipatingMassRatios"></block>
+    <block type="sap_SapModel_Results_ModeShape"></block>
   </category>
-  <category name="Diseño (9)" colour="270">
+  <category name="DiseÃ±o" colour="300">
+    <block type="sap_SapModel_DesignSteel_SetComboStrength"></block>
+    <block type="sap_SapModel_DesignSteel_GetComboStrength"></block>
+    <block type="sap_SapModel_DesignSteel_SetComboDeflection"></block>
+    <block type="sap_SapModel_DesignSteel_GetCode"></block>
+    <block type="sap_SapModel_DesignSteel_SetCode"></block>
+    <block type="sap_SapModel_DesignSteel_DeleteResults"></block>
+    <block type="sap_SapModel_DesignConcrete_SetComboStrength"></block>
+    <block type="sap_SapModel_DesignConcrete_GetCode"></block>
+    <block type="sap_SapModel_DesignConcrete_SetCode"></block>
   </category>
-  <category name="Utilidades" colour="300">
-    <block type="sap_Select_All"></block>
-    <block type="sap_Select_ClearSelection"></block>
+  <category name="Utilidades" colour="210">
+    <block type="sap_SapModel_Func_FuncRS_SetUser"></block>
   </category>
 </xml>

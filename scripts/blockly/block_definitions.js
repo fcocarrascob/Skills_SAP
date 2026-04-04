@@ -1,1805 +1,1865 @@
-// Auto-generado � NO editar manualmente
-// Fecha: 2026-04-04
+// ===========================================================
+// SAP2000 Block Definitions - Auto-generated
+// Generated: 2026-04-04 01:14
+// DO NOT EDIT MANUALLY - run blockly_generator.py to regenerate
+// ===========================================================
 
-var BLOCKLY_BLOCKS = {
-  'sap_SapModel_File_NewBlank': {
-    "type": "sap_SapModel_File_NewBlank",
-    "message0": "NewBlank",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_SetMaterial': {
-    "type": "sap_SapModel_PropMaterial_SetMaterial",
-    "message0": "SetMaterial",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_SetMPIsotropic': {
-    "type": "sap_SapModel_PropMaterial_SetMPIsotropic",
-    "message0": "SetMPIsotropic",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_SetWeightAndMass': {
-    "type": "sap_SapModel_PropMaterial_SetWeightAndMass",
-    "message0": "SetWeightAndMass",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetRectangle': {
-    "type": "sap_SapModel_PropFrame_SetRectangle",
-    "message0": "SetRectangle",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetCircle': {
-    "type": "sap_SapModel_PropFrame_SetCircle",
-    "message0": "SetCircle",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetISection': {
-    "type": "sap_SapModel_PropFrame_SetISection",
-    "message0": "SetISection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetTube': {
-    "type": "sap_SapModel_PropFrame_SetTube",
-    "message0": "SetTube",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_InitializeNewModel': {
-    "type": "sap_SapModel_InitializeNewModel",
-    "message0": "InitializeNewModel",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SetPresentUnits': {
-    "type": "sap_SapModel_SetPresentUnits",
-    "message0": "SetPresentUnits",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_AddCartesian': {
-    "type": "sap_SapModel_PointObj_AddCartesian",
-    "message0": "AddCartesian",
-    "args0": [],
-    "output": "String",
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_Count': {
-    "type": "sap_SapModel_PointObj_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_GetCoordCartesian': {
-    "type": "sap_SapModel_PointObj_GetCoordCartesian",
-    "message0": "GetCoordCartesian",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_AddByPoint': {
-    "type": "sap_SapModel_FrameObj_AddByPoint",
-    "message0": "AddByPoint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_Count': {
-    "type": "sap_SapModel_FrameObj_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetPoints': {
-    "type": "sap_SapModel_FrameObj_GetPoints",
-    "message0": "GetPoints",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_AddByCoord': {
-    "type": "sap_SapModel_FrameObj_AddByCoord",
-    "message0": "AddByCoord",
-    "args0": [],
-    "output": "String",
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetSection': {
-    "type": "sap_SapModel_FrameObj_SetSection",
-    "message0": "SetSection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetSection': {
-    "type": "sap_SapModel_FrameObj_GetSection",
-    "message0": "GetSection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropArea_SetShell_1': {
-    "type": "sap_SapModel_PropArea_SetShell_1",
-    "message0": "SetShell_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropArea_GetNameList': {
-    "type": "sap_SapModel_PropArea_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_AddByCoord': {
-    "type": "sap_SapModel_AreaObj_AddByCoord",
-    "message0": "AddByCoord",
-    "args0": [],
-    "output": "String",
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_Count': {
-    "type": "sap_SapModel_AreaObj_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_SetSpring': {
-    "type": "sap_SapModel_AreaObj_SetSpring",
-    "message0": "SetSpring",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_Add': {
-    "type": "sap_SapModel_LoadPatterns_Add",
-    "message0": "Add",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Func_FuncRS_SetUser': {
-    "type": "sap_SapModel_Func_FuncRS_SetUser",
-    "message0": "SetUser",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Func_FuncRS_GetUser': {
-    "type": "sap_SapModel_Func_FuncRS_GetUser",
-    "message0": "GetUser",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_ResponseSpectrum_SetCase': {
-    "type": "sap_SapModel_LoadCases_ResponseSpectrum_SetCase",
-    "message0": "SetCase",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_ResponseSpectrum_SetLoads': {
-    "type": "sap_SapModel_LoadCases_ResponseSpectrum_SetLoads",
-    "message0": "SetLoads",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_ResponseSpectrum_GetLoads': {
-    "type": "sap_SapModel_LoadCases_ResponseSpectrum_GetLoads",
-    "message0": "GetLoads",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_GetNameList': {
-    "type": "sap_SapModel_LoadCases_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_Add': {
-    "type": "sap_SapModel_RespCombo_Add",
-    "message0": "Add",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_GetNameList': {
-    "type": "sap_SapModel_RespCombo_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_SetCaseList': {
-    "type": "sap_SapModel_RespCombo_SetCaseList",
-    "message0": "SetCaseList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_GetCaseList': {
-    "type": "sap_SapModel_RespCombo_GetCaseList",
-    "message0": "GetCaseList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_EditArea_Divide': {
-    "type": "sap_SapModel_EditArea_Divide",
-    "message0": "Divide",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SelectObj_ClearSelection': {
-    "type": "sap_SapModel_SelectObj_ClearSelection",
-    "message0": "ClearSelection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SelectObj_CoordinateRange': {
-    "type": "sap_SapModel_SelectObj_CoordinateRange",
-    "message0": "CoordinateRange",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SelectObj_GetSelected': {
-    "type": "sap_SapModel_SelectObj_GetSelected",
-    "message0": "GetSelected",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_ConstraintDef_SetBody': {
-    "type": "sap_SapModel_ConstraintDef_SetBody",
-    "message0": "SetBody",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_SetConstraint': {
-    "type": "sap_SapModel_PointObj_SetConstraint",
-    "message0": "SetConstraint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_ConstraintDef_GetBody': {
-    "type": "sap_SapModel_ConstraintDef_GetBody",
-    "message0": "GetBody",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetTCLimits': {
-    "type": "sap_SapModel_FrameObj_SetTCLimits",
-    "message0": "SetTCLimits",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetTCLimits': {
-    "type": "sap_SapModel_FrameObj_GetTCLimits",
-    "message0": "GetTCLimits",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_SetRestraint': {
-    "type": "sap_SapModel_PointObj_SetRestraint",
-    "message0": "SetRestraint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_GetNameList': {
-    "type": "sap_SapModel_LoadPatterns_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_GetNameList': {
-    "type": "sap_SapModel_PropFrame_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetLoadDistributed': {
-    "type": "sap_SapModel_FrameObj_SetLoadDistributed",
-    "message0": "SetLoadDistributed",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_SetLoadForce': {
-    "type": "sap_SapModel_PointObj_SetLoadForce",
-    "message0": "SetLoadForce",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_View_RefreshView': {
-    "type": "sap_SapModel_View_RefreshView",
-    "message0": "RefreshView",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_File_Save': {
-    "type": "sap_SapModel_File_Save",
-    "message0": "Save",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Analyze_RunAnalysis': {
-    "type": "sap_SapModel_Analyze_RunAnalysis",
-    "message0": "RunAnalysis",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_Setup_DeselectAllCasesAndCombosForOutput': {
-    "type": "sap_SapModel_Results_Setup_DeselectAllCasesAndCombosForOutput",
-    "message0": "DeselectAllCasesAndCombosForOutput",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_Setup_SetCaseSelectedForOutput': {
-    "type": "sap_SapModel_Results_Setup_SetCaseSelectedForOutput",
-    "message0": "SetCaseSelectedForOutput",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_JointDispl': {
-    "type": "sap_SapModel_Results_JointDispl",
-    "message0": "JointDispl",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_FrameForce': {
-    "type": "sap_SapModel_Results_FrameForce",
-    "message0": "FrameForce",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_JointReact': {
-    "type": "sap_SapModel_Results_JointReact",
-    "message0": "JointReact",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_Setup_SetComboSelectedForOutput': {
-    "type": "sap_SapModel_Results_Setup_SetComboSelectedForOutput",
-    "message0": "SetComboSelectedForOutput",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_SetSelfWTMultiplier': {
-    "type": "sap_SapModel_LoadPatterns_SetSelfWTMultiplier",
-    "message0": "SetSelfWTMultiplier",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetAllTables': {
-    "type": "sap_SapModel_DatabaseTables_GetAllTables",
-    "message0": "GetAllTables",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetAvailableTables': {
-    "type": "sap_SapModel_DatabaseTables_GetAvailableTables",
-    "message0": "GetAvailableTables",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetAllFieldsInTable': {
-    "type": "sap_SapModel_DatabaseTables_GetAllFieldsInTable",
-    "message0": "GetAllFieldsInTable",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetObsoleteTableKeyList': {
-    "type": "sap_SapModel_DatabaseTables_GetObsoleteTableKeyList",
-    "message0": "GetObsoleteTableKeyList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForEditingArray': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForEditingArray",
-    "message0": "GetTableForEditingArray",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_CancelTableEditing': {
-    "type": "sap_SapModel_DatabaseTables_CancelTableEditing",
-    "message0": "CancelTableEditing",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetTableForEditingArray': {
-    "type": "sap_SapModel_DatabaseTables_SetTableForEditingArray",
-    "message0": "SetTableForEditingArray",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_ApplyEditedTables': {
-    "type": "sap_SapModel_DatabaseTables_ApplyEditedTables",
-    "message0": "ApplyEditedTables",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForDisplayArray': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForDisplayArray",
-    "message0": "GetTableForDisplayArray",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForDisplayCSVFile': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForDisplayCSVFile",
-    "message0": "GetTableForDisplayCSVFile",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForDisplayCSVString': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForDisplayCSVString",
-    "message0": "GetTableForDisplayCSVString",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForDisplayXMLString': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForDisplayXMLString",
-    "message0": "GetTableForDisplayXMLString",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForEditingCSVFile': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForEditingCSVFile",
-    "message0": "GetTableForEditingCSVFile",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableForEditingCSVString': {
-    "type": "sap_SapModel_DatabaseTables_GetTableForEditingCSVString",
-    "message0": "GetTableForEditingCSVString",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetTableForEditingCSVFile': {
-    "type": "sap_SapModel_DatabaseTables_SetTableForEditingCSVFile",
-    "message0": "SetTableForEditingCSVFile",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetTableForEditingCSVString': {
-    "type": "sap_SapModel_DatabaseTables_SetTableForEditingCSVString",
-    "message0": "SetTableForEditingCSVString",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetLoadCasesSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetLoadCasesSelectedForDisplay",
-    "message0": "GetLoadCasesSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetLoadCasesSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetLoadCasesSelectedForDisplay",
-    "message0": "SetLoadCasesSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetLoadCombinationsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetLoadCombinationsSelectedForDisplay",
-    "message0": "GetLoadCombinationsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetLoadCombinationsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetLoadCombinationsSelectedForDisplay",
-    "message0": "SetLoadCombinationsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetLoadPatternsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetLoadPatternsSelectedForDisplay",
-    "message0": "GetLoadPatternsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetLoadPatternsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetLoadPatternsSelectedForDisplay",
-    "message0": "SetLoadPatternsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetElementVirtualWorkNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetElementVirtualWorkNamedSetsSelectedForDisplay",
-    "message0": "GetElementVirtualWorkNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetElementVirtualWorkNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetElementVirtualWorkNamedSetsSelectedForDisplay",
-    "message0": "SetElementVirtualWorkNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetGeneralizedDisplacementsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetGeneralizedDisplacementsSelectedForDisplay",
-    "message0": "GetGeneralizedDisplacementsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetGeneralizedDisplacementsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetGeneralizedDisplacementsSelectedForDisplay",
-    "message0": "SetGeneralizedDisplacementsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetJointResponseSpectraNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetJointResponseSpectraNamedSetsSelectedForDisplay",
-    "message0": "GetJointResponseSpectraNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetJointResponseSpectraNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetJointResponseSpectraNamedSetsSelectedForDisplay",
-    "message0": "SetJointResponseSpectraNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetPlotFunctionTracesNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetPlotFunctionTracesNamedSetsSelectedForDisplay",
-    "message0": "GetPlotFunctionTracesNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetPlotFunctionTracesNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetPlotFunctionTracesNamedSetsSelectedForDisplay",
-    "message0": "SetPlotFunctionTracesNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetPushoverNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetPushoverNamedSetsSelectedForDisplay",
-    "message0": "GetPushoverNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetPushoverNamedSetsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetPushoverNamedSetsSelectedForDisplay",
-    "message0": "SetPushoverNamedSetsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetSectionCutsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetSectionCutsSelectedForDisplay",
-    "message0": "GetSectionCutsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetSectionCutsSelectedForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetSectionCutsSelectedForDisplay",
-    "message0": "SetSectionCutsSelectedForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_GetTableOutputOptionsForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_GetTableOutputOptionsForDisplay",
-    "message0": "GetTableOutputOptionsForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_SetTableOutputOptionsForDisplay': {
-    "type": "sap_SapModel_DatabaseTables_SetTableOutputOptionsForDisplay",
-    "message0": "SetTableOutputOptionsForDisplay",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DatabaseTables_ShowTablesInExcel': {
-    "type": "sap_SapModel_DatabaseTables_ShowTablesInExcel",
-    "message0": "ShowTablesInExcel",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GetModelIsLocked': {
-    "type": "sap_SapModel_GetModelIsLocked",
-    "message0": "GetModelIsLocked",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetLoadDistributed': {
-    "type": "sap_SapModel_FrameObj_GetLoadDistributed",
-    "message0": "GetLoadDistributed",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetLoadPoint': {
-    "type": "sap_SapModel_FrameObj_SetLoadPoint",
-    "message0": "SetLoadPoint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_SetLoadUniform': {
-    "type": "sap_SapModel_AreaObj_SetLoadUniform",
-    "message0": "SetLoadUniform",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_BaseReact': {
-    "type": "sap_SapModel_Results_BaseReact",
-    "message0": "BaseReact",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_SetLoadGravity': {
-    "type": "sap_SapModel_AreaObj_SetLoadGravity",
-    "message0": "SetLoadGravity",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetReleases': {
-    "type": "sap_SapModel_FrameObj_SetReleases",
-    "message0": "SetReleases",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetReleases': {
-    "type": "sap_SapModel_FrameObj_GetReleases",
-    "message0": "GetReleases",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetInsertionPoint_1': {
-    "type": "sap_SapModel_FrameObj_SetInsertionPoint_1",
-    "message0": "SetInsertionPoint_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetInsertionPoint_1': {
-    "type": "sap_SapModel_FrameObj_GetInsertionPoint_1",
-    "message0": "GetInsertionPoint_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetLocalAxes': {
-    "type": "sap_SapModel_FrameObj_SetLocalAxes",
-    "message0": "SetLocalAxes",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetLocalAxes': {
-    "type": "sap_SapModel_FrameObj_GetLocalAxes",
-    "message0": "GetLocalAxes",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GroupDef_SetGroup': {
-    "type": "sap_SapModel_GroupDef_SetGroup",
-    "message0": "SetGroup",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GroupDef_GetNameList': {
-    "type": "sap_SapModel_GroupDef_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetGroupAssign': {
-    "type": "sap_SapModel_FrameObj_SetGroupAssign",
-    "message0": "SetGroupAssign",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GroupDef_GetAssignments': {
-    "type": "sap_SapModel_GroupDef_GetAssignments",
-    "message0": "GetAssignments",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_SetGroupAssign': {
-    "type": "sap_SapModel_AreaObj_SetGroupAssign",
-    "message0": "SetGroupAssign",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_ConstraintDef_SetDiaphragm': {
-    "type": "sap_SapModel_ConstraintDef_SetDiaphragm",
-    "message0": "SetDiaphragm",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_ConstraintDef_GetDiaphragm': {
-    "type": "sap_SapModel_ConstraintDef_GetDiaphragm",
-    "message0": "GetDiaphragm",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_GetPoints': {
-    "type": "sap_SapModel_AreaObj_GetPoints",
-    "message0": "GetPoints",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_AreaStressShell': {
-    "type": "sap_SapModel_Results_AreaStressShell",
-    "message0": "AreaStressShell",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_GetNameList': {
-    "type": "sap_SapModel_PointObj_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_ModalPeriod': {
-    "type": "sap_SapModel_Results_ModalPeriod",
-    "message0": "ModalPeriod",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_ModalParticipatingMassRatios': {
-    "type": "sap_SapModel_Results_ModalParticipatingMassRatios",
-    "message0": "ModalParticipatingMassRatios",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Results_ModeShape': {
-    "type": "sap_SapModel_Results_ModeShape",
-    "message0": "ModeShape",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Analyze_SetActiveDOF': {
-    "type": "sap_SapModel_Analyze_SetActiveDOF",
-    "message0": "SetActiveDOF",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Analyze_GetActiveDOF': {
-    "type": "sap_SapModel_Analyze_GetActiveDOF",
-    "message0": "GetActiveDOF",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_Analyze_GetCaseStatus': {
-    "type": "sap_SapModel_Analyze_GetCaseStatus",
-    "message0": "GetCaseStatus",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_File_OpenFile': {
-    "type": "sap_SapModel_File_OpenFile",
-    "message0": "OpenFile",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropLink_SetLinear': {
-    "type": "sap_SapModel_PropLink_SetLinear",
-    "message0": "SetLinear",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropLink_GetLinear': {
-    "type": "sap_SapModel_PropLink_GetLinear",
-    "message0": "GetLinear",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LinkObj_AddByPoint': {
-    "type": "sap_SapModel_LinkObj_AddByPoint",
-    "message0": "AddByPoint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LinkObj_Count': {
-    "type": "sap_SapModel_LinkObj_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LinkObj_AddByCoord': {
-    "type": "sap_SapModel_LinkObj_AddByCoord",
-    "message0": "AddByCoord",
-    "args0": [],
-    "output": "String",
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_GetProperty': {
-    "type": "sap_SapModel_AreaObj_GetProperty",
-    "message0": "GetProperty",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_SetProperty': {
-    "type": "sap_SapModel_AreaObj_SetProperty",
-    "message0": "SetProperty",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropArea_GetShell_1': {
-    "type": "sap_SapModel_PropArea_GetShell_1",
-    "message0": "GetShell_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_SetOSteel_1': {
-    "type": "sap_SapModel_PropMaterial_SetOSteel_1",
-    "message0": "SetOSteel_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_SetOConcrete_1': {
-    "type": "sap_SapModel_PropMaterial_SetOConcrete_1",
-    "message0": "SetOConcrete_1",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_GetMaterial': {
-    "type": "sap_SapModel_PropMaterial_GetMaterial",
-    "message0": "GetMaterial",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_GetMPIsotropic': {
-    "type": "sap_SapModel_PropMaterial_GetMPIsotropic",
-    "message0": "GetMPIsotropic",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_GetNameList': {
-    "type": "sap_SapModel_PropMaterial_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetAngle': {
-    "type": "sap_SapModel_PropFrame_SetAngle",
-    "message0": "SetAngle",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetChannel': {
-    "type": "sap_SapModel_PropFrame_SetChannel",
-    "message0": "SetChannel",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_SetPipe': {
-    "type": "sap_SapModel_PropFrame_SetPipe",
-    "message0": "SetPipe",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_GetRectangle': {
-    "type": "sap_SapModel_PropFrame_GetRectangle",
-    "message0": "GetRectangle",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_GetCircle': {
-    "type": "sap_SapModel_PropFrame_GetCircle",
-    "message0": "GetCircle",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_GetISection': {
-    "type": "sap_SapModel_PropFrame_GetISection",
-    "message0": "GetISection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_SetComboStrength': {
-    "type": "sap_SapModel_DesignSteel_SetComboStrength",
-    "message0": "SetComboStrength",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_GetComboStrength': {
-    "type": "sap_SapModel_DesignSteel_GetComboStrength",
-    "message0": "GetComboStrength",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_SetComboDeflection': {
-    "type": "sap_SapModel_DesignSteel_SetComboDeflection",
-    "message0": "SetComboDeflection",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_GetCode': {
-    "type": "sap_SapModel_DesignSteel_GetCode",
-    "message0": "GetCode",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_SetCode': {
-    "type": "sap_SapModel_DesignSteel_SetCode",
-    "message0": "SetCode",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignSteel_DeleteResults': {
-    "type": "sap_SapModel_DesignSteel_DeleteResults",
-    "message0": "DeleteResults",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignConcrete_SetComboStrength': {
-    "type": "sap_SapModel_DesignConcrete_SetComboStrength",
-    "message0": "SetComboStrength",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignConcrete_GetCode': {
-    "type": "sap_SapModel_DesignConcrete_GetCode",
-    "message0": "GetCode",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_DesignConcrete_SetCode': {
-    "type": "sap_SapModel_DesignConcrete_SetCode",
-    "message0": "SetCode",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_Delete': {
-    "type": "sap_SapModel_RespCombo_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_ChangeName': {
-    "type": "sap_SapModel_RespCombo_ChangeName",
-    "message0": "ChangeName",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_Count': {
-    "type": "sap_SapModel_RespCombo_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_SetTypeOAPI': {
-    "type": "sap_SapModel_RespCombo_SetTypeOAPI",
-    "message0": "SetTypeOAPI",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_GetTypeOAPI': {
-    "type": "sap_SapModel_RespCombo_GetTypeOAPI",
-    "message0": "GetTypeOAPI",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_DeleteCase': {
-    "type": "sap_SapModel_RespCombo_DeleteCase",
-    "message0": "DeleteCase",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_RespCombo_AddDesignDefaultCombos': {
-    "type": "sap_SapModel_RespCombo_AddDesignDefaultCombos",
-    "message0": "AddDesignDefaultCombos",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_File_New2DFrame': {
-    "type": "sap_SapModel_File_New2DFrame",
-    "message0": "New2DFrame",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GetVersion': {
-    "type": "sap_SapModel_GetVersion",
-    "message0": "GetVersion",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_ResponseSpectrum_SetDampConstant': {
-    "type": "sap_SapModel_LoadCases_ResponseSpectrum_SetDampConstant",
-    "message0": "SetDampConstant",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_Count': {
-    "type": "sap_SapModel_LoadCases_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_Delete': {
-    "type": "sap_SapModel_LoadCases_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_ChangeName': {
-    "type": "sap_SapModel_LoadCases_ChangeName",
-    "message0": "ChangeName",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_Count': {
-    "type": "sap_SapModel_LoadPatterns_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_Delete': {
-    "type": "sap_SapModel_LoadPatterns_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadPatterns_ChangeName': {
-    "type": "sap_SapModel_LoadPatterns_ChangeName",
-    "message0": "ChangeName",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SourceMass_SetMassSource': {
-    "type": "sap_SapModel_SourceMass_SetMassSource",
-    "message0": "SetMassSource",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SourceMass_Count': {
-    "type": "sap_SapModel_SourceMass_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SourceMass_GetMassSource': {
-    "type": "sap_SapModel_SourceMass_GetMassSource",
-    "message0": "GetMassSource",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SourceMass_GetDefault': {
-    "type": "sap_SapModel_SourceMass_GetDefault",
-    "message0": "GetDefault",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_SetModifiers': {
-    "type": "sap_SapModel_FrameObj_SetModifiers",
-    "message0": "SetModifiers",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetModifiers': {
-    "type": "sap_SapModel_FrameObj_GetModifiers",
-    "message0": "GetModifiers",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropArea_SetModifiers': {
-    "type": "sap_SapModel_PropArea_SetModifiers",
-    "message0": "SetModifiers",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropArea_GetModifiers': {
-    "type": "sap_SapModel_PropArea_GetModifiers",
-    "message0": "GetModifiers",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_ChangeName': {
-    "type": "sap_SapModel_PropFrame_ChangeName",
-    "message0": "ChangeName",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_Count': {
-    "type": "sap_SapModel_PropFrame_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropFrame_Delete': {
-    "type": "sap_SapModel_PropFrame_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_ChangeName': {
-    "type": "sap_SapModel_PropMaterial_ChangeName",
-    "message0": "ChangeName",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_Count': {
-    "type": "sap_SapModel_PropMaterial_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_Delete': {
-    "type": "sap_SapModel_PropMaterial_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropLink_SetGap': {
-    "type": "sap_SapModel_PropLink_SetGap",
-    "message0": "SetGap",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropLink_Count': {
-    "type": "sap_SapModel_PropLink_Count",
-    "message0": "Count",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_AddByPoint': {
-    "type": "sap_SapModel_AreaObj_AddByPoint",
-    "message0": "AddByPoint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_ConstraintDef_GetNameList': {
-    "type": "sap_SapModel_ConstraintDef_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_GetNameList': {
-    "type": "sap_SapModel_AreaObj_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GetPresentUnits': {
-    "type": "sap_SapModel_GetPresentUnits",
-    "message0": "GetPresentUnits",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_AddMaterial': {
-    "type": "sap_SapModel_PropMaterial_AddMaterial",
-    "message0": "AddMaterial",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PropMaterial_GetTypeOAPI': {
-    "type": "sap_SapModel_PropMaterial_GetTypeOAPI",
-    "message0": "GetTypeOAPI",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_GetGroupAssign': {
-    "type": "sap_SapModel_AreaObj_GetGroupAssign",
-    "message0": "GetGroupAssign",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_GetRestraint': {
-    "type": "sap_SapModel_PointObj_GetRestraint",
-    "message0": "GetRestraint",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_LoadCases_GetTypeOAPI': {
-    "type": "sap_SapModel_LoadCases_GetTypeOAPI",
-    "message0": "GetTypeOAPI",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_GetModelFilename': {
-    "type": "sap_SapModel_GetModelFilename",
-    "message0": "GetModelFilename",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_SetModelIsLocked': {
-    "type": "sap_SapModel_SetModelIsLocked",
-    "message0": "SetModelIsLocked",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_GetNameList': {
-    "type": "sap_SapModel_FrameObj_GetNameList",
-    "message0": "GetNameList",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_FrameObj_Delete': {
-    "type": "sap_SapModel_FrameObj_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_AreaObj_Delete': {
-    "type": "sap_SapModel_AreaObj_Delete",
-    "message0": "Delete",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-  'sap_SapModel_PointObj_GetLoadForce': {
-    "type": "sap_SapModel_PointObj_GetLoadForce",
-    "message0": "GetLoadForce",
-    "args0": [],
-    "output": null,
-    "colour": 300,
-    "tooltip": "",
-    "helpUrl": ""
-},
-};
+function registerSAP2000Blocks() {
+
+  // File.NewBlank
+  Blockly.Blocks['sap_SapModel_File_NewBlank'] = {
+    init: function() {
+      this.setColour(0);
+      this.appendDummyInput()
+          .appendField('File.NewBlank()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Initialize a new blank model');
+    }
+  };
+
+  // PropMaterial.SetMaterial
+  Blockly.Blocks['sap_SapModel_PropMaterial_SetMaterial'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.SetMaterial')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatType:'))
+          .appendField(new Blockly.FieldDropdown([["Steel (1)", "1"], ["Concrete (2)", "2"], ["NoDesign (3)", "3"], ["Aluminum (4)", "4"], ["ColdFormed (5)", "5"], ["Rebar (6)", "6"], ["Tendon (7)", "7"]]), 'MatType');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define or modify a material by name and type');
+    }
+  };
+
+  // PropMaterial.SetMPIsotropic
+  Blockly.Blocks['sap_SapModel_PropMaterial_SetMPIsotropic'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.SetMPIsotropic')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('E:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'E');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('U:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('A:'))
+          .appendField(new Blockly.FieldTextInput(''), 'A');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set isotropic mechanical properties (E, Poisson, thermal coeff)');
+    }
+  };
+
+  // PropMaterial.SetWeightAndMass
+  Blockly.Blocks['sap_SapModel_PropMaterial_SetWeightAndMass'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.SetWeightAndMass')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MyType:'))
+          .appendField(new Blockly.FieldNumber(1, -Infinity, Infinity, 1), 'MyType');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('Value:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Value');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set weight per unit volume and mass per unit volume');
+    }
+  };
+
+  // PropFrame.SetRectangle
+  Blockly.Blocks['sap_SapModel_PropFrame_SetRectangle'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetRectangle')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatProp:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T3:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T2:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T2');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a rectangular (solid) frame section');
+    }
+  };
+
+  // PropFrame.SetCircle
+  Blockly.Blocks['sap_SapModel_PropFrame_SetCircle'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetCircle')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatProp:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T3:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a solid circular frame section');
+    }
+  };
+
+  // PropFrame.SetISection
+  Blockly.Blocks['sap_SapModel_PropFrame_SetISection'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetISection')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatProp:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T3:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T2:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T2');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('TF:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TF');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('TW:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TW');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T2B:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T2B');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('TFB:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TFB');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a general I-section (W-shape / H-beam)');
+    }
+  };
+
+  // PropFrame.SetTube
+  Blockly.Blocks['sap_SapModel_PropFrame_SetTube'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetTube')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatProp:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T3:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('T2:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T2');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('TF:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TF');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('TW:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TW');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a rectangular tube (HSS) frame section');
+    }
+  };
+
+  // PointObj.AddCartesian
+  Blockly.Blocks['sap_SapModel_PointObj_AddCartesian'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('PointObj.AddCartesian()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create a point object at Cartesian coordinates');
+    }
+  };
+
+  // FrameObj.AddByPoint
+  Blockly.Blocks['sap_SapModel_FrameObj_AddByPoint'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.AddByPoint()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create a frame element between two existing points');
+    }
+  };
+
+  // FrameObj.AddByCoord
+  Blockly.Blocks['sap_SapModel_FrameObj_AddByCoord'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.AddByCoord()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add a frame element defined by endpoint coordinates');
+    }
+  };
+
+  // FrameObj.SetSection
+  Blockly.Blocks['sap_SapModel_FrameObj_SetSection'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetSection()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign or change the section property of a frame element');
+    }
+  };
+
+  // PropArea.SetShell_1
+  Blockly.Blocks['sap_SapModel_PropArea_SetShell_1'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropArea.SetShell_1()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define una propiedad de área tipo shell. ShellType: 1=thin, 2=thick, 3=plate-thin, 4=plate-thick, 5=membrane, 6=layered.');
+    }
+  };
+
+  // AreaObj.AddByCoord
+  Blockly.Blocks['sap_SapModel_AreaObj_AddByCoord'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.AddByCoord()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Crea un objeto de área (shell) definiendo sus vértices por coordenadas. Acepta triángulos (3 pts) o quads (4 pts). Retor');
+    }
+  };
+
+  // AreaObj.SetSpring
+  Blockly.Blocks['sap_SapModel_AreaObj_SetSpring'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.SetSpring()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign area springs (Winkler foundation) to an area element');
+    }
+  };
+
+  // LoadPatterns.Add
+  Blockly.Blocks['sap_SapModel_LoadPatterns_Add'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadPatterns.Add()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add a new load pattern to the model');
+    }
+  };
+
+  // FuncRS.SetUser
+  Blockly.Blocks['sap_SapModel_Func_FuncRS_SetUser'] = {
+    init: function() {
+      this.setColour(210);
+      this.appendDummyInput()
+          .appendField('FuncRS.SetUser()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a user-defined response spectrum function from period-value pairs');
+    }
+  };
+
+  // ResponseSpectrum.SetLoads
+  Blockly.Blocks['sap_SapModel_LoadCases_ResponseSpectrum_SetLoads'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('ResponseSpectrum.SetLoads()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign directional response spectrum loads to a spectrum load case');
+    }
+  };
+
+  // RespCombo.Add
+  Blockly.Blocks['sap_SapModel_RespCombo_Add'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.Add()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create a new response combination (linear, envelope, SRSS, etc.)');
+    }
+  };
+
+  // RespCombo.SetCaseList
+  Blockly.Blocks['sap_SapModel_RespCombo_SetCaseList'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.SetCaseList()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add a load case to a response combination with scale factor');
+    }
+  };
+
+  // RespCombo.GetCaseList
+  Blockly.Blocks['sap_SapModel_RespCombo_GetCaseList'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.GetCaseList()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Query the load cases and scale factors in a combination');
+    }
+  };
+
+  // EditArea.Divide
+  Blockly.Blocks['sap_SapModel_EditArea_Divide'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('EditArea.Divide()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Divide an area object into a mesh of smaller areas');
+    }
+  };
+
+  // SelectObj.CoordinateRange
+  Blockly.Blocks['sap_SapModel_SelectObj_CoordinateRange'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('SelectObj.CoordinateRange()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Select objects within a coordinate bounding box');
+    }
+  };
+
+  // ConstraintDef.SetBody
+  Blockly.Blocks['sap_SapModel_ConstraintDef_SetBody'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('ConstraintDef.SetBody()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a body constraint (rigid link) for DOF coupling');
+    }
+  };
+
+  // FrameObj.SetTCLimits
+  Blockly.Blocks['sap_SapModel_FrameObj_SetTCLimits'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetTCLimits()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set tension/compression force limits for a frame element');
+    }
+  };
+
+  // PointObj.SetRestraint
+  Blockly.Blocks['sap_SapModel_PointObj_SetRestraint'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('PointObj.SetRestraint()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign translational and rotational restraints to a joint');
+    }
+  };
+
+  // FrameObj.SetLoadDistributed
+  Blockly.Blocks['sap_SapModel_FrameObj_SetLoadDistributed'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetLoadDistributed()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign distributed loads (force/moment per unit length) to frame objects');
+    }
+  };
+
+  // PointObj.SetLoadForce
+  Blockly.Blocks['sap_SapModel_PointObj_SetLoadForce'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('PointObj.SetLoadForce()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign point load forces and moments to point objects');
+    }
+  };
+
+  // DatabaseTables.GetAllTables
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetAllTables'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetAllTables()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns all tables with import type and empty status');
+    }
+  };
+
+  // DatabaseTables.GetAvailableTables
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetAvailableTables'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetAvailableTables()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns available (non-empty) tables with their import type — lighter query than GetAllTables');
+    }
+  };
+
+  // DatabaseTables.GetAllFieldsInTable
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetAllFieldsInTable'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetAllFieldsInTable()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns all fields (columns) metadata for a specific table');
+    }
+  };
+
+  // DatabaseTables.GetObsoleteTableKeyList
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetObsoleteTableKeyList'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetObsoleteTableKeyList()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns list of obsolete table keys and associated version notes');
+    }
+  };
+
+  // DatabaseTables.GetTableForEditingArray
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForEditingArray'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForEditingArray()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Read a table as flat array for interactive editing. Returns TableVersion, FieldKeysIncluded[], NumberRecords, TableData[');
+    }
+  };
+
+  // DatabaseTables.CancelTableEditing
+  Blockly.Blocks['sap_SapModel_DatabaseTables_CancelTableEditing'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.CancelTableEditing()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Cancel all pending table edits without applying them. Acts as a rollback of SetTableForEditing* calls.');
+    }
+  };
+
+  // DatabaseTables.SetTableForEditingArray
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetTableForEditingArray'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetTableForEditingArray()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Write edited table data (flat array) back for import via ApplyEditedTables. COM echoes back TableVersion, FieldKeysInclu');
+    }
+  };
+
+  // DatabaseTables.ApplyEditedTables
+  Blockly.Blocks['sap_SapModel_DatabaseTables_ApplyEditedTables'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.ApplyEditedTables()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Apply all pending table edits to the model. Returns NumFatalErrors, NumErrorMsgs, NumWarnMsgs, NumInfoMsgs, ImportLog.');
+    }
+  };
+
+  // DatabaseTables.GetTableForDisplayArray
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForDisplayArray'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForDisplayArray()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Read table data for display (read-only) as flat array. Allows specifying subset of fields via FieldKeyList.');
+    }
+  };
+
+  // DatabaseTables.GetTableForDisplayCSVFile
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForDisplayCSVFile'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForDisplayCSVFile()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export table display data to a CSV file');
+    }
+  };
+
+  // DatabaseTables.GetTableForDisplayCSVString
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForDisplayCSVString'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForDisplayCSVString()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export table display data as a CSV string');
+    }
+  };
+
+  // DatabaseTables.GetTableForDisplayXMLString
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForDisplayXMLString'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForDisplayXMLString()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export table display data as an XML string');
+    }
+  };
+
+  // DatabaseTables.GetTableForEditingCSVFile
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForEditingCSVFile'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForEditingCSVFile()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export editable table data to a CSV file');
+    }
+  };
+
+  // DatabaseTables.GetTableForEditingCSVString
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableForEditingCSVString'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableForEditingCSVString()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export editable table data as a CSV string');
+    }
+  };
+
+  // DatabaseTables.SetTableForEditingCSVFile
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetTableForEditingCSVFile'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetTableForEditingCSVFile()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Import table data from a CSV file for editing');
+    }
+  };
+
+  // DatabaseTables.SetTableForEditingCSVString
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetTableForEditingCSVString'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetTableForEditingCSVString()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Import table data from a CSV string for editing');
+    }
+  };
+
+  // DatabaseTables.GetLoadCasesSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetLoadCasesSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetLoadCasesSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the load cases currently selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.SetLoadCasesSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetLoadCasesSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetLoadCasesSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the load cases selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.GetLoadCombinationsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetLoadCombinationsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetLoadCombinationsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the load combinations currently selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.SetLoadCombinationsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetLoadCombinationsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetLoadCombinationsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the load combinations selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.GetLoadPatternsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetLoadPatternsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetLoadPatternsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the load patterns currently selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.SetLoadPatternsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetLoadPatternsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetLoadPatternsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the load patterns selected for display in database tables');
+    }
+  };
+
+  // DatabaseTables.GetElementVirtualWorkNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetElementVirtualWorkNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetElementVirtualWorkNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the element virtual work named sets currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetElementVirtualWorkNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetElementVirtualWorkNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetElementVirtualWorkNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the element virtual work named sets selected for display');
+    }
+  };
+
+  // DatabaseTables.GetGeneralizedDisplacementsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetGeneralizedDisplacementsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetGeneralizedDisplacementsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the generalized displacements currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetGeneralizedDisplacementsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetGeneralizedDisplacementsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetGeneralizedDisplacementsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the generalized displacements selected for display');
+    }
+  };
+
+  // DatabaseTables.GetJointResponseSpectraNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetJointResponseSpectraNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetJointResponseSpectraNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the joint response spectra named sets currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetJointResponseSpectraNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetJointResponseSpectraNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetJointResponseSpectraNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the joint response spectra named sets selected for display');
+    }
+  };
+
+  // DatabaseTables.GetPlotFunctionTracesNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetPlotFunctionTracesNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetPlotFunctionTracesNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the plot function traces named sets currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetPlotFunctionTracesNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetPlotFunctionTracesNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetPlotFunctionTracesNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the plot function traces named sets selected for display');
+    }
+  };
+
+  // DatabaseTables.GetPushoverNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetPushoverNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetPushoverNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the pushover named sets currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetPushoverNamedSetsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetPushoverNamedSetsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetPushoverNamedSetsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the pushover named sets selected for display');
+    }
+  };
+
+  // DatabaseTables.GetSectionCutsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetSectionCutsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetSectionCutsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns the section cuts currently selected for display');
+    }
+  };
+
+  // DatabaseTables.SetSectionCutsSelectedForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetSectionCutsSelectedForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetSectionCutsSelectedForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets the section cuts selected for display');
+    }
+  };
+
+  // DatabaseTables.GetTableOutputOptionsForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_GetTableOutputOptionsForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.GetTableOutputOptionsForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Returns table output display options (18 ByRef params: BaseReaction coords, mode ranges, history options)');
+    }
+  };
+
+  // DatabaseTables.SetTableOutputOptionsForDisplay
+  Blockly.Blocks['sap_SapModel_DatabaseTables_SetTableOutputOptionsForDisplay'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.SetTableOutputOptionsForDisplay()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Sets table output display options (18 params: BaseReaction coords, mode ranges, history options)');
+    }
+  };
+
+  // DatabaseTables.ShowTablesInExcel
+  Blockly.Blocks['sap_SapModel_DatabaseTables_ShowTablesInExcel'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('DatabaseTables.ShowTablesInExcel()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Export specified tables directly to Excel. Excel must be installed. Returns 0 on success.');
+    }
+  };
+
+  // FrameObj.GetLoadDistributed
+  Blockly.Blocks['sap_SapModel_FrameObj_GetLoadDistributed'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.GetLoadDistributed()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve distributed load assignments from frame objects');
+    }
+  };
+
+  // FrameObj.SetLoadPoint
+  Blockly.Blocks['sap_SapModel_FrameObj_SetLoadPoint'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetLoadPoint()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign point loads (force/moment) to frame objects at specified distance');
+    }
+  };
+
+  // AreaObj.SetLoadUniform
+  Blockly.Blocks['sap_SapModel_AreaObj_SetLoadUniform'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.SetLoadUniform()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign uniform distributed loads [F/L²] to area objects');
+    }
+  };
+
+  // Results.BaseReact
+  Blockly.Blocks['sap_SapModel_Results_BaseReact'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('Results.BaseReact()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Extract total base reactions (forces and moments at reporting point)');
+    }
+  };
+
+  // AreaObj.SetLoadGravity
+  Blockly.Blocks['sap_SapModel_AreaObj_SetLoadGravity'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.SetLoadGravity()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign gravity load multipliers to area objects');
+    }
+  };
+
+  // FrameObj.SetReleases
+  Blockly.Blocks['sap_SapModel_FrameObj_SetReleases'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetReleases()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign end releases (hinges/partial fixity) to frame objects');
+    }
+  };
+
+  // FrameObj.GetReleases
+  Blockly.Blocks['sap_SapModel_FrameObj_GetReleases'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.GetReleases()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve end release and partial fixity assignments from frame objects');
+    }
+  };
+
+  // FrameObj.SetInsertionPoint_1
+  Blockly.Blocks['sap_SapModel_FrameObj_SetInsertionPoint_1'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetInsertionPoint_1()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign cardinal point and joint offsets to frame objects');
+    }
+  };
+
+  // FrameObj.SetLocalAxes
+  Blockly.Blocks['sap_SapModel_FrameObj_SetLocalAxes'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetLocalAxes()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign local axis rotation angle to frame objects');
+    }
+  };
+
+  // GroupDef.SetGroup
+  Blockly.Blocks['sap_SapModel_GroupDef_SetGroup'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('GroupDef.SetGroup()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create or modify a group definition with properties');
+    }
+  };
+
+  // GroupDef.GetNameList
+  Blockly.Blocks['sap_SapModel_GroupDef_GetNameList'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('GroupDef.GetNameList()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve names of all defined groups');
+    }
+  };
+
+  // FrameObj.SetGroupAssign
+  Blockly.Blocks['sap_SapModel_FrameObj_SetGroupAssign'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetGroupAssign()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add or remove frame objects from a group');
+    }
+  };
+
+  // AreaObj.SetGroupAssign
+  Blockly.Blocks['sap_SapModel_AreaObj_SetGroupAssign'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.SetGroupAssign()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add or remove area objects from a group');
+    }
+  };
+
+  // ConstraintDef.SetDiaphragm
+  Blockly.Blocks['sap_SapModel_ConstraintDef_SetDiaphragm'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('ConstraintDef.SetDiaphragm()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a diaphragm constraint (rigid floor)');
+    }
+  };
+
+  // ConstraintDef.GetDiaphragm
+  Blockly.Blocks['sap_SapModel_ConstraintDef_GetDiaphragm'] = {
+    init: function() {
+      this.setColour(160);
+      this.appendDummyInput()
+          .appendField('ConstraintDef.GetDiaphragm()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve diaphragm constraint definition (axis and coordinate system)');
+    }
+  };
+
+  // Results.AreaStressShell
+  Blockly.Blocks['sap_SapModel_Results_AreaStressShell'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('Results.AreaStressShell()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Extract shell element stresses (S11, S22, S12 at top/bottom, principal, Von Mises)');
+    }
+  };
+
+  // Results.ModalPeriod
+  Blockly.Blocks['sap_SapModel_Results_ModalPeriod'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('Results.ModalPeriod()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Extract modal periods, frequencies, circular frequencies, and eigenvalues');
+    }
+  };
+
+  // Results.ModalParticipatingMassRatios
+  Blockly.Blocks['sap_SapModel_Results_ModalParticipatingMassRatios'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('Results.ModalParticipatingMassRatios()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Extract modal participating mass ratios (individual and cumulative per DOF)');
+    }
+  };
+
+  // Results.ModeShape
+  Blockly.Blocks['sap_SapModel_Results_ModeShape'] = {
+    init: function() {
+      this.setColour(270);
+      this.appendDummyInput()
+          .appendField('Results.ModeShape()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Extract modal displacements (mode shapes) at point elements');
+    }
+  };
+
+  // Analyze.SetActiveDOF
+  Blockly.Blocks['sap_SapModel_Analyze_SetActiveDOF'] = {
+    init: function() {
+      this.setColour(230);
+      this.appendDummyInput()
+          .appendField('Analyze.SetActiveDOF()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set active/inactive global degrees of freedom for analysis model');
+    }
+  };
+
+  // Analyze.GetActiveDOF
+  Blockly.Blocks['sap_SapModel_Analyze_GetActiveDOF'] = {
+    init: function() {
+      this.setColour(230);
+      this.appendDummyInput()
+          .appendField('Analyze.GetActiveDOF()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve active global degrees of freedom for analysis model');
+    }
+  };
+
+  // Analyze.GetCaseStatus
+  Blockly.Blocks['sap_SapModel_Analyze_GetCaseStatus'] = {
+    init: function() {
+      this.setColour(230);
+      this.appendDummyInput()
+          .appendField('Analyze.GetCaseStatus()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve run status for all load cases (1=Not run, 4=Finished)');
+    }
+  };
+
+  // File.OpenFile
+  Blockly.Blocks['sap_SapModel_File_OpenFile'] = {
+    init: function() {
+      this.setColour(0);
+      this.appendDummyInput()
+          .appendField('File.OpenFile()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Open an existing SAP2000 model file (.sdb)');
+    }
+  };
+
+  // PropLink.SetLinear
+  Blockly.Blocks['sap_SapModel_PropLink_SetLinear'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropLink.SetLinear()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a linear-type link property (stiffness, damping, DOFs)');
+    }
+  };
+
+  // LinkObj.AddByPoint
+  Blockly.Blocks['sap_SapModel_LinkObj_AddByPoint'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('LinkObj.AddByPoint()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create a two-joint link element between two existing point objects.');
+    }
+  };
+
+  // LinkObj.AddByCoord
+  Blockly.Blocks['sap_SapModel_LinkObj_AddByCoord'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('LinkObj.AddByCoord()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Create a link element by specifying I-End and J-End coordinates');
+    }
+  };
+
+  // AreaObj.SetProperty
+  Blockly.Blocks['sap_SapModel_AreaObj_SetProperty'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('AreaObj.SetProperty()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Assign or change area section property on an area object');
+    }
+  };
+
+  // PropArea.GetShell_1
+  Blockly.Blocks['sap_SapModel_PropArea_GetShell_1'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropArea.GetShell_1()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve shell-type area section properties (type, material, thicknesses)');
+    }
+  };
+
+  // PropMaterial.SetOSteel_1
+  Blockly.Blocks['sap_SapModel_PropMaterial_SetOSteel_1'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.SetOSteel_1')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('Fy:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Fy');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('Fu:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Fu');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('EFy:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EFy');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('EFu:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EFu');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('SSType:'))
+          .appendField(new Blockly.FieldTextInput(''), 'SSType');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('SSHysType:'))
+          .appendField(new Blockly.FieldTextInput(''), 'SSHysType');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('StrainAtHardening:'))
+          .appendField(new Blockly.FieldTextInput(''), 'StrainAtHardening');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('StrainAtMaxStress:'))
+          .appendField(new Blockly.FieldTextInput(''), 'StrainAtMaxStress');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('StrainAtRupture:'))
+          .appendField(new Blockly.FieldTextInput(''), 'StrainAtRupture');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('FinalSlope:'))
+          .appendField(new Blockly.FieldTextInput(''), 'FinalSlope');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set steel design properties (yield/ultimate strengths, stress-strain model)');
+    }
+  };
+
+  // PropMaterial.SetOConcrete_1
+  Blockly.Blocks['sap_SapModel_PropMaterial_SetOConcrete_1'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.SetOConcrete_1')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('fc:'))
+          .appendField(new Blockly.FieldTextInput(''), 'fc');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('IsLightweight:'))
+          .appendField(new Blockly.FieldTextInput(''), 'IsLightweight');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('FcsFactor:'))
+          .appendField(new Blockly.FieldTextInput(''), 'FcsFactor');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('SSType:'))
+          .appendField(new Blockly.FieldTextInput(''), 'SSType');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('SSHysType:'))
+          .appendField(new Blockly.FieldTextInput(''), 'SSHysType');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('StrainAtfc:'))
+          .appendField(new Blockly.FieldTextInput(''), 'StrainAtfc');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('StrainUltimate:'))
+          .appendField(new Blockly.FieldTextInput(''), 'StrainUltimate');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('FinalSlope:'))
+          .appendField(new Blockly.FieldTextInput(''), 'FinalSlope');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('FrictionAngle:'))
+          .appendField(new Blockly.FieldTextInput(''), 'FrictionAngle');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('DilatationalAngle:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DilatationalAngle');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set concrete design properties (fc, lightweight flag, stress-strain model)');
+    }
+  };
+
+  // PropMaterial.GetMaterial
+  Blockly.Blocks['sap_SapModel_PropMaterial_GetMaterial'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.GetMaterial')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('MatType:'))
+          .appendField(new Blockly.FieldDropdown([["Steel (1)", "1"], ["Concrete (2)", "2"], ["NoDesign (3)", "3"], ["Aluminum (4)", "4"], ["ColdFormed (5)", "5"], ["Rebar (6)", "6"], ["Tendon (7)", "7"]]), 'MatType');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get material type and metadata (MatType, Color, Notes, GUID) for an existing material');
+    }
+  };
+
+  // PropMaterial.GetMPIsotropic
+  Blockly.Blocks['sap_SapModel_PropMaterial_GetMPIsotropic'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.GetMPIsotropic')
+          .appendField(new Blockly.FieldLabel('Name:'))
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('E:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'E');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('U:'))
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U');
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabel('A:'))
+          .appendField(new Blockly.FieldTextInput(''), 'A');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve isotropic mechanical properties (E, Poisson ratio, thermal expansion coefficient)');
+    }
+  };
+
+  // PropFrame.SetAngle
+  Blockly.Blocks['sap_SapModel_PropFrame_SetAngle'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetAngle()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define an angle (L-shape) frame section');
+    }
+  };
+
+  // PropFrame.SetChannel
+  Blockly.Blocks['sap_SapModel_PropFrame_SetChannel'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetChannel()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a channel (C-shape) frame section');
+    }
+  };
+
+  // PropFrame.SetPipe
+  Blockly.Blocks['sap_SapModel_PropFrame_SetPipe'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.SetPipe()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a circular pipe (hollow) frame section');
+    }
+  };
+
+  // PropFrame.GetRectangle
+  Blockly.Blocks['sap_SapModel_PropFrame_GetRectangle'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.GetRectangle()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve rectangular section properties');
+    }
+  };
+
+  // PropFrame.GetCircle
+  Blockly.Blocks['sap_SapModel_PropFrame_GetCircle'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.GetCircle()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve circular (solid) section properties');
+    }
+  };
+
+  // PropFrame.GetISection
+  Blockly.Blocks['sap_SapModel_PropFrame_GetISection'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.GetISection()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve I-section properties');
+    }
+  };
+
+  // DesignSteel.SetComboStrength
+  Blockly.Blocks['sap_SapModel_DesignSteel_SetComboStrength'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.SetComboStrength()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Select/deselect a combo for steel strength design');
+    }
+  };
+
+  // DesignSteel.GetComboStrength
+  Blockly.Blocks['sap_SapModel_DesignSteel_GetComboStrength'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.GetComboStrength()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve combos selected for steel strength design');
+    }
+  };
+
+  // DesignSteel.SetComboDeflection
+  Blockly.Blocks['sap_SapModel_DesignSteel_SetComboDeflection'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.SetComboDeflection()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Select/deselect a combo for steel deflection design (serviceability)');
+    }
+  };
+
+  // DesignSteel.GetCode
+  Blockly.Blocks['sap_SapModel_DesignSteel_GetCode'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.GetCode()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve current steel design code');
+    }
+  };
+
+  // DesignSteel.SetCode
+  Blockly.Blocks['sap_SapModel_DesignSteel_SetCode'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.SetCode()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set the steel design code');
+    }
+  };
+
+  // DesignSteel.DeleteResults
+  Blockly.Blocks['sap_SapModel_DesignSteel_DeleteResults'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignSteel.DeleteResults()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete all steel frame design results');
+    }
+  };
+
+  // DesignConcrete.SetComboStrength
+  Blockly.Blocks['sap_SapModel_DesignConcrete_SetComboStrength'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignConcrete.SetComboStrength()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Select/deselect a combo for concrete strength design');
+    }
+  };
+
+  // DesignConcrete.GetCode
+  Blockly.Blocks['sap_SapModel_DesignConcrete_GetCode'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignConcrete.GetCode()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve current concrete design code');
+    }
+  };
+
+  // DesignConcrete.SetCode
+  Blockly.Blocks['sap_SapModel_DesignConcrete_SetCode'] = {
+    init: function() {
+      this.setColour(300);
+      this.appendDummyInput()
+          .appendField('DesignConcrete.SetCode()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set the concrete design code');
+    }
+  };
+
+  // RespCombo.Delete
+  Blockly.Blocks['sap_SapModel_RespCombo_Delete'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.Delete()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete an existing load combination');
+    }
+  };
+
+  // RespCombo.ChangeName
+  Blockly.Blocks['sap_SapModel_RespCombo_ChangeName'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.ChangeName()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Rename an existing load combination');
+    }
+  };
+
+  // RespCombo.Count
+  Blockly.Blocks['sap_SapModel_RespCombo_Count'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of load combinations');
+    }
+  };
+
+  // RespCombo.SetTypeOAPI
+  Blockly.Blocks['sap_SapModel_RespCombo_SetTypeOAPI'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.SetTypeOAPI()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set the type of a load combination');
+    }
+  };
+
+  // RespCombo.GetTypeOAPI
+  Blockly.Blocks['sap_SapModel_RespCombo_GetTypeOAPI'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.GetTypeOAPI()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get the type of a load combination');
+    }
+  };
+
+  // RespCombo.DeleteCase
+  Blockly.Blocks['sap_SapModel_RespCombo_DeleteCase'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.DeleteCase()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Remove a load case or combo from a combination');
+    }
+  };
+
+  // RespCombo.AddDesignDefaultCombos
+  Blockly.Blocks['sap_SapModel_RespCombo_AddDesignDefaultCombos'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('RespCombo.AddDesignDefaultCombos()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add default design combinations by material type');
+    }
+  };
+
+  // ResponseSpectrum.SetDampConstant
+  Blockly.Blocks['sap_SapModel_LoadCases_ResponseSpectrum_SetDampConstant'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('ResponseSpectrum.SetDampConstant()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set constant damping for a response spectrum case');
+    }
+  };
+
+  // LoadCases.Count
+  Blockly.Blocks['sap_SapModel_LoadCases_Count'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadCases.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of load cases (optionally by type)');
+    }
+  };
+
+  // LoadCases.Delete
+  Blockly.Blocks['sap_SapModel_LoadCases_Delete'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadCases.Delete()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete a load case');
+    }
+  };
+
+  // LoadCases.ChangeName
+  Blockly.Blocks['sap_SapModel_LoadCases_ChangeName'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadCases.ChangeName()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Rename a load case');
+    }
+  };
+
+  // LoadPatterns.Count
+  Blockly.Blocks['sap_SapModel_LoadPatterns_Count'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadPatterns.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of load patterns');
+    }
+  };
+
+  // LoadPatterns.Delete
+  Blockly.Blocks['sap_SapModel_LoadPatterns_Delete'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadPatterns.Delete()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete a load pattern');
+    }
+  };
+
+  // LoadPatterns.ChangeName
+  Blockly.Blocks['sap_SapModel_LoadPatterns_ChangeName'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('LoadPatterns.ChangeName()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Rename a load pattern');
+    }
+  };
+
+  // SourceMass.SetMassSource
+  Blockly.Blocks['sap_SapModel_SourceMass_SetMassSource'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('SourceMass.SetMassSource()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Add or reinitialize a mass source definition specifying which elements and load patterns contribute to model mass. Essen');
+    }
+  };
+
+  // SourceMass.Count
+  Blockly.Blocks['sap_SapModel_SourceMass_Count'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('SourceMass.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of mass sources defined in the model. Returns integer directly (not ByRef).');
+    }
+  };
+
+  // SourceMass.GetMassSource
+  Blockly.Blocks['sap_SapModel_SourceMass_GetMassSource'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('SourceMass.GetMassSource()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve mass source configuration including element/load contributions and scale factors. Returns ByRef layout with all');
+    }
+  };
+
+  // SourceMass.GetDefault
+  Blockly.Blocks['sap_SapModel_SourceMass_GetDefault'] = {
+    init: function() {
+      this.setColour(200);
+      this.appendDummyInput()
+          .appendField('SourceMass.GetDefault()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve the name of the default mass source currently set in the model.');
+    }
+  };
+
+  // FrameObj.SetModifiers
+  Blockly.Blocks['sap_SapModel_FrameObj_SetModifiers'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.SetModifiers()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set stiffness modification factors for a frame object (cracked section analysis)');
+    }
+  };
+
+  // FrameObj.GetModifiers
+  Blockly.Blocks['sap_SapModel_FrameObj_GetModifiers'] = {
+    init: function() {
+      this.setColour(120);
+      this.appendDummyInput()
+          .appendField('FrameObj.GetModifiers()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve stiffness modification factors for a frame object');
+    }
+  };
+
+  // PropArea.SetModifiers
+  Blockly.Blocks['sap_SapModel_PropArea_SetModifiers'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropArea.SetModifiers()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Set stiffness modification factors for an area property (shell/slab/wall)');
+    }
+  };
+
+  // PropArea.GetModifiers
+  Blockly.Blocks['sap_SapModel_PropArea_GetModifiers'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropArea.GetModifiers()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Retrieve stiffness modification factors for an area property');
+    }
+  };
+
+  // PropFrame.ChangeName
+  Blockly.Blocks['sap_SapModel_PropFrame_ChangeName'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.ChangeName()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Rename a frame section property');
+    }
+  };
+
+  // PropFrame.Count
+  Blockly.Blocks['sap_SapModel_PropFrame_Count'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of frame section properties (optionally filtered by type)');
+    }
+  };
+
+  // PropFrame.Delete
+  Blockly.Blocks['sap_SapModel_PropFrame_Delete'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropFrame.Delete()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete a frame section property (must not be in use by any element)');
+    }
+  };
+
+  // PropMaterial.ChangeName
+  Blockly.Blocks['sap_SapModel_PropMaterial_ChangeName'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.ChangeName()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Rename a material property');
+    }
+  };
+
+  // PropMaterial.Count
+  Blockly.Blocks['sap_SapModel_PropMaterial_Count'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.Count()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Get total number of material properties (optionally filtered by material type)');
+    }
+  };
+
+  // PropMaterial.Delete
+  Blockly.Blocks['sap_SapModel_PropMaterial_Delete'] = {
+    init: function() {
+      this.setColour(30);
+      this.appendDummyInput()
+          .appendField('PropMaterial.Delete()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Delete a material property (must not be in use by any section)');
+    }
+  };
+
+  // PropLink.SetGap
+  Blockly.Blocks['sap_SapModel_PropLink_SetGap'] = {
+    init: function() {
+      this.setColour(60);
+      this.appendDummyInput()
+          .appendField('PropLink.SetGap()');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+      this.setTooltip('Define a Gap-type nonlinear link property (compression-only). DOF arrays size 6.');
+    }
+  };
+
+  console.log('✅ ' + Object.keys(Blockly.Blocks).filter(k => k.startsWith("sap_")).length + ' SAP2000 blocks registered');
+}

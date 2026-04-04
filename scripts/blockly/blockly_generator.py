@@ -2,309 +2,505 @@
 Blockly Block Generator — Auto-genera definiciones de bloques desde registry.json
 ===============================================================================
 Genera:
-  1. block_definitions.js — Blockly block JSON para cada función SAP2000
-  2. toolbox_structure.xml — Toolbox organizado por 9 fases
-  3. generators.js — Generador Python para cada bloque
+  1. block_definitions.js — Blockly block JSON con args0 poblados
+  2. toolbox_structure.xml — Toolbox organizado por 9 fases con bloques listados
+  3. generators.js — Generador Python para CADA bloque
 
 Uso:
-    generator = BlocklyBlockGenerator(registry_path="scripts/registry.json")
-    generator.generate_all(output_dir="scripts/blockly")
+    python scripts/blockly/blockly_generator.py [registry_path] [output_dir]
 """
 
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Any
-from dataclasses import dataclass
+from typing import Dict, List, Any, Optional
+from dataclasses import dataclass, field
+from datetime import datetime
 
 
-# Mapeo de fases a colores Blockly
+# ─── Phase colors (Blockly hue 0-360) ───────────────────────────────────────
+
 PHASE_COLORS = {
-    1: 0,          # Rojo: Init (File)
-    2: 45,         # Naranja: Materials
-    3: 90,         # Verde claro: Sections  
-    4: 120,        # Verde: Geometry
-    5: 150,        # Cian: Constraints
-    6: 180,        # Azul claro: Loads
-    7: 210,        # Azul: Analysis
-    8: 240,        # Púrpura: Results
-    9: 270,        # Púrpura oscuro: Design
-    999: 300,      # Gris: Utility
+    1: 0,       # Rojo: Init (File)
+    2: 30,      # Naranja: Materials
+    3: 60,      # Amarillo: Sections
+    4: 120,     # Verde: Geometry
+    5: 160,     # Cian: Constraints/Groups
+    6: 200,     # Azul claro: Loads
+    7: 230,     # Azul: Analysis
+    8: 270,     # Púrpura: Results
+    9: 300,     # Magenta: Design
+    999: 210,   # Gris-azul: Utility / Sin fase
 }
 
-# Mapeo: función SAP2000 → Fase
-FUNCTION_PHASES = {
-    "File.NewBlank": 1, "File.OpenFile": 1, "File.Save": 1, "File.New2DFrame": 1,
-    
-    "PropMaterial.SetMaterial": 2, "PropMaterial.SetMPIsotropic": 2, "PropMaterial.SetMPOrthotropic": 2,
-    
-    "PropFrame.SetRectangle": 3, "PropFrame.SetISection": 3, "PropFrame.SetCircle": 3,
-    "PropArea.SetShell_1": 3,
-    
-    "FrameObj.AddByCoord": 4, "AreaObj.AddByCoord": 4, "PointObj.AddCartesian": 4,
-    "EditArea.Divide": 4,
-    
-    "PointObj.SetRestraint": 5, "ConstraintDef.SetDiaphragm": 5, "ConstraintDef.SetBody": 5,
-    "Groups.Create": 5, "Select.All": 5, "Select.ClearSelection": 5,
-    
-    "LoadPatterns.Add": 6, "LoadCases.StaticLinear": 6, "RespCombo.Add": 6,
-    "FrameObj.SetLoadDistributed": 6, "AreaObj.SetLoadUniform": 6, "PointObj.SetLoadForce": 6,
-    
-    "Analyze.RunAnalysis": 7, "Analyze.SetActiveDOF": 7, "Analyze.GetCaseStatus": 7,
-    
-    "Results.JointDispl": 8, "Results.FrameForce": 8, "DatabaseTables.GetTableForDisplayArray": 8,
-    
-    "DesignSteel.StartDesign": 9, "DesignConcrete.StartDesign": 9,
+PHASE_NAMES = {
+    1: "Inicializar",
+    2: "Materiales",
+    3: "Secciones",
+    4: "Geometría",
+    5: "Restricciones / Grupos",
+    6: "Cargas",
+    7: "Análisis",
+    8: "Resultados",
+    9: "Diseño",
+}
+
+# ─── Category → Phase mapping ───────────────────────────────────────────────
+
+CATEGORY_PHASE = {
+    "File": 1,
+    "PropMaterial": 2,
+    "PropFrame": 3, "PropArea": 3, "Properties": 3,
+    "Object_Model": 4, "FrameObj": 4, "AreaObj": 4, "Edit": 4,
+    "Constraints": 5, "Groups": 5, "Select": 5,
+    "Load_Patterns": 6, "Load_Cases": 6, "RespCombo": 6, "Mass_Source": 6,
+    "Analyze": 7,
+    "Analysis_Results": 8, "Database_Tables": 8,
+    "Design": 9,
+    "Functions": 999,
+}
+
+# ─── Known enum mappings (for dropdown generation) ──────────────────────────
+
+ENUM_MAPS = {
+    "MatType": {
+        "Steel (1)": "1", "Concrete (2)": "2", "NoDesign (3)": "3",
+        "Aluminum (4)": "4", "ColdFormed (5)": "5", "Rebar (6)": "6", "Tendon (7)": "7",
+    },
+    "eUnits": {
+        "lb_in_F (1)": "1", "lb_ft_F (2)": "2", "kip_in_F (3)": "3", "kip_ft_F (4)": "4",
+        "kN_mm_C (5)": "5", "kN_m_C (6)": "6", "kgf_mm_C (7)": "7", "kgf_m_C (8)": "8",
+        "N_mm_C (9)": "9", "N_m_C (10)": "10", "Ton_mm_C (11)": "11", "Ton_m_C (12)": "12",
+        "kN_cm_C (13)": "13", "kgf_cm_C (14)": "14", "N_cm_C (15)": "15", "Ton_cm_C (16)": "16",
+    },
+    "eLoadPatternType": {
+        "Dead (1)": "1", "SuperDead (2)": "2", "Live (3)": "3", "ReduceLive (4)": "4",
+        "Quake (5)": "5", "Wind (6)": "6", "Snow (7)": "7", "Other (8)": "8",
+        "Move (9)": "9", "Temperature (10)": "10", "RoofLive (11)": "11", "Notional (12)": "12",
+    },
+    "eItemType": {
+        "Object (0)": "0", "Group (1)": "1", "SelectedObjects (2)": "2",
+    },
+    "eFrameLoadDistType": {"Force (1)": "1", "Moment (2)": "2"},
+    "eFrameLoadDir": {
+        "Local1 (1)": "1", "Local2 (2)": "2", "Local3 (3)": "3",
+        "X (4)": "4", "Y (5)": "5", "Z (6)": "6",
+        "GravityProjected (10)": "10", "GravityFull (11)": "11",
+    },
+    "eDOF": {"UX": "True", "UY": "True", "UZ": "True", "RX": "True", "RY": "True", "RZ": "True"},
+    "eShellType": {
+        "ShellThin (1)": "1", "ShellThick (2)": "2", "Membrane (3)": "3", "Plate (4)": "4",
+    },
+    "eCombType": {
+        "LinearAdd (0)": "0", "Envelope (1)": "1", "AbsAdd (2)": "2",
+        "SRSS (3)": "3", "RangeAdd (4)": "4",
+    },
 }
 
 
 @dataclass
-class BlockParam:
-    """Descripción de un parámetro de bloque"""
+class ParamDef:
+    """Definición de un parámetro para un bloque Blockly."""
     name: str
-    python_type: str
-    blockly_check: str
-    default_value: Any = None
-    enum_values: Dict[str, int] = None
+    param_type: str  # "str", "float", "int", "bool", "enum"
+    default: str = ""
+    enum_key: str = ""  # Key en ENUM_MAPS si es dropdown
     description: str = ""
+    required: bool = True
+
+
+@dataclass
+class BlockSpec:
+    """Especificación completa de un bloque Blockly."""
+    block_type: str          # e.g. "sap_File_NewBlank"
+    func_path: str           # e.g. "SapModel.File.NewBlank"
+    display_name: str        # e.g. "File.NewBlank"
+    phase: int
+    params: List[ParamDef] = field(default_factory=list)
+    has_byref: bool = False
+    byref_outputs: List[str] = field(default_factory=list)
+    description: str = ""
+    api_call: str = ""
 
 
 class BlocklyBlockGenerator:
-    """Generador de bloques Blockly desde registry SAP2000"""
-    
+    """Generador de bloques Blockly desde registry SAP2000."""
+
     def __init__(self, registry_path: str = "scripts/registry.json"):
         self.registry_path = Path(registry_path)
         self.registry = self._load_registry()
-        self.output_dir = None
-    
+        self.output_dir: Optional[Path] = None
+        self.block_specs: List[BlockSpec] = []
+
     def _load_registry(self) -> Dict[str, Any]:
-        """Cargar registry.json"""
         if not self.registry_path.exists():
             raise FileNotFoundError(f"Registry no encontrado: {self.registry_path}")
-        
-        with open(self.registry_path, 'r') as f:
+        with open(self.registry_path, "r", encoding="utf-8") as f:
             return json.load(f)
-    
+
+    # ─── Main entry ──────────────────────────────────────────────────────
+
     def generate_all(self, output_dir: str = "scripts/blockly"):
-        """Generar todos los archivos
-        
-        Outputs:
-            - block_definitions.js
-            - toolbox_structure.xml
-            - generators.js
-        """
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        
-        print(f"📦 Generando {len(self.registry.get('functions', []))} bloques...")
-        
-        # Generar JavaScript + XML
-        blocks_js = self._generate_block_definitions_js()
+
+        self.block_specs = self._build_block_specs()
+        print(f"📦 {len(self.block_specs)} bloques parseados del registry")
+
+        defs_js = self._generate_block_definitions_js()
         toolbox_xml = self._generate_toolbox_xml()
-        generators_js = self._generate_generators_js()
-        
-        # Escribir archivos
-        (self.output_dir / "block_definitions.js").write_text(blocks_js)
-        (self.output_dir / "toolbox_structure.xml").write_text(toolbox_xml)
-        (self.output_dir / "generators.js").write_text(generators_js)
-        
-        print(f"✅ Generados:")
-        print(f"   - block_definitions.js ({len(blocks_js)} bytes)")
-        print(f"   - toolbox_structure.xml ({len(toolbox_xml)} bytes)")
-        print(f"   - generators.js ({len(generators_js)} bytes)")
-    
-    def _generate_block_definitions_js(self) -> str:
-        """Generar bloque JSON para cada función"""
-        
-        js_output = "// Auto-generado — NO editar manualmente\n"
-        js_output += "// Fecha: 2026-04-04\n\n"
-        js_output += "var BLOCKLY_BLOCKS = {\n"
-        
-        functions_dict = self.registry.get('functions', {})
-        for func_path, func_info in functions_dict.items():
-            # Skip si no tenemos info
+        gens_js = self._generate_generators_js()
+
+        (self.output_dir / "block_definitions.js").write_text(defs_js, encoding="utf-8")
+        (self.output_dir / "toolbox_structure.xml").write_text(toolbox_xml, encoding="utf-8")
+        (self.output_dir / "generators.js").write_text(gens_js, encoding="utf-8")
+
+        print(f"✅ Generados en {self.output_dir}:")
+        print(f"   block_definitions.js  ({len(defs_js):,} bytes)")
+        print(f"   toolbox_structure.xml ({len(toolbox_xml):,} bytes)")
+        print(f"   generators.js         ({len(gens_js):,} bytes)")
+
+    # ─── Registry → BlockSpec parsing ────────────────────────────────────
+
+    def _build_block_specs(self) -> List[BlockSpec]:
+        specs = []
+        functions = self.registry.get("functions", {})
+
+        for func_path, info in functions.items():
             if not func_path:
                 continue
-            
-            block_type = f"sap_{func_path.replace('.', '_')}"
-            phase = self._get_phase(func_path)
-            color = PHASE_COLORS.get(phase, PHASE_COLORS[999])
-            
-            # Extraer docstring y parámetros
-            params = self._extract_parameters(func_info)
-            
-            # Generar JSON del bloque
-            block_def = {
-                "type": block_type,
-                "message0": self._generate_message0(func_path, params),
-                "args0": self._generate_args0(params),
-                "output": self._get_output_type(func_path),
-                "colour": color,
-                "tooltip": func_info.get('docstring', '')[:100],
-                "helpUrl": ""
-            }
-            
-            js_output += f"  '{block_type}': {json.dumps(block_def, indent=4)},\n"
-        
-        js_output += "};\n"
-        return js_output
-    
-    def _get_phase(self, func_path: str) -> int:
-        """Retorna la fase (1-9) de una función"""
-        return FUNCTION_PHASES.get(func_path, 999)
-    
-    def _extract_parameters(self, func_info: Dict) -> List[BlockParam]:
-        """Extraer parámetros desde docstring"""
-        # Dummy: parsear docstring o usar metadata
-        # Para MVP: usar parámetros hardcodeados por función conocida
+
+            signature = info.get("signature", "")
+            description = info.get("description", "") or info.get("docstring", "")
+            if not signature and not description:
+                continue
+
+            block_type = "sap_" + func_path.replace(".", "_")
+
+            category = info.get("category", "")
+            phase = CATEGORY_PHASE.get(category, 999)
+            if phase == 999:
+                parts = func_path.split(".")
+                for part in parts:
+                    if part in CATEGORY_PHASE:
+                        phase = CATEGORY_PHASE[part]
+                        break
+
+            parts = [p for p in func_path.split(".") if p != "SapModel"]
+            display_name = ".".join(parts[-2:]) if len(parts) >= 2 else func_path
+
+            params = self._parse_params(info)
+
+            notes = info.get("notes", "") or ""
+            param_notes = info.get("parameter_notes", "") or ""
+            combined_notes = notes + " " + param_notes
+            byref_outputs = self._parse_byref_outputs(combined_notes)
+            has_byref = len(byref_outputs) > 0
+            api_call = func_path + "()"
+
+            spec = BlockSpec(
+                block_type=block_type,
+                func_path=func_path,
+                display_name=display_name,
+                phase=phase,
+                params=params,
+                has_byref=has_byref,
+                byref_outputs=byref_outputs,
+                description=description[:200],
+                api_call=api_call,
+            )
+            specs.append(spec)
+
+        return specs
+
+    def _parse_params(self, info: Dict) -> List[ParamDef]:
+        """Parse parameters from signature + parameter_notes."""
         params = []
-        
-        func_path = func_info.get('function_path', '')
-        
-        # Ejemplos hardcodeados (MVP)
-        if func_path == "PropMaterial.SetMaterial":
-            params = [
-                BlockParam("Name", "str", "String", "", description="Nombre del material"),
-                BlockParam("MatType", "int", "Number", description="Tipo: 1=Steel, 2=Concrete, etc")
-            ]
-        elif func_path == "FrameObj.AddByCoord":
-            params = [
-                BlockParam("X1", "float", "Number", 0),
-                BlockParam("Y1", "float", "Number", 0),
-                BlockParam("Z1", "float", "Number", 0),
-                BlockParam("X2", "float", "Number", 0),
-                BlockParam("Y2", "float", "Number", 0),
-                BlockParam("Z2", "float", "Number", 0),
-                BlockParam("Prop", "str", "String", "Default", description="Sección"),
-                BlockParam("Group", "str", "String", "1"),
-            ]
-        
-        return params
-    
-    def _generate_message0(self, func_path: str, params: List[BlockParam]) -> str:
-        """Generar message0 amigable"""
-        parts = func_path.split('.')
-        msg = f"{parts[-1]}"
-        
-        for i, param in enumerate(params):
-            msg += f" {param.name}:%{i+1}"
-        
-        return msg
-    
-    def _generate_args0(self, params: List[BlockParam]) -> List[Dict]:
-        """Generar args0 para Blockly"""
-        args = []
-        for param in params:
-            arg = {
-                "type": "input_value",
-                "name": param.name,
-                "check": param.blockly_check
-            }
-            args.append(arg)
-        return args
-    
-    def _get_output_type(self, func_path: str) -> str:
-        """Retorna tipo output del bloque"""
-        # Create functions retornan String (nombre del objeto)
-        if any(x in func_path for x in ["AddByCoord", "AddCartesian", "Create"]):
-            return "String"
-        return None
-    
-    def _generate_toolbox_xml(self) -> str:
-        """Generar toolbox.xml con 9 categorías de fases"""
-        
-        xml = '<?xml version="1.0" encoding="utf-8"?>\n'
-        xml += '<xml id="toolbox" style="display: none">\n'
-        
-        # Agrupar bloques por fase (incluyendo 999 para "sin fase asignada")
-        phase_blocks = {i: [] for i in range(1, 10)}
-        phase_blocks[999] = []  # Para funciones sin fase asignada
-        
-        functions_dict = self.registry.get('functions', {})
-        for func_path, func_info in functions_dict.items():
-            if not func_path:
+        signature = info.get("signature", "")
+        param_notes = info.get("parameter_notes", "") or ""
+
+        sig_match = re.match(r"\(([^)]*)\)", signature)
+        if not sig_match:
+            return params
+
+        raw_params = [p.strip() for p in sig_match.group(1).split(",") if p.strip()]
+        skip = {"Color", "Notes", "GUID", "CSys", "Temp"}
+
+        for pname in raw_params:
+            if pname in skip:
                 continue
-            
-            phase = self._get_phase(func_path)
-            block_type = f"sap_{func_path.replace('.', '_')}"
-            phase_blocks[phase].append((func_path, block_type))
-        
-        # Generar categorías XML
-        phase_names = {
-            1: "Inicializar",
-            2: "Materiales",
-            3: "Secciones",
-            4: "Geometría",
-            5: "Restricciones",
-            6: "Cargas",
-            7: "Análisis",
-            8: "Resultados",
-            9: "Diseño"
-        }
-        
-        for phase in range(1, 10):
-            phase_name = phase_names.get(phase, f"Fase {phase}")
-            colour = PHASE_COLORS[phase]
-            
-            xml += f'  <category name="{phase_name} ({phase})" colour="{colour}">\n'
-            
-            for func_path, block_type in phase_blocks[phase]:
-                xml += f'    <block type="{block_type}"></block>\n'
-            
-            xml += "  </category>\n"
-        
-        # Categoría Utilities
-        xml += f'  <category name="Utilidades" colour="{PHASE_COLORS[999]}">\n'
-        xml += '    <block type="sap_Select_All"></block>\n'
-        xml += '    <block type="sap_Select_ClearSelection"></block>\n'
-        xml += '  </category>\n'
-        
-        xml += '</xml>\n'
-        return xml
-    
+            pdef = ParamDef(name=pname, param_type="str")
+            pdef = self._infer_param_type(pdef, param_notes, pname)
+            params.append(pdef)
+
+        return params
+
+    def _infer_param_type(self, pdef: ParamDef, notes: str, pname: str) -> ParamDef:
+        """Infer field type from parameter notes and naming conventions."""
+        name_lower = pname.lower()
+
+        if "MatType" in pname or "eMatType" in notes:
+            pdef.param_type = "enum"; pdef.enum_key = "MatType"; pdef.default = "2"
+        elif "Units" in pname or "eUnits" in pname:
+            pdef.param_type = "enum"; pdef.enum_key = "eUnits"; pdef.default = "6"
+        elif "PatternType" in pname or "eLoadPatternType" in notes:
+            pdef.param_type = "enum"; pdef.enum_key = "eLoadPatternType"; pdef.default = "1"
+        elif "ItemType" in pname or "eItemType" in notes:
+            pdef.param_type = "enum"; pdef.enum_key = "eItemType"; pdef.default = "0"
+        elif "DistType" in pname:
+            pdef.param_type = "enum"; pdef.enum_key = "eFrameLoadDistType"; pdef.default = "1"
+        elif pname == "Dir" or ("Dir" in pname and "load" in notes.lower()):
+            pdef.param_type = "enum"; pdef.enum_key = "eFrameLoadDir"; pdef.default = "10"
+        elif "ShellType" in pname:
+            pdef.param_type = "enum"; pdef.enum_key = "eShellType"; pdef.default = "1"
+        elif "CombType" in pname or "ComboType" in pname:
+            pdef.param_type = "enum"; pdef.enum_key = "eCombType"; pdef.default = "0"
+        elif any(name_lower.startswith(prefix) for prefix in
+                 ("x", "y", "z", "t2", "t3", "t", "e", "u", "r", "d", "w", "h", "l", "area", "vol")):
+            pdef.param_type = "float"; pdef.default = "0"
+        elif name_lower in ("tf", "tw", "bftop", "bfbot", "t2b", "tfb", "hweb"):
+            pdef.param_type = "float"; pdef.default = "0"
+        elif any(kw in notes.lower() for kw in ("[l]", "depth", "width", "thickness",
+                                                  "height", "length", "radius")):
+            pdef.param_type = "float"; pdef.default = "0"
+        elif name_lower in ("replace", "relative"):
+            pdef.param_type = "bool"; pdef.default = "true"
+        elif name_lower in ("mytype", "type", "itype", "ntype"):
+            pdef.param_type = "int"; pdef.default = "1"
+        elif any(kw in name_lower for kw in ("name", "prop", "mat", "label",
+                                              "pattern", "case", "combo", "group")):
+            pdef.param_type = "str"; pdef.default = ""
+        else:
+            pdef.param_type = "str"; pdef.default = ""
+
+        return pdef
+
+    def _parse_byref_outputs(self, notes: str) -> List[str]:
+        """Extract ByRef output names from notes like 'Returns [Name, ret_code]'."""
+        match = re.search(r"Returns?\s*\[([^\]]+)\]", notes)
+        if not match:
+            return []
+        parts = [p.strip() for p in match.group(1).split(",")]
+        return [p for p in parts if p.lower() not in ("ret_code", "ret")]
+
+    # ─── block_definitions.js ────────────────────────────────────────────
+
+    def _generate_block_definitions_js(self) -> str:
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+        lines = [
+            "// ===========================================================",
+            "// SAP2000 Block Definitions - Auto-generated",
+            "// Generated: " + ts,
+            "// DO NOT EDIT MANUALLY - run blockly_generator.py to regenerate",
+            "// ===========================================================",
+            "",
+            "function registerSAP2000Blocks() {",
+            "",
+        ]
+
+        for spec in self.block_specs:
+            lines.append(self._block_definition_js(spec))
+
+        lines.append("  console.log('\u2705 ' + Object.keys(Blockly.Blocks)"
+                     ".filter(k => k.startsWith(\"sap_\")).length + ' SAP2000 blocks registered');")
+        lines.append("}")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _block_definition_js(self, spec: BlockSpec) -> str:
+        """Generate Blockly.Blocks[type] = { init: ... } for one block."""
+        colour = PHASE_COLORS.get(spec.phase, PHASE_COLORS[999])
+
+        parts = []
+        parts.append("  // " + spec.display_name)
+        parts.append("  Blockly.Blocks['" + spec.block_type + "'] = {")
+        parts.append("    init: function() {")
+        parts.append("      this.setColour(" + str(colour) + ");")
+
+        if spec.params:
+            first = True
+            for param in spec.params:
+                field_js = self._field_js(param)
+                if first:
+                    parts.append("      this.appendDummyInput()")
+                    parts.append("          .appendField('" + spec.display_name + "')")
+                    parts.append("          .appendField(new Blockly.FieldLabel('" + param.name + ":'))")
+                    parts.append("          " + field_js + ";")
+                    first = False
+                else:
+                    parts.append("      this.appendDummyInput()")
+                    parts.append("          .appendField(new Blockly.FieldLabel('" + param.name + ":'))")
+                    parts.append("          " + field_js + ";")
+        else:
+            parts.append("      this.appendDummyInput()")
+            parts.append("          .appendField('" + spec.display_name + "()');")
+
+        parts.append("      this.setPreviousStatement(true);")
+        parts.append("      this.setNextStatement(true);")
+        tooltip = spec.description.replace("'", "\\'")[:120]
+        parts.append("      this.setTooltip('" + tooltip + "');")
+        parts.append("    }")
+        parts.append("  };")
+        parts.append("")
+
+        return "\n".join(parts)
+
+    def _field_js(self, param: ParamDef, label_prefix: str = "") -> str:
+        """Generate a single field/input for a block parameter."""
+        if param.param_type == "enum" and param.enum_key in ENUM_MAPS:
+            options = ENUM_MAPS[param.enum_key]
+            options_js = json.dumps([[k, v] for k, v in options.items()])
+            return ".appendField(new Blockly.FieldDropdown(" + options_js + "), '" + param.name + "')"
+        elif param.param_type == "float":
+            default_val = param.default or "0"
+            return (".appendField(new Blockly.FieldNumber("
+                    + default_val + ", -Infinity, Infinity, 0.001), '" + param.name + "')")
+        elif param.param_type == "int":
+            default_val = param.default or "0"
+            return (".appendField(new Blockly.FieldNumber("
+                    + default_val + ", -Infinity, Infinity, 1), '" + param.name + "')")
+        elif param.param_type == "bool":
+            default_val = (param.default or "true").upper()
+            return ".appendField(new Blockly.FieldCheckbox('" + default_val + "'), '" + param.name + "')"
+        else:
+            default_val = (param.default or "").replace("'", "\\'")
+            return ".appendField(new Blockly.FieldTextInput('" + default_val + "'), '" + param.name + "')"
+
+    # ─── generators.js ───────────────────────────────────────────────────
+
     def _generate_generators_js(self) -> str:
-        """Generar generators.js — código gen Python de bloques"""
-        
-        js = "// Auto-generado — Generadores Python para cada bloque\n\n"
-        js += "python['sap_File_NewBlank'] = function(block) {\n"
-        js += "  return 'SapModel.File.NewBlank()\\n';\n"
-        js += "};\n\n"
-        
-        js += "python['sap_PropMaterial_SetMaterial'] = function(block) {\n"
-        js += "  var name = Blockly.Python.valueToCode(block, 'Name', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var mat_type = Blockly.Python.valueToCode(block, 'MatType', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  return `SapModel.PropMaterial.SetMaterial(${name}, ${mat_type})\\n`;\n"
-        js += "};\n\n"
-        
-        js += "python['sap_FrameObj_AddByCoord'] = function(block) {\n"
-        js += "  var x1 = Blockly.Python.valueToCode(block, 'X1', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var y1 = Blockly.Python.valueToCode(block, 'Y1', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var z1 = Blockly.Python.valueToCode(block, 'Z1', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var x2 = Blockly.Python.valueToCode(block, 'X2', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var y2 = Blockly.Python.valueToCode(block, 'Y2', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var z2 = Blockly.Python.valueToCode(block, 'Z2', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var prop = Blockly.Python.valueToCode(block, 'Prop', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var group = Blockly.Python.valueToCode(block, 'Group', Blockly.Python.ORDER_MEMBER);\n"
-        js += "  var code = `raw = SapModel.FrameObj.AddByCoord(${x1}, ${y1}, ${z1}, ${x2}, ${y2}, ${z2}, '', ${prop}, ${group})\\n`;\n"
-        js += "  code += `frame_name = raw[0]\\n`;\n"
-        js += "  code += `assert raw[-1] == 0, f'AddByCoord failed: {raw[-1]}'\\n`;\n"
-        js += "  return code;\n"
-        js += "};\n\n"
-        
-        return js
+        ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+        lines = [
+            "// ===========================================================",
+            "// SAP2000 Python Generators - Auto-generated",
+            "// Generated: " + ts,
+            "// DO NOT EDIT MANUALLY",
+            "// ===========================================================",
+            "",
+            "function registerSAP2000Generators(pythonGenerator) {",
+            "",
+        ]
+
+        for spec in self.block_specs:
+            lines.append(self._generator_js(spec))
+
+        lines.append("  console.log('\u2705 SAP2000 Python generators registered');")
+        lines.append("}")
+        lines.append("")
+        return "\n".join(lines)
+
+    def _generator_js(self, spec: BlockSpec) -> str:
+        """Generate python generator function for one block."""
+        # NL = JS newline escape (backslash + n) for Python code strings
+        NL = chr(92) + "n"
+        Q = chr(34)  # double-quote character
+
+        parts = []
+        parts.append("  // " + spec.display_name)
+        parts.append("  pythonGenerator.forBlock['" + spec.block_type
+                     + "'] = function(block, generator) {")
+
+        # Extract field values
+        for param in spec.params:
+            var = self._js_var(param.name)
+            if param.param_type == "enum":
+                parts.append("    var " + var + " = block.getFieldValue('"
+                              + param.name + "') || '" + (param.default or "") + "';")
+            elif param.param_type in ("float", "int"):
+                parts.append("    var " + var + " = block.getFieldValue('"
+                              + param.name + "') || '" + str(param.default or "0") + "';")
+            elif param.param_type == "bool":
+                parts.append("    var " + var + " = block.getFieldValue('"
+                              + param.name + "') === 'TRUE' ? 'True' : 'False';")
+            else:
+                # String: wrap in single quotes for Python
+                parts.append("    var " + var + " = \"'\" + (block.getFieldValue('"
+                              + param.name + "') || '') + \"'\";")
+
+        args_expr = self._build_args_js(spec)
+
+        if spec.has_byref and spec.byref_outputs:
+            parts.append("    var code = '';")
+            parts.append("    code += 'raw = " + spec.func_path
+                         + "(' + " + args_expr + " + ')" + NL + "';")
+            for idx, out in enumerate(spec.byref_outputs):
+                safe_out = re.sub(r"[^a-zA-Z0-9_]", "_", out.lower())
+                parts.append("    code += '" + safe_out
+                              + " = raw[" + str(idx) + "]" + NL + "';")
+            parts.append("    code += 'ret_code = raw[-1]" + NL + "';")
+            parts.append("    code += 'assert ret_code == 0, " + Q
+                         + spec.display_name + " failed: " + Q
+                         + " + str(ret_code)" + NL + "';")
+        elif spec.params:
+            parts.append("    var code = '';")
+            parts.append("    code += 'ret = " + spec.func_path
+                         + "(' + " + args_expr + " + ')" + NL + "';")
+            parts.append("    code += 'assert ret == 0, " + Q
+                         + spec.display_name + " failed: " + Q
+                         + " + str(ret)" + NL + "';")
+        else:
+            parts.append("    var code = '';")
+            parts.append("    code += 'ret = " + spec.func_path + "()" + NL + "';")
+            parts.append("    code += 'assert ret == 0, " + Q
+                         + spec.display_name + " failed" + Q + NL + "';")
+
+        parts.append("    return code;")
+        parts.append("  };")
+        parts.append("")
+        return "\n".join(parts)
+
+    def _build_args_js(self, spec: BlockSpec) -> str:
+        """Build JS expression that produces Python argument string."""
+        arg_parts = [self._js_var(p.name) for p in spec.params]
+        return " + ', ' + ".join(arg_parts) if arg_parts else "''"
+
+    def _js_var(self, name: str) -> str:
+        """Convert param name to safe JS variable name."""
+        return "v_" + re.sub(r"[^a-zA-Z0-9]", "_", name)
+
+    # ─── toolbox_structure.xml ───────────────────────────────────────────
+
+    def _generate_toolbox_xml(self) -> str:
+        lines = [
+            '<?xml version="1.0" encoding="utf-8"?>',
+            '<xml id="toolbox" style="display: none">',
+        ]
+
+        phase_blocks: Dict[int, List[BlockSpec]] = {i: [] for i in range(1, 10)}
+        phase_blocks[999] = []
+
+        for spec in self.block_specs:
+            phase_blocks.setdefault(spec.phase, []).append(spec)
+
+        for phase_num in range(1, 10):
+            name = PHASE_NAMES.get(phase_num, "Fase " + str(phase_num))
+            colour = PHASE_COLORS.get(phase_num, PHASE_COLORS[999])
+            lines.append('  <category name="' + name + '" colour="' + str(colour) + '">')
+            for spec in phase_blocks.get(phase_num, []):
+                lines.append('    <block type="' + spec.block_type + '"></block>')
+            lines.append("  </category>")
+
+        utility_blocks = phase_blocks.get(999, [])
+        if utility_blocks:
+            lines.append('  <category name="Utilidades" colour="' + str(PHASE_COLORS[999]) + '">')
+            for spec in utility_blocks:
+                lines.append('    <block type="' + spec.block_type + '"></block>')
+            lines.append("  </category>")
+
+        lines.append("</xml>")
+        return "\n".join(lines)
 
 
 def main():
     """CLI entry point"""
     import sys
-    
-    # Detectar ubicación relativa al proyecto
+
     script_dir = Path(__file__).resolve().parent
-    project_root = script_dir.parent.parent  # scripts/blockly/ → scripts/ → project_root/
-    
+    project_root = script_dir.parent.parent  # scripts/blockly/ -> scripts/ -> project_root/
+
     registry_path = sys.argv[1] if len(sys.argv) > 1 else str(project_root / "scripts" / "registry.json")
     output_dir = sys.argv[2] if len(sys.argv) > 2 else str(script_dir)
-    
+
     generator = BlocklyBlockGenerator(registry_path)
     generator.generate_all(output_dir)
 

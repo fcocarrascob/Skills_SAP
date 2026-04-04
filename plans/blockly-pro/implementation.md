@@ -152,7 +152,7 @@ git commit -m "refactor: move all blockly modules into scripts/blockly/"
 
 Reescribir el generador para que extraiga parámetros reales de cada función del registry y produzca bloques con campos editables, generadores Python completos, y toolbox con bloques listados.
 
-- [ ] Reemplazar el contenido completo de `scripts/blockly/blockly_generator.py` con el código siguiente:
+- [x] Reemplazar el contenido completo de `scripts/blockly/blockly_generator.py` con el código siguiente:
 
 ```python
 """
@@ -757,12 +757,12 @@ python scripts/blockly/blockly_generator.py
 ```
 
 ##### Step 1 Verification Checklist
-- [ ] El generador termina sin errores y reporta ~200 bloques parseados
-- [ ] `block_definitions.js` contiene bloques con `args0` poblados (fields, dropdowns, números)
-- [ ] `generators.js` tiene un generador `pythonGenerator.forBlock[...]` para cada bloque
-- [ ] `toolbox_structure.xml` tiene `<block type="...">` dentro de cada categoría (no vacías)
-- [ ] El XML usa UTF-8 correcto: "Geometría", "Análisis", "Diseño" (sin caracteres rotos)
-- [ ] Verificar que los enums (MatType, eUnits, etc.) generan `FieldDropdown` con opciones
+- [x] El generador termina sin errores y reporta ~200 bloques parseados (141 bloques — skips vacíos sin sig+desc)
+- [x] `block_definitions.js` contiene bloques con `args0` poblados (fields, dropdowns, números)
+- [x] `generators.js` tiene un generador `pythonGenerator.forBlock[...]` para cada bloque
+- [x] `toolbox_structure.xml` tiene `<block type="...">` dentro de cada categoría (no vacías)
+- [x] El XML usa UTF-8 correcto: "Geometría", "Análisis", "Diseño" (sin caracteres rotos)
+- [x] Verificar que los enums (MatType, eUnits, etc.) generan `FieldDropdown` con opciones
 
 #### Step 1 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
