@@ -1,337 +1,290 @@
 """
-Blockly XML → Python Transpiler
-================================
+Blockly XML → Python Transpiler (data-driven)
+===============================================
 Traduce workspace Blockly (XML) a código Python ejecutable para SAP2000.
+Usa el registry como fuente de verdad para firmas y patrones ByRef.
 
 Flujo:
-  1. Parsear XML del workspace
-  2. Validar orden de fases (1→2→3...→9)
-  3. Generar Python snippet por bloque
-  4. Ensamblar script completo
-  5. Opcional: Inyectar setup/teardown
-
-Ejemplo:
-    transpiler = BlocklyTranspiler()
-    python_code = transpiler.xml_to_python(blockly_xml_string)
+  1. Cargar registry → construir mapa de bloques
+  2. Parsear XML del workspace
+  3. Validar orden de fases (warning, no error)
+  4. Generar Python snippet por bloque usando metadata
+  5. Ensamblar script completo
 """
 
-import xml.etree.ElementTree as ET
-from typing import List, Dict, Any, Tuple
+import json
 import re
+import warnings
+import xml.etree.ElementTree as ET
+from pathlib import Path
+from typing import Dict, List, Any, Tuple, Optional
 
 
-class BlockDefinition:
-    """Definición de cómo traducir un tipo de bloque a Python"""
-    
-    def __init__(self, block_type: str, python_template: str, phase: int = 0):
+# Phase mapping by category (same as generator)
+CATEGORY_PHASE = {
+    "File": 1,
+    "PropMaterial": 2,
+    "PropFrame": 3, "PropArea": 3, "Properties": 3,
+    "Object_Model": 4, "FrameObj": 4, "AreaObj": 4, "Edit": 4,
+    "Constraints": 5, "Groups": 5, "Select": 5,
+    "Load_Patterns": 6, "Load_Cases": 6, "RespCombo": 6, "Mass_Source": 6,
+    "Analyze": 7,
+    "Analysis_Results": 8, "Database_Tables": 8,
+    "Design": 9,
+    "Functions": 999,
+}
+
+
+class BlockMeta:
+    """Metadata for one block type, derived from registry."""
+
+    def __init__(self, block_type: str, func_path: str, phase: int,
+                 param_names: List[str], has_byref: bool,
+                 byref_outputs: List[str], description: str):
         self.block_type = block_type
-        self.python_template = python_template
+        self.func_path = func_path  # e.g. "SapModel.File.NewBlank"
         self.phase = phase
+        self.param_names = param_names  # ordered parameter names (from signature)
+        self.has_byref = has_byref
+        self.byref_outputs = byref_outputs
+        self.description = description
 
 
 class BlocklyTranspiler:
-    """Transpilar Blockly XML → Python"""
-    
-    # Mapeo: block_type → Python generation function
-    BLOCK_GENERATORS = {
-        'sap_File_NewBlank': lambda block, ctx: 'ret = SapModel.File.NewBlank()\nassert ret == 0\n',
-        'sap_File_Save': lambda block, ctx: 'ret = SapModel.File.Save(sap_temp_dir + r"\\model.sdb")\nassert ret == 0\n',
-        'sap_Select_All': lambda block, ctx: 'ret = SapModel.Select.All()\nassert ret == 0\n',
-    }
-    
-    # Mapeo: block_type → phase
-    BLOCK_PHASES = {
-        'sap_File_NewBlank': 1,
-        'sap_File_Save': 1,
-        'sap_PropMaterial_SetMaterial': 2,
-        'sap_PropFrame_SetRectangle': 3,
-        'sap_FrameObj_AddByCoord': 4,
-        'sap_PointObj_SetRestraint': 5,
-        'sap_LoadPatterns_Add': 6,
-        'sap_Analyze_RunAnalysis': 7,
-        'sap_Results_JointDispl': 8,
-        'sap_DesignSteel_StartDesign': 9,
-    }
-    
-    def __init__(self):
-        self.blocks = []
-        self.phase_order = []
-        self.variables = {}  # track variable names (names of created objects)
-    
+    """Data-driven Blockly XML → Python transpiler."""
+
+    def __init__(self, registry_path: Optional[str] = None):
+        if registry_path is None:
+            # Auto-detect registry relative to this file
+            here = Path(__file__).resolve().parent
+            registry_path = str(here.parent / "registry.json")
+
+        self.registry_path = Path(registry_path)
+        self.block_map: Dict[str, BlockMeta] = {}
+        self._load_registry()
+
+    def _load_registry(self):
+        """Load registry.json and build block_type → BlockMeta map."""
+        if not self.registry_path.exists():
+            warnings.warn(f"Registry not found: {self.registry_path}")
+            return
+
+        with open(self.registry_path, "r", encoding="utf-8") as f:
+            registry = json.load(f)
+
+        for func_path, info in registry.get("functions", {}).items():
+            if not func_path:
+                continue
+
+            short_path = func_path.replace("SapModel.", "")
+            block_type = "sap_" + short_path.replace(".", "_")
+
+            category = info.get("category", "")
+            phase = CATEGORY_PHASE.get(category, 999)
+
+            # Parse param names from signature
+            param_names = self._parse_signature_params(info.get("signature", ""))
+
+            # ByRef detection
+            notes = info.get("notes", "")
+            has_byref = "ByRef" in notes or "Returns [" in notes
+            byref_outputs = self._parse_byref_outputs(notes)
+
+            self.block_map[block_type] = BlockMeta(
+                block_type=block_type,
+                func_path=func_path,
+                phase=phase,
+                param_names=param_names,
+                has_byref=has_byref,
+                byref_outputs=byref_outputs,
+                description=info.get("description", ""),
+            )
+
+    def _parse_signature_params(self, signature: str) -> List[str]:
+        match = re.match(r"\(([^)]*)\)", signature)
+        if not match:
+            return []
+        raw = [p.strip() for p in match.group(1).split(",") if p.strip()]
+        # Filter out optional/internal params
+        skip = {"Color", "Notes", "GUID", "CSys"}
+        return [p for p in raw if p not in skip]
+
+    def _parse_byref_outputs(self, notes: str) -> List[str]:
+        match = re.search(r"Returns?\s*\[([^\]]+)\]", notes)
+        if not match:
+            return []
+        parts = [p.strip() for p in match.group(1).split(",")]
+        return [p for p in parts if p.lower() != "ret_code"]
+
+    # ─── Main transpilation ──────────────────────────────────────────────
+
     def xml_to_python(self, xml_string: str, validate_phases: bool = True) -> str:
-        """Transpilar XML workspace → Python code
-        
+        """Transpile Blockly workspace XML → Python code.
+
         Args:
-            xml_string: XML serializado del workspace Blockly
-            validate_phases: Si True, valida que las fases estén en orden correcto
-        
+            xml_string: Serialized XML from Blockly workspace
+            validate_phases: If True, warn (not error) when phases are out of order
+
         Returns:
-            Código Python ejecutable
-        
-        Raises:
-            ValueError: Si el XML es inválido o las fases están fuera de orden
+            Executable Python code string
         """
-        
+        if not xml_string or not xml_string.strip():
+            return "# Arrastra bloques desde el toolbox para crear un script\n"
+
         try:
             root = ET.fromstring(xml_string)
         except ET.ParseError as e:
-            raise ValueError(f"XML inválido: {e}")
-        
-        # Parsear bloques
-        self.blocks = []
-        self.phase_order = []
-        
-        for block_elem in root.findall('.//block'):
-            block_info = self._parse_block(block_elem)
-            self.blocks.append(block_info)
-            phase = self.BLOCK_PHASES.get(block_info['type'], 0)
-            if phase > 0:
-                self.phase_order.append(phase)
-        
-        # Validar orden de fases
+            return f"# Error: XML inválido — {e}\n"
+
+        # Parse all top-level blocks (follow next chains)
+        blocks = self._collect_blocks(root)
+
+        if not blocks:
+            return "# Arrastra bloques desde el toolbox para crear un script\n"
+
+        # Phase validation (warning only)
         if validate_phases:
-            self._validate_phase_order()
-        
-        # Generar Python
-        python_code = self._generate_python_code()
-        
-        return python_code
-    
-    def _parse_block(self, block_elem: ET.Element) -> Dict[str, Any]:
-        """Parsear un elemento block XML"""
-        
-        block_type = block_elem.get('type')
-        block_id = block_elem.get('id')
-        
-        # Extraer campos (field)
+            self._check_phase_order(blocks)
+
+        # Generate Python
+        return self._assemble_python(blocks)
+
+    def _collect_blocks(self, root: ET.Element) -> List[Dict[str, Any]]:
+        """Collect all blocks from XML, following <next> chains."""
+        blocks = []
+
+        for block_elem in root.findall("block"):
+            self._walk_chain(block_elem, blocks)
+
+        return blocks
+
+    def _walk_chain(self, elem: ET.Element, out: List[Dict]):
+        """Walk a block chain (block → next → block → next ...)."""
+        current = elem
+        while current is not None:
+            info = self._parse_block(current)
+            out.append(info)
+
+            # Follow <next><block> chain
+            next_elem = current.find("next")
+            current = next_elem.find("block") if next_elem is not None else None
+
+    def _parse_block(self, elem: ET.Element) -> Dict[str, Any]:
+        """Parse one <block> element into a dict."""
+        block_type = elem.get("type", "")
+
+        # Extract <field> values
         fields = {}
-        for field_elem in block_elem.findall('field'):
-            field_name = field_elem.get('name')
-            field_value = field_elem.text or ''
-            fields[field_name] = field_value
-        
-        # Extraer valores (input_value)
-        inputs = {}
-        for input_elem in block_elem.findall('value'):
-            input_name = input_elem.get('name')
-            # Buscar bloque anidado
-            inner_block = input_elem.find('block')
-            if inner_block:
-                inputs[input_name] = self._parse_block(inner_block)
-            else:
-                inputs[input_name] = None
-        
-        return {
-            'type': block_type,
-            'id': block_id,
-            'fields': fields,
-            'inputs': inputs,
-        }
-    
-    def _validate_phase_order(self):
-        """Validar que las fases estén en orden creciente (sin saltos)"""
-        if not self.phase_order:
-            return
-        
-        # Verificar orden: cada fase debe ser >= anterior
-        for i in range(1, len(self.phase_order)):
-            if self.phase_order[i] < self.phase_order[i-1]:
-                raise ValueError(
-                    f"Fase fuera de orden: fase {self.phase_order[i-1]} "
-                    f"seguida de fase {self.phase_order[i]}. "
-                    f"Las fases deben estar en orden: 1→2→3→...→9"
+        for field_elem in elem.findall("field"):
+            fname = field_elem.get("name", "")
+            fval = field_elem.text or ""
+            fields[fname] = fval
+
+        return {"type": block_type, "fields": fields}
+
+    def _check_phase_order(self, blocks: List[Dict]):
+        """Warn if phases are out of order."""
+        phases = []
+        for b in blocks:
+            meta = self.block_map.get(b["type"])
+            if meta and meta.phase < 999:
+                phases.append((meta.phase, meta.block_type))
+
+        for i in range(1, len(phases)):
+            if phases[i][0] < phases[i - 1][0]:
+                warnings.warn(
+                    f"Fase fuera de orden: {phases[i-1][1]} (fase {phases[i-1][0]}) "
+                    f"seguido de {phases[i][1]} (fase {phases[i][0]})"
                 )
-    
-    def _generate_python_code(self) -> str:
-        """Generar script Python completo"""
-        
+
+    # ─── Python code assembly ──────────────────────────────────────────
+
+    def _assemble_python(self, blocks: List[Dict]) -> str:
         lines = [
             "# Auto-generado por Blockly Visual Scripter",
-            "# NO editar manualmente — regenerado cada ejecución",
+            "# Variables pre-inyectadas: SapModel, SapObject, result, sap_temp_dir",
             "",
         ]
-        
-        # Si no hay bloques, dar instrucción
-        if not self.blocks:
-            lines.append("# Arrastra bloques desde el toolbox para crear un script")
-            return "\n".join(lines)
-        
-        lines.extend([
-            "# Variables pre-inyectadas:",
-            "# - SapModel: modelo SAP2000 activo",
-            "# - SapObject: aplicación SAP2000",
-            "# - result: dict para escribir outputs",
-            "# - sap_temp_dir: directorio temporal",
-            "",
-            "result = {}",
-            "",
-        ])
-        
-        # Generar código para cada bloque
-        for i, block_info in enumerate(self.blocks):
-            block_code = self._generate_block_code(block_info)
-            if block_code:
-                lines.append(f"# Bloque {i+1}")
-                lines.append(block_code)
-                lines.append("")
-        
+
+        for i, block in enumerate(blocks):
+            code = self._block_to_python(block, i + 1)
+            lines.append(code)
+            lines.append("")
+
         return "\n".join(lines)
-    
-    def _generate_block_code(self, block_info: Dict[str, Any]) -> str:
-        """Generar Python para un bloque específico"""
-        
-        block_type = block_info['type']
-        fields = block_info['fields']
-        inputs = block_info['inputs']
-        
-        # Log: qué bloque estamos procesando
-        # print(f"DEBUG: Procesando bloque tipo={block_type}, fields={fields}")
-        
-        # Caso 1: File.NewBlank
-        if 'NewBlank' in block_type:
-            return 'ret = SapModel.File.NewBlank()\nassert ret == 0, "NewBlank failed"'
-        
-        # Caso 2: File.Save
-        elif 'Save' in block_type:
-            file_path = fields.get('FilePath', 'model.sdb')
-            return f'ret = SapModel.File.Save(sap_temp_dir + r"\\{file_path}")\nassert ret == 0, "File.Save failed"'
-        
-        # Caso 3: PropMaterial.SetMaterial
-        elif 'SetMaterial' in block_type and 'PropMaterial' in block_type:
-            name = fields.get('Name', fields.get('NAME', 'MAT1'))
-            mat_type = fields.get('MatType', fields.get('TYPE', '2'))
-            return f'ret = SapModel.PropMaterial.SetMaterial("{name}", {mat_type})\nassert ret == 0, "SetMaterial failed"'
-        
-        # Caso 4: PropFrame.SetRectangle
-        elif 'SetRectangle' in block_type or 'Rectang' in block_type:
-            name = fields.get('Name', fields.get('NAME', 'SEC1'))
-            material = fields.get('Material', 'CONC')
-            t3 = fields.get('T3', '0.3')
-            t2 = fields.get('T2', '0.3')
-            return f'ret = SapModel.PropFrame.SetRectangle("{name}", "{material}", {t3}, {t2})\nassert ret == 0, "SetRectangle failed"'
-        
-        # Caso 5: FrameObj.AddByCoord
-        elif 'AddByCoord' in block_type and 'Frame' in block_type:
-            x1 = fields.get('X1', '0')
-            y1 = fields.get('Y1', '0')
-            z1 = fields.get('Z1', '0')
-            x2 = fields.get('X2', '0')
-            y2 = fields.get('Y2', '0')
-            z2 = fields.get('Z2', '10')
-            prop = fields.get('Prop', 'Default')
-            group = fields.get('Group', '1')
-            
-            code = (
-                f'raw = SapModel.FrameObj.AddByCoord({x1}, {y1}, {z1}, {x2}, {y2}, {z2}, "", "{prop}", "{group}")\n'
-                f'frame_name = raw[0]\n'
-                f'ret_code = raw[-1]\n'
-                f'assert ret_code == 0, f"AddByCoord failed: {{ret_code}}"\n'
-                f'result["frame_name"] = frame_name'
+
+    def _block_to_python(self, block: Dict, index: int) -> str:
+        """Generate Python code for one block."""
+        block_type = block["type"]
+        fields = block["fields"]
+
+        meta = self.block_map.get(block_type)
+        if meta is None:
+            return f"# Bloque desconocido: {block_type}"
+
+        comment = f"# [{index}] {meta.description or meta.func_path}"
+
+        # Build argument list from fields
+        args = self._build_args(meta, fields)
+
+        if meta.has_byref and meta.byref_outputs:
+            # ByRef pattern
+            args_str = ", ".join(args) if args else ""
+            call = f"raw = {meta.func_path}({args_str})"
+            output_lines = [comment, call]
+            for j, out_name in enumerate(meta.byref_outputs):
+                safe = out_name.lower().replace(" ", "_")
+                output_lines.append(f"{safe} = raw[{j}]")
+            output_lines.append("ret_code = raw[-1]")
+            output_lines.append(
+                f'assert ret_code == 0, f"{meta.func_path} failed: {{ret_code}}"'
             )
-            return code
-        
-        # Caso 6: PointObj.AddCartesian
-        elif 'AddCartesian' in block_type:
-            x = fields.get('X', '0')
-            y = fields.get('Y', '0')
-            z = fields.get('Z', '0')
-            name = fields.get('PointName', '')
-            
-            code = (
-                f'raw = SapModel.PointObj.AddCartesian({x}, {y}, {z}, "", "{name}")\n'
-                f'point_name = raw[0]\n'
-                f'ret_code = raw[-1]\n'
-                f'assert ret_code == 0, f"AddCartesian failed: {{ret_code}}"\n'
-                f'result["point_name"] = point_name'
-            )
-            return code
-        
-        # Caso 7: PointObj.SetRestraint
-        elif 'SetRestraint' in block_type:
-            point_name = fields.get('PointName', 'all')
-            ux = '1' if fields.get('UX') == 'true' else '0'
-            uy = '1' if fields.get('UY') == 'true' else '0'
-            uz = '1' if fields.get('UZ') == 'true' else '0'
-            rx = '1' if fields.get('RX') == 'true' else '0'
-            ry = '1' if fields.get('RY') == 'true' else '0'
-            rz = '1' if fields.get('RZ') == 'true' else '0'
-            
-            code = (
-                f'ret = SapModel.PointObj.SetRestraint("{point_name}", {ux}, {uy}, {uz}, {rx}, {ry}, {rz})\n'
-                f'assert ret == 0, "SetRestraint failed"'
-            )
-            return code
-        
-        # Caso 8: Analyze.RunAnalysis
-        elif 'RunAnalysis' in block_type:
-            return (
-                'ret = SapModel.Analyze.RunAnalysis()\n'
-                'assert ret == 0, "RunAnalysis failed"'
-            )
-        
-        # Caso 9: Select.All
-        elif 'Select_All' in block_type or 'SelectAll' in block_type:
-            return (
-                'ret = SapModel.Select.All()\n'
-                'assert ret == 0, "Select.All failed"'
-            )
-        
-        # Default: Return pass con tipo de bloque en comentario
+            return "\n".join(output_lines)
         else:
-            return f'# Bloque no implementado: {block_type}'
-    
-    def validate_syntax(self, python_code: str) -> Tuple[bool, str]:
-        """Validar sintaxis Python generado
-        
-        Returns:
-            (is_valid, error_message)
-        """
+            # Simple pattern
+            args_str = ", ".join(args) if args else ""
+            call = f"ret = {meta.func_path}({args_str})"
+            assertion = f'assert ret == 0, f"{meta.func_path} failed: {{ret}}"'
+            return f"{comment}\n{call}\n{assertion}"
+
+    def _build_args(self, meta: BlockMeta, fields: Dict[str, str]) -> List[str]:
+        """Build Python argument list from block fields and block metadata."""
+        args = []
+        for pname in meta.param_names:
+            value = fields.get(pname, "")
+
+            if not value:
+                # Try common alternate field names
+                value = fields.get(pname.upper(), "")
+                if not value:
+                    value = fields.get(pname.lower(), "")
+
+            # Determine if value should be quoted
+            if self._looks_numeric(value):
+                args.append(value)
+            elif value.lower() in ("true", "false"):
+                args.append(value.capitalize())
+            elif value == "":
+                args.append('""')
+            else:
+                # String — quote it
+                safe = value.replace("\\", "\\\\").replace('"', '\\"')
+                args.append(f'"{safe}"')
+
+        return args
+
+    def _looks_numeric(self, value: str) -> bool:
+        """Check if value looks like a number."""
         try:
-            compile(python_code, '<blockly>', 'exec')
+            float(value)
+            return True
+        except (ValueError, TypeError):
+            return False
+
+    def validate_syntax(self, python_code: str) -> Tuple[bool, str]:
+        """Validate Python syntax."""
+        try:
+            compile(python_code, "<blockly>", "exec")
             return (True, "")
         except SyntaxError as e:
             return (False, str(e))
-
-
-def example_usage():
-    """Ejemplo de uso"""
-    
-    # XML de ejemplo (workspace Blockly)
-    blockly_xml = '''<?xml version="1.0" encoding="utf-8"?>
-    <xml>
-      <block type="sap_File_NewBlank" id="1">
-        <field name="Name">NewBlank</field>
-      </block>
-      <block type="sap_PropMaterial_SetMaterial" id="2">
-        <field name="Name">CONC</field>
-        <field name="MatType">2</field>
-      </block>
-      <block type="sap_FrameObj_AddByCoord" id="3">
-        <field name="X1">0</field>
-        <field name="Y1">0</field>
-        <field name="Z1">0</field>
-        <field name="X2">0</field>
-        <field name="Y2">0</field>
-        <field name="Z2">10</field>
-        <field name="Prop">SEC1</field>
-        <field name="Group">1</field>
-      </block>
-    </xml>
-    '''
-    
-    transpiler = BlocklyTranspiler()
-    python_code = transpiler.xml_to_python(blockly_xml)
-    
-    print("=== Generated Python Code ===")
-    print(python_code)
-    print()
-    
-    # Validar
-    is_valid, error = transpiler.validate_syntax(python_code)
-    print(f"Validez sintaxis: {is_valid}")
-    if error:
-        print(f"Error: {error}")
-
-
-if __name__ == "__main__":
-    example_usage()

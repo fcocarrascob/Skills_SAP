@@ -778,7 +778,7 @@ git commit -m "feat(blockly): rewrite generator with parametric blocks from regi
 
 Reemplazar los `if/elif` hardcodeados por un sistema data-driven que use el registry para generar código Python correcto para cualquier bloque.
 
-- [ ] Reemplazar el contenido completo de `scripts/blockly/blockly_transpiler.py` con el siguiente código:
+- [x] Reemplazar el contenido completo de `scripts/blockly/blockly_transpiler.py` con el siguiente código:
 
 ```python
 """
@@ -1074,12 +1074,12 @@ class BlocklyTranspiler:
 ```
 
 ##### Step 2 Verification Checklist
-- [ ] `from blockly_transpiler import BlocklyTranspiler` funciona sin errores
-- [ ] `BlocklyTranspiler()` carga el registry automáticamente (auto-detect path)
-- [ ] XML con bloques de distintas fases genera Python correcto con el patrón `ret = SapModel.X.Y(...)`
-- [ ] Funciones ByRef (ej: AddByCoord) generan el patrón `raw = ...; name = raw[0]; ret_code = raw[-1]`
-- [ ] Fases fuera de orden generan `warnings.warn()` pero NO `ValueError`
-- [ ] XML vacío retorna mensaje de placeholder (no crash)
+- [x] `from blockly_transpiler import BlocklyTranspiler` funciona sin errores
+- [x] `BlocklyTranspiler()` carga el registry automáticamente (auto-detect path)
+- [x] XML con bloques de distintas fases genera Python correcto con el patrón `ret = SapModel.X.Y(...)`
+- [x] Funciones ByRef (ej: AddByCoord) generan el patrón `raw = ...; name = raw[0]; ret_code = raw[-1]`
+- [x] Fases fuera de orden generan `warnings.warn()` pero NO `ValueError`
+- [x] XML vacío retorna mensaje de placeholder (no crash)
 
 #### Step 2 STOP & COMMIT
 **STOP & COMMIT:** Agent must stop here and wait for the user to test, stage, and commit the change.
