@@ -272,8 +272,8 @@ class BlocklyScripterApp(QMainWindow):
                 try:
                     python_code = self.transpiler.xml_to_python(xml)
                     self.code_preview.setPlainText(python_code)
-                except Exception:
-                    pass
+                except Exception as e:
+                    self._log(f"Preview error: {e}")
             else:
                 self.code_preview.clear()
             self.editor.get_block_count(

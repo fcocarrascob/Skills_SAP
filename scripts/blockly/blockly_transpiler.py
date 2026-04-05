@@ -76,8 +76,8 @@ class BlocklyTranspiler:
             if not func_path:
                 continue
 
-            short_path = func_path.replace("SapModel.", "")
-            block_type = "sap_" + short_path.replace(".", "_")
+            # Must match blockly_generator.py: "sap_" + full path with dots→underscores
+            block_type = "sap_" + func_path.replace(".", "_")
 
             category = info.get("category", "")
             phase = CATEGORY_PHASE.get(category, 999)
@@ -131,8 +131,12 @@ class BlocklyTranspiler:
         if not xml_string or not xml_string.strip():
             return "# Arrastra bloques desde el toolbox para crear un script\n"
 
+        # Strip Blockly XML namespaces (Blockly v10 serializes with xmlns=...)
+        # so ElementTree can find tags without namespace prefix
+        xml_clean = re.sub(r'\s+xmlns(?::\w+)?="[^"]*"', "", xml_string)
+
         try:
-            root = ET.fromstring(xml_string)
+            root = ET.fromstring(xml_clean)
         except ET.ParseError as e:
             return f"# Error: XML inválido — {e}\n"
 
