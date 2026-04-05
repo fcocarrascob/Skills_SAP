@@ -1,6 +1,6 @@
 // ===========================================================
 // SAP2000 Python Generators - Auto-generated
-// Generated: 2026-04-04 09:59
+// Generated: 2026-04-04 22:39
 // DO NOT EDIT MANUALLY
 // ===========================================================
 
@@ -29,7 +29,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_E = block.getFieldValue('E') || '0';
     var v_U = block.getFieldValue('U') || '0';
-    var v_A = "'" + (block.getFieldValue('A') || '') + "'";
+    var v_A = block.getFieldValue('A') || '0';
     var code = '';
     code += 'ret = SapModel.PropMaterial.SetMPIsotropic(' + v_Name + ', ' + v_E + ', ' + v_U + ', ' + v_A + ')\n';
     code += 'assert ret == 0, "PropMaterial.SetMPIsotropic failed: " + str(ret)\n';
@@ -49,8 +49,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetRectangle
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetRectangle'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var code = '';
@@ -61,8 +61,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetCircle
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetCircle'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var code = '';
     code += 'ret = SapModel.PropFrame.SetCircle(' + v_Name + ', ' + v_MatProp + ', ' + v_T3 + ')\n';
@@ -72,8 +72,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetISection
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetISection'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var v_TF = block.getFieldValue('TF') || '0';
@@ -88,8 +88,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetTube
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetTube'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var v_TF = block.getFieldValue('TF') || '0';
@@ -124,7 +124,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Y = block.getFieldValue('Y') || '0';
     var v_Z = block.getFieldValue('Z') || '0';
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var v_MergeOff = "'" + (block.getFieldValue('MergeOff') || '') + "'";
     var v_MergeNumber = "'" + (block.getFieldValue('MergeNumber') || '') + "'";
     var code = '';
@@ -159,7 +159,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Point2 = "'" + (block.getFieldValue('Point2') || '') + "'";
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'ret = SapModel.FrameObj.AddByPoint(' + v_Point1 + ', ' + v_Point2 + ', ' + v_Name + ', ' + v_PropName + ', ' + v_UserName + ')\n';
     code += 'assert ret == 0, "FrameObj.AddByPoint failed: " + str(ret)\n';
@@ -195,7 +195,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_z2 = block.getFieldValue('z2') || '0';
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'ret = SapModel.FrameObj.AddByCoord(' + v_x1 + ', ' + v_y1 + ', ' + v_z1 + ', ' + v_x2 + ', ' + v_y2 + ', ' + v_z2 + ', ' + v_Name + ', ' + v_PropName + ', ' + v_UserName + ')\n';
     code += 'assert ret == 0, "FrameObj.AddByCoord failed: " + str(ret)\n';
@@ -232,7 +232,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_IncludeDrillingDOF = "'" + (block.getFieldValue('IncludeDrillingDOF') || '') + "'";
     var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_MatAng = "'" + (block.getFieldValue('MatAng') || '') + "'";
-    var v_Thickness = block.getFieldValue('Thickness') || '0';
+    var v_Thickness = "'" + (block.getFieldValue('Thickness') || '') + "'";
     var v_Bending = "'" + (block.getFieldValue('Bending') || '') + "'";
     var code = '';
     code += 'ret = SapModel.PropArea.SetShell_1(' + v_Name + ', ' + v_ShellType + ', ' + v_IncludeDrillingDOF + ', ' + v_MatProp + ', ' + v_MatAng + ', ' + v_Thickness + ', ' + v_Bending + ')\n';
@@ -258,7 +258,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Z = block.getFieldValue('Z') || '0';
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'ret = SapModel.AreaObj.AddByCoord(' + v_NumberPoints + ', ' + v_X + ', ' + v_Y + ', ' + v_Z + ', ' + v_Name + ', ' + v_PropName + ', ' + v_UserName + ')\n';
     code += 'assert ret == 0, "AreaObj.AddByCoord failed: " + str(ret)\n';
@@ -279,14 +279,14 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_MyType = block.getFieldValue('MyType') || '1';
     var v_S = "'" + (block.getFieldValue('S') || '') + "'";
     var v_SimpleSpringType = "'" + (block.getFieldValue('SimpleSpringType') || '') + "'";
-    var v_LinkProp = block.getFieldValue('LinkProp') || '0';
+    var v_LinkProp = "'" + (block.getFieldValue('LinkProp') || '') + "'";
     var v_Face = "'" + (block.getFieldValue('Face') || '') + "'";
     var v_SpringLocalOneType = "'" + (block.getFieldValue('SpringLocalOneType') || '') + "'";
     var v_Dir = block.getFieldValue('Dir') || '10';
     var v_Outward = "'" + (block.getFieldValue('Outward') || '') + "'";
     var v_Vec = "'" + (block.getFieldValue('Vec') || '') + "'";
     var v_Ang = "'" + (block.getFieldValue('Ang') || '') + "'";
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.AreaObj.SetSpring(' + v_Name + ', ' + v_MyType + ', ' + v_S + ', ' + v_SimpleSpringType + ', ' + v_LinkProp + ', ' + v_Face + ', ' + v_SpringLocalOneType + ', ' + v_Dir + ', ' + v_Outward + ', ' + v_Vec + ', ' + v_Ang + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -312,7 +312,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_NumberItems = "'" + (block.getFieldValue('NumberItems') || '') + "'";
     var v_Period = "'" + (block.getFieldValue('Period') || '') + "'";
     var v_Value = "'" + (block.getFieldValue('Value') || '') + "'";
-    var v_DampRatio = block.getFieldValue('DampRatio') || '0';
+    var v_DampRatio = "'" + (block.getFieldValue('DampRatio') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Func.FuncRS.SetUser(' + v_Name + ', ' + v_NumberItems + ', ' + v_Period + ', ' + v_Value + ', ' + v_DampRatio + ')\n';
     code += 'assert ret == 0, "FuncRS.SetUser failed: " + str(ret)\n';
@@ -325,7 +325,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_NumberItems = "'" + (block.getFieldValue('NumberItems') || '') + "'";
     var v_Period = "'" + (block.getFieldValue('Period') || '') + "'";
     var v_Value = "'" + (block.getFieldValue('Value') || '') + "'";
-    var v_DampRatio = block.getFieldValue('DampRatio') || '0';
+    var v_DampRatio = "'" + (block.getFieldValue('DampRatio') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Func.FuncRS.GetUser(' + v_Name + ', ' + v_NumberItems + ', ' + v_Period + ', ' + v_Value + ', ' + v_DampRatio + ')\n';
     code += 'assert ret == 0, "FuncRS.GetUser failed: " + str(ret)\n';
@@ -345,7 +345,7 @@ function registerSAP2000Generators(pythonGenerator) {
   pythonGenerator.forBlock['sap_SapModel_LoadCases_ResponseSpectrum_SetLoads'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_NumberLoads = "'" + (block.getFieldValue('NumberLoads') || '') + "'";
-    var v_LoadName = block.getFieldValue('LoadName') || '0';
+    var v_LoadName = "'" + (block.getFieldValue('LoadName') || '') + "'";
     var v_Func = "'" + (block.getFieldValue('Func') || '') + "'";
     var v_SF = "'" + (block.getFieldValue('SF') || '') + "'";
     var v_Ang = "'" + (block.getFieldValue('Ang') || '') + "'";
@@ -359,7 +359,7 @@ function registerSAP2000Generators(pythonGenerator) {
   pythonGenerator.forBlock['sap_SapModel_LoadCases_ResponseSpectrum_GetLoads'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_NumberItems = "'" + (block.getFieldValue('NumberItems') || '') + "'";
-    var v_LoadName = block.getFieldValue('LoadName') || '0';
+    var v_LoadName = "'" + (block.getFieldValue('LoadName') || '') + "'";
     var v_Func = "'" + (block.getFieldValue('Func') || '') + "'";
     var v_SF = "'" + (block.getFieldValue('SF') || '') + "'";
     var v_Ang = "'" + (block.getFieldValue('Ang') || '') + "'";
@@ -430,20 +430,20 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_MeshType = "'" + (block.getFieldValue('MeshType') || '') + "'";
     var v_NumAreas = "'" + (block.getFieldValue('NumAreas') || '') + "'";
-    var v_AreaName = block.getFieldValue('AreaName') || '0';
+    var v_AreaName = "'" + (block.getFieldValue('AreaName') || '') + "'";
     var v_N1 = "'" + (block.getFieldValue('N1') || '') + "'";
     var v_N2 = "'" + (block.getFieldValue('N2') || '') + "'";
     var v_MaxSize1 = "'" + (block.getFieldValue('MaxSize1') || '') + "'";
     var v_MaxSize2 = "'" + (block.getFieldValue('MaxSize2') || '') + "'";
     var v_PointOnEdgeFromLine = "'" + (block.getFieldValue('PointOnEdgeFromLine') || '') + "'";
     var v_PointOnEdgeFromPoint = "'" + (block.getFieldValue('PointOnEdgeFromPoint') || '') + "'";
-    var v_ExtendCookieCutLines = block.getFieldValue('ExtendCookieCutLines') || '0';
-    var v_Rotation = block.getFieldValue('Rotation') || '0';
+    var v_ExtendCookieCutLines = "'" + (block.getFieldValue('ExtendCookieCutLines') || '') + "'";
+    var v_Rotation = "'" + (block.getFieldValue('Rotation') || '') + "'";
     var v_MaxSizeGeneral = "'" + (block.getFieldValue('MaxSizeGeneral') || '') + "'";
-    var v_LocalAxesOnEdge = block.getFieldValue('LocalAxesOnEdge') || '0';
-    var v_LocalAxesOnFace = block.getFieldValue('LocalAxesOnFace') || '0';
-    var v_RestraintsOnEdge = block.getFieldValue('RestraintsOnEdge') || '0';
-    var v_RestraintsOnFace = block.getFieldValue('RestraintsOnFace') || '0';
+    var v_LocalAxesOnEdge = "'" + (block.getFieldValue('LocalAxesOnEdge') || '') + "'";
+    var v_LocalAxesOnFace = "'" + (block.getFieldValue('LocalAxesOnFace') || '') + "'";
+    var v_RestraintsOnEdge = "'" + (block.getFieldValue('RestraintsOnEdge') || '') + "'";
+    var v_RestraintsOnFace = "'" + (block.getFieldValue('RestraintsOnFace') || '') + "'";
     var v_Group = "'" + (block.getFieldValue('Group') || '') + "'";
     var v_SubMesh = "'" + (block.getFieldValue('SubMesh') || '') + "'";
     var v_SubMeshSize = "'" + (block.getFieldValue('SubMeshSize') || '') + "'";
@@ -469,7 +469,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_YMax = block.getFieldValue('YMax') || '0';
     var v_ZMin = block.getFieldValue('ZMin') || '0';
     var v_ZMax = block.getFieldValue('ZMax') || '0';
-    var v_Deselect = block.getFieldValue('Deselect') || '0';
+    var v_Deselect = "'" + (block.getFieldValue('Deselect') || '') + "'";
     var v_IncludeIntersections = "'" + (block.getFieldValue('IncludeIntersections') || '') + "'";
     var v_IncludePoints = "'" + (block.getFieldValue('IncludePoints') || '') + "'";
     var v_IncludeFrames = "'" + (block.getFieldValue('IncludeFrames') || '') + "'";
@@ -517,7 +517,7 @@ function registerSAP2000Generators(pythonGenerator) {
   // ConstraintDef.GetBody
   pythonGenerator.forBlock['sap_SapModel_ConstraintDef_GetBody'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var code = '';
     code += 'ret = SapModel.ConstraintDef.GetBody(' + v_Name + ', ' + v_DOF + ')\n';
     code += 'assert ret == 0, "ConstraintDef.GetBody failed: " + str(ret)\n';
@@ -527,10 +527,10 @@ function registerSAP2000Generators(pythonGenerator) {
   // FrameObj.SetTCLimits
   pythonGenerator.forBlock['sap_SapModel_FrameObj_SetTCLimits'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LimitCompressionExists = block.getFieldValue('LimitCompressionExists') || '0';
-    var v_LimitCompression = block.getFieldValue('LimitCompression') || '0';
-    var v_LimitTensionExists = block.getFieldValue('LimitTensionExists') || '0';
-    var v_LimitTension = block.getFieldValue('LimitTension') || '0';
+    var v_LimitCompressionExists = "'" + (block.getFieldValue('LimitCompressionExists') || '') + "'";
+    var v_LimitCompression = "'" + (block.getFieldValue('LimitCompression') || '') + "'";
+    var v_LimitTensionExists = "'" + (block.getFieldValue('LimitTensionExists') || '') + "'";
+    var v_LimitTension = "'" + (block.getFieldValue('LimitTension') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.FrameObj.SetTCLimits(' + v_Name + ', ' + v_LimitCompressionExists + ', ' + v_LimitCompression + ', ' + v_LimitTensionExists + ', ' + v_LimitTension + ', ' + v_ItemType + ')\n';
@@ -541,10 +541,10 @@ function registerSAP2000Generators(pythonGenerator) {
   // FrameObj.GetTCLimits
   pythonGenerator.forBlock['sap_SapModel_FrameObj_GetTCLimits'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LimitCompressionExists = block.getFieldValue('LimitCompressionExists') || '0';
-    var v_LimitCompression = block.getFieldValue('LimitCompression') || '0';
-    var v_LimitTensionExists = block.getFieldValue('LimitTensionExists') || '0';
-    var v_LimitTension = block.getFieldValue('LimitTension') || '0';
+    var v_LimitCompressionExists = "'" + (block.getFieldValue('LimitCompressionExists') || '') + "'";
+    var v_LimitCompression = "'" + (block.getFieldValue('LimitCompression') || '') + "'";
+    var v_LimitTensionExists = "'" + (block.getFieldValue('LimitTensionExists') || '') + "'";
+    var v_LimitTension = "'" + (block.getFieldValue('LimitTension') || '') + "'";
     var code = '';
     code += 'ret = SapModel.FrameObj.GetTCLimits(' + v_Name + ', ' + v_LimitCompressionExists + ', ' + v_LimitCompression + ', ' + v_LimitTensionExists + ', ' + v_LimitTension + ')\n';
     code += 'assert ret == 0, "FrameObj.GetTCLimits failed: " + str(ret)\n';
@@ -586,15 +586,15 @@ function registerSAP2000Generators(pythonGenerator) {
   // FrameObj.SetLoadDistributed
   pythonGenerator.forBlock['sap_SapModel_FrameObj_SetLoadDistributed'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_MyType = block.getFieldValue('MyType') || '1';
     var v_Dir = block.getFieldValue('Dir') || '10';
-    var v_Dist1 = block.getFieldValue('Dist1') || '0';
-    var v_Dist2 = block.getFieldValue('Dist2') || '0';
+    var v_Dist1 = "'" + (block.getFieldValue('Dist1') || '') + "'";
+    var v_Dist2 = "'" + (block.getFieldValue('Dist2') || '') + "'";
     var v_Val1 = "'" + (block.getFieldValue('Val1') || '') + "'";
     var v_Val2 = "'" + (block.getFieldValue('Val2') || '') + "'";
-    var v_RelDist = block.getFieldValue('RelDist') || '0';
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_RelDist = "'" + (block.getFieldValue('RelDist') || '') + "'";
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.FrameObj.SetLoadDistributed(' + v_Name + ', ' + v_LoadPat + ', ' + v_MyType + ', ' + v_Dir + ', ' + v_Dist1 + ', ' + v_Dist2 + ', ' + v_Val1 + ', ' + v_Val2 + ', ' + v_RelDist + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -605,9 +605,9 @@ function registerSAP2000Generators(pythonGenerator) {
   // PointObj.SetLoadForce
   pythonGenerator.forBlock['sap_SapModel_PointObj_SetLoadForce'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_Value = "'" + (block.getFieldValue('Value') || '') + "'";
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.PointObj.SetLoadForce(' + v_Name + ', ' + v_LoadPat + ', ' + v_Value + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -617,7 +617,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // View.RefreshView
   pythonGenerator.forBlock['sap_SapModel_View_RefreshView'] = function(block, generator) {
-    var v_Window = block.getFieldValue('Window') || '0';
+    var v_Window = "'" + (block.getFieldValue('Window') || '') + "'";
     var v_Zoom = block.getFieldValue('Zoom') || '0';
     var code = '';
     code += 'ret = SapModel.View.RefreshView(' + v_Window + ', ' + v_Zoom + ')\n';
@@ -666,16 +666,16 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ItemTypeElm = block.getFieldValue('ItemTypeElm') || '0';
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
     var v_Obj = "'" + (block.getFieldValue('Obj') || '') + "'";
-    var v_Elm = block.getFieldValue('Elm') || '0';
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_Elm = "'" + (block.getFieldValue('Elm') || '') + "'";
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
-    var v_U1 = block.getFieldValue('U1') || '0';
-    var v_U2 = block.getFieldValue('U2') || '0';
-    var v_U3 = block.getFieldValue('U3') || '0';
-    var v_R1 = block.getFieldValue('R1') || '0';
-    var v_R2 = block.getFieldValue('R2') || '0';
-    var v_R3 = block.getFieldValue('R3') || '0';
+    var v_U1 = "'" + (block.getFieldValue('U1') || '') + "'";
+    var v_U2 = "'" + (block.getFieldValue('U2') || '') + "'";
+    var v_U3 = "'" + (block.getFieldValue('U3') || '') + "'";
+    var v_R1 = "'" + (block.getFieldValue('R1') || '') + "'";
+    var v_R2 = "'" + (block.getFieldValue('R2') || '') + "'";
+    var v_R3 = "'" + (block.getFieldValue('R3') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Results.JointDispl(' + v_Name + ', ' + v_ItemTypeElm + ', ' + v_NumberResults + ', ' + v_Obj + ', ' + v_Elm + ', ' + v_LoadCase + ', ' + v_StepType + ', ' + v_StepNum + ', ' + v_U1 + ', ' + v_U2 + ', ' + v_U3 + ', ' + v_R1 + ', ' + v_R2 + ', ' + v_R3 + ')\n';
     code += 'assert ret == 0, "Results.JointDispl failed: " + str(ret)\n';
@@ -689,9 +689,9 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
     var v_Obj = "'" + (block.getFieldValue('Obj') || '') + "'";
     var v_ObjSta = "'" + (block.getFieldValue('ObjSta') || '') + "'";
-    var v_Elm = block.getFieldValue('Elm') || '0';
-    var v_ElmSta = block.getFieldValue('ElmSta') || '0';
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_Elm = "'" + (block.getFieldValue('Elm') || '') + "'";
+    var v_ElmSta = "'" + (block.getFieldValue('ElmSta') || '') + "'";
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_P = "'" + (block.getFieldValue('P') || '') + "'";
@@ -712,8 +712,8 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ItemTypeElm = block.getFieldValue('ItemTypeElm') || '0';
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
     var v_Obj = "'" + (block.getFieldValue('Obj') || '') + "'";
-    var v_Elm = block.getFieldValue('Elm') || '0';
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_Elm = "'" + (block.getFieldValue('Elm') || '') + "'";
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_F1 = "'" + (block.getFieldValue('F1') || '') + "'";
@@ -751,8 +751,8 @@ function registerSAP2000Generators(pythonGenerator) {
   // DatabaseTables.GetAllTables
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetAllTables'] = function(block, generator) {
     var v_NumberTables = "'" + (block.getFieldValue('NumberTables') || '') + "'";
-    var v_TableKey__ = block.getFieldValue('TableKey[]') || '0';
-    var v_TableName__ = block.getFieldValue('TableName[]') || '0';
+    var v_TableKey__ = "'" + (block.getFieldValue('TableKey[]') || '') + "'";
+    var v_TableName__ = "'" + (block.getFieldValue('TableName[]') || '') + "'";
     var v_ImportType__ = "'" + (block.getFieldValue('ImportType[]') || '') + "'";
     var v_IsEmpty__ = "'" + (block.getFieldValue('IsEmpty[]') || '') + "'";
     var code = '';
@@ -764,8 +764,8 @@ function registerSAP2000Generators(pythonGenerator) {
   // DatabaseTables.GetAvailableTables
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetAvailableTables'] = function(block, generator) {
     var v_NumberTables = "'" + (block.getFieldValue('NumberTables') || '') + "'";
-    var v_TableKey__ = block.getFieldValue('TableKey[]') || '0';
-    var v_TableName__ = block.getFieldValue('TableName[]') || '0';
+    var v_TableKey__ = "'" + (block.getFieldValue('TableKey[]') || '') + "'";
+    var v_TableName__ = "'" + (block.getFieldValue('TableName[]') || '') + "'";
     var v_ImportType__ = "'" + (block.getFieldValue('ImportType[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetAvailableTables(' + v_NumberTables + ', ' + v_TableKey__ + ', ' + v_TableName__ + ', ' + v_ImportType__ + ')\n';
@@ -775,12 +775,12 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetAllFieldsInTable
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetAllFieldsInTable'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_NumberFields = "'" + (block.getFieldValue('NumberFields') || '') + "'";
     var v_FieldKey__ = "'" + (block.getFieldValue('FieldKey[]') || '') + "'";
     var v_FieldName__ = "'" + (block.getFieldValue('FieldName[]') || '') + "'";
-    var v_Description__ = block.getFieldValue('Description[]') || '0';
+    var v_Description__ = "'" + (block.getFieldValue('Description[]') || '') + "'";
     var v_UnitsString__ = block.getFieldValue('UnitsString[]') || '6';
     var v_IsImportable__ = "'" + (block.getFieldValue('IsImportable[]') || '') + "'";
     var code = '';
@@ -792,7 +792,7 @@ function registerSAP2000Generators(pythonGenerator) {
   // DatabaseTables.GetObsoleteTableKeyList
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetObsoleteTableKeyList'] = function(block, generator) {
     var v_NumberTableKeys = "'" + (block.getFieldValue('NumberTableKeys') || '') + "'";
-    var v_TableKeyList__ = block.getFieldValue('TableKeyList[]') || '0';
+    var v_TableKeyList__ = "'" + (block.getFieldValue('TableKeyList[]') || '') + "'";
     var v_NotesList__ = "'" + (block.getFieldValue('NotesList[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetObsoleteTableKeyList(' + v_NumberTableKeys + ', ' + v_TableKeyList__ + ', ' + v_NotesList__ + ')\n';
@@ -802,12 +802,12 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForEditingArray
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForEditingArray'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_FieldKeysIncluded__ = "'" + (block.getFieldValue('FieldKeysIncluded[]') || '') + "'";
     var v_NumberRecords = "'" + (block.getFieldValue('NumberRecords') || '') + "'";
-    var v_TableData__ = block.getFieldValue('TableData[]') || '0';
+    var v_TableData__ = "'" + (block.getFieldValue('TableData[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetTableForEditingArray(' + v_TableKey + ', ' + v_GroupName + ', ' + v_TableVersion + ', ' + v_FieldKeysIncluded__ + ', ' + v_NumberRecords + ', ' + v_TableData__ + ')\n';
     code += 'assert ret == 0, "DatabaseTables.GetTableForEditingArray failed: " + str(ret)\n';
@@ -824,11 +824,11 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.SetTableForEditingArray
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_SetTableForEditingArray'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_FieldKeysIncluded__ = "'" + (block.getFieldValue('FieldKeysIncluded[]') || '') + "'";
     var v_NumberRecords = "'" + (block.getFieldValue('NumberRecords') || '') + "'";
-    var v_TableData__ = block.getFieldValue('TableData[]') || '0';
+    var v_TableData__ = "'" + (block.getFieldValue('TableData[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.SetTableForEditingArray(' + v_TableKey + ', ' + v_TableVersion + ', ' + v_FieldKeysIncluded__ + ', ' + v_NumberRecords + ', ' + v_TableData__ + ')\n';
     code += 'assert ret == 0, "DatabaseTables.SetTableForEditingArray failed: " + str(ret)\n';
@@ -851,13 +851,13 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForDisplayArray
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForDisplayArray'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_FieldKeyList__ = "'" + (block.getFieldValue('FieldKeyList[]') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_FieldKeysIncluded__ = "'" + (block.getFieldValue('FieldKeysIncluded[]') || '') + "'";
     var v_NumberRecords = "'" + (block.getFieldValue('NumberRecords') || '') + "'";
-    var v_TableData__ = block.getFieldValue('TableData[]') || '0';
+    var v_TableData__ = "'" + (block.getFieldValue('TableData[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetTableForDisplayArray(' + v_TableKey + ', ' + v_FieldKeyList__ + ', ' + v_GroupName + ', ' + v_TableVersion + ', ' + v_FieldKeysIncluded__ + ', ' + v_NumberRecords + ', ' + v_TableData__ + ')\n';
     code += 'assert ret == 0, "DatabaseTables.GetTableForDisplayArray failed: " + str(ret)\n';
@@ -866,10 +866,10 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForDisplayCSVFile
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForDisplayCSVFile'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_FieldKeyList__ = "'" + (block.getFieldValue('FieldKeyList[]') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvFilePath = "'" + (block.getFieldValue('csvFilePath') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -880,10 +880,10 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForDisplayCSVString
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForDisplayCSVString'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_FieldKeyList__ = "'" + (block.getFieldValue('FieldKeyList[]') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvString = "'" + (block.getFieldValue('csvString') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -894,11 +894,11 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForDisplayXMLString
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForDisplayXMLString'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_FieldKeyList__ = "'" + (block.getFieldValue('FieldKeyList[]') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
     var v_IncludeSchema = "'" + (block.getFieldValue('IncludeSchema') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_XMLTableData = block.getFieldValue('XMLTableData') || '0';
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetTableForDisplayXMLString(' + v_TableKey + ', ' + v_FieldKeyList__ + ', ' + v_GroupName + ', ' + v_IncludeSchema + ', ' + v_TableVersion + ', ' + v_XMLTableData + ')\n';
@@ -908,9 +908,9 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForEditingCSVFile
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForEditingCSVFile'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvFilePath = "'" + (block.getFieldValue('csvFilePath') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -921,9 +921,9 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.GetTableForEditingCSVString
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_GetTableForEditingCSVString'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvString = "'" + (block.getFieldValue('csvString') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -934,8 +934,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.SetTableForEditingCSVFile
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_SetTableForEditingCSVFile'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvFilePath = "'" + (block.getFieldValue('csvFilePath') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -946,8 +946,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.SetTableForEditingCSVString
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_SetTableForEditingCSVString'] = function(block, generator) {
-    var v_TableKey = block.getFieldValue('TableKey') || '0';
-    var v_TableVersion = block.getFieldValue('TableVersion') || '0';
+    var v_TableKey = "'" + (block.getFieldValue('TableKey') || '') + "'";
+    var v_TableVersion = "'" + (block.getFieldValue('TableVersion') || '') + "'";
     var v_csvString = "'" + (block.getFieldValue('csvString') || '') + "'";
     var v_sepChar = "'" + (block.getFieldValue('sepChar') || '') + "'";
     var code = '';
@@ -1142,20 +1142,20 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_SortConnectyData = "'" + (block.getFieldValue('SortConnectyData') || '') + "'";
     var v_ModeShapeOpt = "'" + (block.getFieldValue('ModeShapeOpt') || '') + "'";
     var v_ModeShapeRef = "'" + (block.getFieldValue('ModeShapeRef') || '') + "'";
-    var v_TableGroupOpt = block.getFieldValue('TableGroupOpt') || '0';
-    var v_TableGroupSingle = block.getFieldValue('TableGroupSingle') || '0';
-    var v_TwoDFloat = block.getFieldValue('TwoDFloat') || '0';
-    var v_TwoDFloatFig = block.getFieldValue('TwoDFloatFig') || '0';
-    var v_TwoDInt = block.getFieldValue('TwoDInt') || '0';
+    var v_TableGroupOpt = "'" + (block.getFieldValue('TableGroupOpt') || '') + "'";
+    var v_TableGroupSingle = "'" + (block.getFieldValue('TableGroupSingle') || '') + "'";
+    var v_TwoDFloat = "'" + (block.getFieldValue('TwoDFloat') || '') + "'";
+    var v_TwoDFloatFig = "'" + (block.getFieldValue('TwoDFloatFig') || '') + "'";
+    var v_TwoDInt = "'" + (block.getFieldValue('TwoDInt') || '') + "'";
     var v_FourDFloat = "'" + (block.getFieldValue('FourDFloat') || '') + "'";
     var v_FourDFloatFig = "'" + (block.getFieldValue('FourDFloatFig') || '') + "'";
     var v_FourDInt = "'" + (block.getFieldValue('FourDInt') || '') + "'";
-    var v_EightDFloat = block.getFieldValue('EightDFloat') || '0';
-    var v_EightDFloatFig = block.getFieldValue('EightDFloatFig') || '0';
-    var v_EightDInt = block.getFieldValue('EightDInt') || '0';
-    var v_TwelveDFloat = block.getFieldValue('TwelveDFloat') || '0';
-    var v_TwelveDFloatFig = block.getFieldValue('TwelveDFloatFig') || '0';
-    var v_TwelveDInt = block.getFieldValue('TwelveDInt') || '0';
+    var v_EightDFloat = "'" + (block.getFieldValue('EightDFloat') || '') + "'";
+    var v_EightDFloatFig = "'" + (block.getFieldValue('EightDFloatFig') || '') + "'";
+    var v_EightDInt = "'" + (block.getFieldValue('EightDInt') || '') + "'";
+    var v_TwelveDFloat = "'" + (block.getFieldValue('TwelveDFloat') || '') + "'";
+    var v_TwelveDFloatFig = "'" + (block.getFieldValue('TwelveDFloatFig') || '') + "'";
+    var v_TwelveDInt = "'" + (block.getFieldValue('TwelveDInt') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.GetTableOutputOptionsForDisplay(' + v_SortTableData + ', ' + v_SortConnectyData + ', ' + v_ModeShapeOpt + ', ' + v_ModeShapeRef + ', ' + v_TableGroupOpt + ', ' + v_TableGroupSingle + ', ' + v_TwoDFloat + ', ' + v_TwoDFloatFig + ', ' + v_TwoDInt + ', ' + v_FourDFloat + ', ' + v_FourDFloatFig + ', ' + v_FourDInt + ', ' + v_EightDFloat + ', ' + v_EightDFloatFig + ', ' + v_EightDInt + ', ' + v_TwelveDFloat + ', ' + v_TwelveDFloatFig + ', ' + v_TwelveDInt + ')\n';
     code += 'assert ret == 0, "DatabaseTables.GetTableOutputOptionsForDisplay failed: " + str(ret)\n';
@@ -1168,20 +1168,20 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_SortConnectyData = "'" + (block.getFieldValue('SortConnectyData') || '') + "'";
     var v_ModeShapeOpt = "'" + (block.getFieldValue('ModeShapeOpt') || '') + "'";
     var v_ModeShapeRef = "'" + (block.getFieldValue('ModeShapeRef') || '') + "'";
-    var v_TableGroupOpt = block.getFieldValue('TableGroupOpt') || '0';
-    var v_TableGroupSingle = block.getFieldValue('TableGroupSingle') || '0';
-    var v_TwoDFloat = block.getFieldValue('TwoDFloat') || '0';
-    var v_TwoDFloatFig = block.getFieldValue('TwoDFloatFig') || '0';
-    var v_TwoDInt = block.getFieldValue('TwoDInt') || '0';
+    var v_TableGroupOpt = "'" + (block.getFieldValue('TableGroupOpt') || '') + "'";
+    var v_TableGroupSingle = "'" + (block.getFieldValue('TableGroupSingle') || '') + "'";
+    var v_TwoDFloat = "'" + (block.getFieldValue('TwoDFloat') || '') + "'";
+    var v_TwoDFloatFig = "'" + (block.getFieldValue('TwoDFloatFig') || '') + "'";
+    var v_TwoDInt = "'" + (block.getFieldValue('TwoDInt') || '') + "'";
     var v_FourDFloat = "'" + (block.getFieldValue('FourDFloat') || '') + "'";
     var v_FourDFloatFig = "'" + (block.getFieldValue('FourDFloatFig') || '') + "'";
     var v_FourDInt = "'" + (block.getFieldValue('FourDInt') || '') + "'";
-    var v_EightDFloat = block.getFieldValue('EightDFloat') || '0';
-    var v_EightDFloatFig = block.getFieldValue('EightDFloatFig') || '0';
-    var v_EightDInt = block.getFieldValue('EightDInt') || '0';
-    var v_TwelveDFloat = block.getFieldValue('TwelveDFloat') || '0';
-    var v_TwelveDFloatFig = block.getFieldValue('TwelveDFloatFig') || '0';
-    var v_TwelveDInt = block.getFieldValue('TwelveDInt') || '0';
+    var v_EightDFloat = "'" + (block.getFieldValue('EightDFloat') || '') + "'";
+    var v_EightDFloatFig = "'" + (block.getFieldValue('EightDFloatFig') || '') + "'";
+    var v_EightDInt = "'" + (block.getFieldValue('EightDInt') || '') + "'";
+    var v_TwelveDFloat = "'" + (block.getFieldValue('TwelveDFloat') || '') + "'";
+    var v_TwelveDFloatFig = "'" + (block.getFieldValue('TwelveDFloatFig') || '') + "'";
+    var v_TwelveDInt = "'" + (block.getFieldValue('TwelveDInt') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.SetTableOutputOptionsForDisplay(' + v_SortTableData + ', ' + v_SortConnectyData + ', ' + v_ModeShapeOpt + ', ' + v_ModeShapeRef + ', ' + v_TableGroupOpt + ', ' + v_TableGroupSingle + ', ' + v_TwoDFloat + ', ' + v_TwoDFloatFig + ', ' + v_TwoDInt + ', ' + v_FourDFloat + ', ' + v_FourDFloatFig + ', ' + v_FourDInt + ', ' + v_EightDFloat + ', ' + v_EightDFloatFig + ', ' + v_EightDInt + ', ' + v_TwelveDFloat + ', ' + v_TwelveDFloatFig + ', ' + v_TwelveDInt + ')\n';
     code += 'assert ret == 0, "DatabaseTables.SetTableOutputOptionsForDisplay failed: " + str(ret)\n';
@@ -1190,8 +1190,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // DatabaseTables.ShowTablesInExcel
   pythonGenerator.forBlock['sap_SapModel_DatabaseTables_ShowTablesInExcel'] = function(block, generator) {
-    var v_TableKeyList__ = block.getFieldValue('TableKeyList[]') || '0';
-    var v_WindowHandle = block.getFieldValue('WindowHandle') || '0';
+    var v_TableKeyList__ = "'" + (block.getFieldValue('TableKeyList[]') || '') + "'";
+    var v_WindowHandle = "'" + (block.getFieldValue('WindowHandle') || '') + "'";
     var code = '';
     code += 'ret = SapModel.DatabaseTables.ShowTablesInExcel(' + v_TableKeyList__ + ', ' + v_WindowHandle + ')\n';
     code += 'assert ret == 0, "DatabaseTables.ShowTablesInExcel failed: " + str(ret)\n';
@@ -1211,13 +1211,13 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_NumberItems = "'" + (block.getFieldValue('NumberItems') || '') + "'";
     var v_FrameName = "'" + (block.getFieldValue('FrameName') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_MyType = block.getFieldValue('MyType') || '1';
     var v_Dir = block.getFieldValue('Dir') || '10';
-    var v_RD1 = block.getFieldValue('RD1') || '0';
-    var v_RD2 = block.getFieldValue('RD2') || '0';
-    var v_Dist1 = block.getFieldValue('Dist1') || '0';
-    var v_Dist2 = block.getFieldValue('Dist2') || '0';
+    var v_RD1 = "'" + (block.getFieldValue('RD1') || '') + "'";
+    var v_RD2 = "'" + (block.getFieldValue('RD2') || '') + "'";
+    var v_Dist1 = "'" + (block.getFieldValue('Dist1') || '') + "'";
+    var v_Dist2 = "'" + (block.getFieldValue('Dist2') || '') + "'";
     var v_Val1 = "'" + (block.getFieldValue('Val1') || '') + "'";
     var v_Val2 = "'" + (block.getFieldValue('Val2') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
@@ -1230,13 +1230,13 @@ function registerSAP2000Generators(pythonGenerator) {
   // FrameObj.SetLoadPoint
   pythonGenerator.forBlock['sap_SapModel_FrameObj_SetLoadPoint'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_MyType = block.getFieldValue('MyType') || '1';
     var v_Dir = block.getFieldValue('Dir') || '10';
-    var v_Dist = block.getFieldValue('Dist') || '0';
+    var v_Dist = "'" + (block.getFieldValue('Dist') || '') + "'";
     var v_Val = "'" + (block.getFieldValue('Val') || '') + "'";
-    var v_RelDist = block.getFieldValue('RelDist') || '0';
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_RelDist = "'" + (block.getFieldValue('RelDist') || '') + "'";
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.FrameObj.SetLoadPoint(' + v_Name + ', ' + v_LoadPat + ', ' + v_MyType + ', ' + v_Dir + ', ' + v_Dist + ', ' + v_Val + ', ' + v_RelDist + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -1247,10 +1247,10 @@ function registerSAP2000Generators(pythonGenerator) {
   // AreaObj.SetLoadUniform
   pythonGenerator.forBlock['sap_SapModel_AreaObj_SetLoadUniform'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_Value = "'" + (block.getFieldValue('Value') || '') + "'";
     var v_Dir = block.getFieldValue('Dir') || '10';
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.AreaObj.SetLoadUniform(' + v_Name + ', ' + v_LoadPat + ', ' + v_Value + ', ' + v_Dir + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -1261,7 +1261,7 @@ function registerSAP2000Generators(pythonGenerator) {
   // Results.BaseReact
   pythonGenerator.forBlock['sap_SapModel_Results_BaseReact'] = function(block, generator) {
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_Fx = "'" + (block.getFieldValue('Fx') || '') + "'";
@@ -1282,11 +1282,11 @@ function registerSAP2000Generators(pythonGenerator) {
   // AreaObj.SetLoadGravity
   pythonGenerator.forBlock['sap_SapModel_AreaObj_SetLoadGravity'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_LoadPat = block.getFieldValue('LoadPat') || '0';
+    var v_LoadPat = "'" + (block.getFieldValue('LoadPat') || '') + "'";
     var v_x = block.getFieldValue('x') || '0';
     var v_y = block.getFieldValue('y') || '0';
     var v_z = block.getFieldValue('z') || '0';
-    var v_Replace = block.getFieldValue('Replace') || '0';
+    var v_Replace = block.getFieldValue('Replace') === 'TRUE' ? 'True' : 'False';
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.AreaObj.SetLoadGravity(' + v_Name + ', ' + v_LoadPat + ', ' + v_x + ', ' + v_y + ', ' + v_z + ', ' + v_Replace + ', ' + v_ItemType + ')\n';
@@ -1300,7 +1300,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ii = "'" + (block.getFieldValue('ii') || '') + "'";
     var v_jj = "'" + (block.getFieldValue('jj') || '') + "'";
     var v_StartValue = "'" + (block.getFieldValue('StartValue') || '') + "'";
-    var v_EndValue = block.getFieldValue('EndValue') || '0';
+    var v_EndValue = "'" + (block.getFieldValue('EndValue') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.FrameObj.SetReleases(' + v_Name + ', ' + v_ii + ', ' + v_jj + ', ' + v_StartValue + ', ' + v_EndValue + ', ' + v_ItemType + ')\n';
@@ -1314,7 +1314,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ii = "'" + (block.getFieldValue('ii') || '') + "'";
     var v_jj = "'" + (block.getFieldValue('jj') || '') + "'";
     var v_StartValue = "'" + (block.getFieldValue('StartValue') || '') + "'";
-    var v_EndValue = block.getFieldValue('EndValue') || '0';
+    var v_EndValue = "'" + (block.getFieldValue('EndValue') || '') + "'";
     var code = '';
     code += 'ret = SapModel.FrameObj.GetReleases(' + v_Name + ', ' + v_ii + ', ' + v_jj + ', ' + v_StartValue + ', ' + v_EndValue + ')\n';
     code += 'assert ret == 0, "FrameObj.GetReleases failed: " + str(ret)\n';
@@ -1409,7 +1409,7 @@ function registerSAP2000Generators(pythonGenerator) {
   pythonGenerator.forBlock['sap_SapModel_FrameObj_SetGroupAssign'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_Remove = block.getFieldValue('Remove') || '0';
+    var v_Remove = "'" + (block.getFieldValue('Remove') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.FrameObj.SetGroupAssign(' + v_Name + ', ' + v_GroupName + ', ' + v_Remove + ', ' + v_ItemType + ')\n';
@@ -1433,7 +1433,7 @@ function registerSAP2000Generators(pythonGenerator) {
   pythonGenerator.forBlock['sap_SapModel_AreaObj_SetGroupAssign'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_GroupName = "'" + (block.getFieldValue('GroupName') || '') + "'";
-    var v_Remove = block.getFieldValue('Remove') || '0';
+    var v_Remove = "'" + (block.getFieldValue('Remove') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
     var code = '';
     code += 'ret = SapModel.AreaObj.SetGroupAssign(' + v_Name + ', ' + v_GroupName + ', ' + v_Remove + ', ' + v_ItemType + ')\n';
@@ -1478,9 +1478,9 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ItemTypeElm = block.getFieldValue('ItemTypeElm') || '0';
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
     var v_Obj = "'" + (block.getFieldValue('Obj') || '') + "'";
-    var v_Elm = block.getFieldValue('Elm') || '0';
+    var v_Elm = "'" + (block.getFieldValue('Elm') || '') + "'";
     var v_PointElm = "'" + (block.getFieldValue('PointElm') || '') + "'";
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_S11Top = "'" + (block.getFieldValue('S11Top') || '') + "'";
@@ -1520,13 +1520,13 @@ function registerSAP2000Generators(pythonGenerator) {
   // Results.ModalPeriod
   pythonGenerator.forBlock['sap_SapModel_Results_ModalPeriod'] = function(block, generator) {
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_Period = "'" + (block.getFieldValue('Period') || '') + "'";
     var v_Frequency = "'" + (block.getFieldValue('Frequency') || '') + "'";
     var v_CircFreq = "'" + (block.getFieldValue('CircFreq') || '') + "'";
-    var v_EigenValue = block.getFieldValue('EigenValue') || '0';
+    var v_EigenValue = "'" + (block.getFieldValue('EigenValue') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Results.ModalPeriod(' + v_NumberResults + ', ' + v_LoadCase + ', ' + v_StepType + ', ' + v_StepNum + ', ' + v_Period + ', ' + v_Frequency + ', ' + v_CircFreq + ', ' + v_EigenValue + ')\n';
     code += 'assert ret == 0, "Results.ModalPeriod failed: " + str(ret)\n';
@@ -1536,19 +1536,19 @@ function registerSAP2000Generators(pythonGenerator) {
   // Results.ModalParticipatingMassRatios
   pythonGenerator.forBlock['sap_SapModel_Results_ModalParticipatingMassRatios'] = function(block, generator) {
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
     var v_Period = "'" + (block.getFieldValue('Period') || '') + "'";
-    var v_Ux = block.getFieldValue('Ux') || '0';
-    var v_Uy = block.getFieldValue('Uy') || '0';
-    var v_Uz = block.getFieldValue('Uz') || '0';
+    var v_Ux = "'" + (block.getFieldValue('Ux') || '') + "'";
+    var v_Uy = "'" + (block.getFieldValue('Uy') || '') + "'";
+    var v_Uz = "'" + (block.getFieldValue('Uz') || '') + "'";
     var v_SumUx = "'" + (block.getFieldValue('SumUx') || '') + "'";
     var v_SumUy = "'" + (block.getFieldValue('SumUy') || '') + "'";
     var v_SumUz = "'" + (block.getFieldValue('SumUz') || '') + "'";
-    var v_Rx = block.getFieldValue('Rx') || '0';
-    var v_Ry = block.getFieldValue('Ry') || '0';
-    var v_Rz = block.getFieldValue('Rz') || '0';
+    var v_Rx = "'" + (block.getFieldValue('Rx') || '') + "'";
+    var v_Ry = "'" + (block.getFieldValue('Ry') || '') + "'";
+    var v_Rz = "'" + (block.getFieldValue('Rz') || '') + "'";
     var v_SumRx = "'" + (block.getFieldValue('SumRx') || '') + "'";
     var v_SumRy = "'" + (block.getFieldValue('SumRy') || '') + "'";
     var v_SumRz = "'" + (block.getFieldValue('SumRz') || '') + "'";
@@ -1564,16 +1564,16 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_ItemTypeElm = block.getFieldValue('ItemTypeElm') || '0';
     var v_NumberResults = "'" + (block.getFieldValue('NumberResults') || '') + "'";
     var v_Obj = "'" + (block.getFieldValue('Obj') || '') + "'";
-    var v_Elm = block.getFieldValue('Elm') || '0';
-    var v_LoadCase = block.getFieldValue('LoadCase') || '0';
+    var v_Elm = "'" + (block.getFieldValue('Elm') || '') + "'";
+    var v_LoadCase = "'" + (block.getFieldValue('LoadCase') || '') + "'";
     var v_StepType = "'" + (block.getFieldValue('StepType') || '') + "'";
     var v_StepNum = "'" + (block.getFieldValue('StepNum') || '') + "'";
-    var v_U1 = block.getFieldValue('U1') || '0';
-    var v_U2 = block.getFieldValue('U2') || '0';
-    var v_U3 = block.getFieldValue('U3') || '0';
-    var v_R1 = block.getFieldValue('R1') || '0';
-    var v_R2 = block.getFieldValue('R2') || '0';
-    var v_R3 = block.getFieldValue('R3') || '0';
+    var v_U1 = "'" + (block.getFieldValue('U1') || '') + "'";
+    var v_U2 = "'" + (block.getFieldValue('U2') || '') + "'";
+    var v_U3 = "'" + (block.getFieldValue('U3') || '') + "'";
+    var v_R1 = "'" + (block.getFieldValue('R1') || '') + "'";
+    var v_R2 = "'" + (block.getFieldValue('R2') || '') + "'";
+    var v_R3 = "'" + (block.getFieldValue('R3') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Results.ModeShape(' + v_Name + ', ' + v_ItemTypeElm + ', ' + v_NumberResults + ', ' + v_Obj + ', ' + v_Elm + ', ' + v_LoadCase + ', ' + v_StepType + ', ' + v_StepNum + ', ' + v_U1 + ', ' + v_U2 + ', ' + v_U3 + ', ' + v_R1 + ', ' + v_R2 + ', ' + v_R3 + ')\n';
     code += 'assert ret == 0, "Results.ModeShape failed: " + str(ret)\n';
@@ -1582,7 +1582,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // Analyze.SetActiveDOF
   pythonGenerator.forBlock['sap_SapModel_Analyze_SetActiveDOF'] = function(block, generator) {
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var code = '';
     code += 'ret = SapModel.Analyze.SetActiveDOF(' + v_DOF + ')\n';
     code += 'assert ret == 0, "Analyze.SetActiveDOF failed: " + str(ret)\n';
@@ -1591,7 +1591,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // Analyze.GetActiveDOF
   pythonGenerator.forBlock['sap_SapModel_Analyze_GetActiveDOF'] = function(block, generator) {
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var code = '';
     code += 'raw = SapModel.Analyze.GetActiveDOF(' + v_DOF + ')\n';
     code += 'dof_ = raw[0]\n';
@@ -1623,12 +1623,12 @@ function registerSAP2000Generators(pythonGenerator) {
   // PropLink.SetLinear
   pythonGenerator.forBlock['sap_SapModel_PropLink_SetLinear'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var v_Fixed = "'" + (block.getFieldValue('Fixed') || '') + "'";
     var v_Ke = "'" + (block.getFieldValue('Ke') || '') + "'";
     var v_Ce = "'" + (block.getFieldValue('Ce') || '') + "'";
-    var v_dj2 = block.getFieldValue('dj2') || '0';
-    var v_dj3 = block.getFieldValue('dj3') || '0';
+    var v_dj2 = "'" + (block.getFieldValue('dj2') || '') + "'";
+    var v_dj3 = "'" + (block.getFieldValue('dj3') || '') + "'";
     var v_KeCoupled = "'" + (block.getFieldValue('KeCoupled') || '') + "'";
     var v_CeCoupled = "'" + (block.getFieldValue('CeCoupled') || '') + "'";
     var code = '';
@@ -1640,12 +1640,12 @@ function registerSAP2000Generators(pythonGenerator) {
   // PropLink.GetLinear
   pythonGenerator.forBlock['sap_SapModel_PropLink_GetLinear'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var v_Fixed = "'" + (block.getFieldValue('Fixed') || '') + "'";
     var v_Ke = "'" + (block.getFieldValue('Ke') || '') + "'";
     var v_Ce = "'" + (block.getFieldValue('Ce') || '') + "'";
-    var v_DJ2 = block.getFieldValue('DJ2') || '0';
-    var v_DJ3 = block.getFieldValue('DJ3') || '0';
+    var v_DJ2 = "'" + (block.getFieldValue('DJ2') || '') + "'";
+    var v_DJ3 = "'" + (block.getFieldValue('DJ3') || '') + "'";
     var code = '';
     code += 'ret = SapModel.PropLink.GetLinear(' + v_Name + ', ' + v_DOF + ', ' + v_Fixed + ', ' + v_Ke + ', ' + v_Ce + ', ' + v_DJ2 + ', ' + v_DJ3 + ')\n';
     code += 'assert ret == 0, "PropLink.GetLinear failed: " + str(ret)\n';
@@ -1659,7 +1659,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_IsSingleJoint = "'" + (block.getFieldValue('IsSingleJoint') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'raw = SapModel.LinkObj.AddByPoint(' + v_Point1 + ', ' + v_Point2 + ', ' + v_Name + ', ' + v_IsSingleJoint + ', ' + v_PropName + ', ' + v_UserName + ')\n';
     code += 'name_assigned = raw[0]\n';
@@ -1687,7 +1687,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_IsSingleJoint = "'" + (block.getFieldValue('IsSingleJoint') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'ret = SapModel.LinkObj.AddByCoord(' + v_xi + ', ' + v_yi + ', ' + v_zi + ', ' + v_xj + ', ' + v_yj + ', ' + v_zj + ', ' + v_Name + ', ' + v_IsSingleJoint + ', ' + v_PropName + ', ' + v_UserName + ')\n';
     code += 'assert ret == 0, "LinkObj.AddByCoord failed: " + str(ret)\n';
@@ -1723,7 +1723,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_IncludeDrillingDOF = "'" + (block.getFieldValue('IncludeDrillingDOF') || '') + "'";
     var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_MatAng = "'" + (block.getFieldValue('MatAng') || '') + "'";
-    var v_Thickness = block.getFieldValue('Thickness') || '0';
+    var v_Thickness = "'" + (block.getFieldValue('Thickness') || '') + "'";
     var v_Bending = "'" + (block.getFieldValue('Bending') || '') + "'";
     var code = '';
     code += 'ret = SapModel.PropArea.GetShell_1(' + v_Name + ', ' + v_ShellType + ', ' + v_IncludeDrillingDOF + ', ' + v_MatProp + ', ' + v_MatAng + ', ' + v_Thickness + ', ' + v_Bending + ')\n';
@@ -1736,8 +1736,8 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_Fy = "'" + (block.getFieldValue('Fy') || '') + "'";
     var v_Fu = "'" + (block.getFieldValue('Fu') || '') + "'";
-    var v_EFy = block.getFieldValue('EFy') || '0';
-    var v_EFu = block.getFieldValue('EFu') || '0';
+    var v_EFy = "'" + (block.getFieldValue('EFy') || '') + "'";
+    var v_EFu = "'" + (block.getFieldValue('EFu') || '') + "'";
     var v_SSType = "'" + (block.getFieldValue('SSType') || '') + "'";
     var v_SSHysType = "'" + (block.getFieldValue('SSHysType') || '') + "'";
     var v_StrainAtHardening = "'" + (block.getFieldValue('StrainAtHardening') || '') + "'";
@@ -1762,7 +1762,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_StrainUltimate = "'" + (block.getFieldValue('StrainUltimate') || '') + "'";
     var v_FinalSlope = "'" + (block.getFieldValue('FinalSlope') || '') + "'";
     var v_FrictionAngle = "'" + (block.getFieldValue('FrictionAngle') || '') + "'";
-    var v_DilatationalAngle = block.getFieldValue('DilatationalAngle') || '0';
+    var v_DilatationalAngle = "'" + (block.getFieldValue('DilatationalAngle') || '') + "'";
     var code = '';
     code += 'ret = SapModel.PropMaterial.SetOConcrete_1(' + v_Name + ', ' + v_fc + ', ' + v_IsLightweight + ', ' + v_FcsFactor + ', ' + v_SSType + ', ' + v_SSHysType + ', ' + v_StrainAtfc + ', ' + v_StrainUltimate + ', ' + v_FinalSlope + ', ' + v_FrictionAngle + ', ' + v_DilatationalAngle + ')\n';
     code += 'assert ret == 0, "PropMaterial.SetOConcrete_1 failed: " + str(ret)\n';
@@ -1784,7 +1784,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
     var v_E = block.getFieldValue('E') || '0';
     var v_U = block.getFieldValue('U') || '0';
-    var v_A = "'" + (block.getFieldValue('A') || '') + "'";
+    var v_A = block.getFieldValue('A') || '0';
     var code = '';
     code += 'ret = SapModel.PropMaterial.GetMPIsotropic(' + v_Name + ', ' + v_E + ', ' + v_U + ', ' + v_A + ')\n';
     code += 'assert ret == 0, "PropMaterial.GetMPIsotropic failed: " + str(ret)\n';
@@ -1803,8 +1803,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetAngle
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetAngle'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var v_TF = block.getFieldValue('TF') || '0';
@@ -1817,8 +1817,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetChannel
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetChannel'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var v_TF = block.getFieldValue('TF') || '0';
@@ -1831,8 +1831,8 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.SetPipe
   pythonGenerator.forBlock['sap_SapModel_PropFrame_SetPipe'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_TW = block.getFieldValue('TW') || '0';
     var code = '';
@@ -1843,9 +1843,9 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.GetRectangle
   pythonGenerator.forBlock['sap_SapModel_PropFrame_GetRectangle'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_FileName = block.getFieldValue('FileName') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_FileName = "'" + (block.getFieldValue('FileName') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var code = '';
@@ -1868,9 +1868,9 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropFrame.GetISection
   pythonGenerator.forBlock['sap_SapModel_PropFrame_GetISection'] = function(block, generator) {
-    var v_Name = block.getFieldValue('Name') || '0';
-    var v_FileName = block.getFieldValue('FileName') || '0';
-    var v_MatProp = block.getFieldValue('MatProp') || '0';
+    var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
+    var v_FileName = "'" + (block.getFieldValue('FileName') || '') + "'";
+    var v_MatProp = "'" + (block.getFieldValue('MatProp') || '') + "'";
     var v_T3 = block.getFieldValue('T3') || '0';
     var v_T2 = block.getFieldValue('T2') || '0';
     var v_TF = block.getFieldValue('TF') || '0';
@@ -2026,10 +2026,10 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // RespCombo.AddDesignDefaultCombos
   pythonGenerator.forBlock['sap_SapModel_RespCombo_AddDesignDefaultCombos'] = function(block, generator) {
-    var v_DesignSteel = block.getFieldValue('DesignSteel') || '0';
-    var v_DesignConcrete = block.getFieldValue('DesignConcrete') || '0';
-    var v_DesignAluminum = block.getFieldValue('DesignAluminum') || '0';
-    var v_DesignColdFormed = block.getFieldValue('DesignColdFormed') || '0';
+    var v_DesignSteel = "'" + (block.getFieldValue('DesignSteel') || '') + "'";
+    var v_DesignConcrete = "'" + (block.getFieldValue('DesignConcrete') || '') + "'";
+    var v_DesignAluminum = "'" + (block.getFieldValue('DesignAluminum') || '') + "'";
+    var v_DesignColdFormed = "'" + (block.getFieldValue('DesignColdFormed') || '') + "'";
     var code = '';
     code += 'ret = SapModel.RespCombo.AddDesignDefaultCombos(' + v_DesignSteel + ', ' + v_DesignConcrete + ', ' + v_DesignAluminum + ', ' + v_DesignColdFormed + ')\n';
     code += 'assert ret == 0, "RespCombo.AddDesignDefaultCombos failed: " + str(ret)\n';
@@ -2038,7 +2038,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // File.New2DFrame
   pythonGenerator.forBlock['sap_SapModel_File_New2DFrame'] = function(block, generator) {
-    var v_TemplateName = block.getFieldValue('TemplateName') || '0';
+    var v_TemplateName = "'" + (block.getFieldValue('TemplateName') || '') + "'";
     var v_NumberStorys = block.getFieldValue('NumberStorys') || '0';
     var v_StoryHeight = block.getFieldValue('StoryHeight') || '0';
     var v_NumberBays = block.getFieldValue('NumberBays') || '0';
@@ -2063,7 +2063,7 @@ function registerSAP2000Generators(pythonGenerator) {
   // ResponseSpectrum.SetDampConstant
   pythonGenerator.forBlock['sap_SapModel_LoadCases_ResponseSpectrum_SetDampConstant'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_Damp = block.getFieldValue('Damp') || '0';
+    var v_Damp = "'" + (block.getFieldValue('Damp') || '') + "'";
     var code = '';
     code += 'ret = SapModel.LoadCases.ResponseSpectrum.SetDampConstant(' + v_Name + ', ' + v_Damp + ')\n';
     code += 'assert ret == 0, "ResponseSpectrum.SetDampConstant failed: " + str(ret)\n';
@@ -2133,7 +2133,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_MassFromLoads = "'" + (block.getFieldValue('MassFromLoads') || '') + "'";
     var v_IsDefault = "'" + (block.getFieldValue('IsDefault') || '') + "'";
     var v_NumberLoads = "'" + (block.getFieldValue('NumberLoads') || '') + "'";
-    var v_LoadPat__ = block.getFieldValue('LoadPat[]') || '0';
+    var v_LoadPat__ = "'" + (block.getFieldValue('LoadPat[]') || '') + "'";
     var v_SF__ = "'" + (block.getFieldValue('SF[]') || '') + "'";
     var code = '';
     code += 'raw = SapModel.SourceMass.SetMassSource(' + v_Name + ', ' + v_MassFromElements + ', ' + v_MassFromMasses + ', ' + v_MassFromLoads + ', ' + v_IsDefault + ', ' + v_NumberLoads + ', ' + v_LoadPat__ + ', ' + v_SF__ + ')\n';
@@ -2159,7 +2159,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_MassFromLoads = "'" + (block.getFieldValue('MassFromLoads') || '') + "'";
     var v_IsDefault = "'" + (block.getFieldValue('IsDefault') || '') + "'";
     var v_NumberLoads = "'" + (block.getFieldValue('NumberLoads') || '') + "'";
-    var v_LoadPat__ = block.getFieldValue('LoadPat[]') || '0';
+    var v_LoadPat__ = "'" + (block.getFieldValue('LoadPat[]') || '') + "'";
     var v_SF__ = "'" + (block.getFieldValue('SF[]') || '') + "'";
     var code = '';
     code += 'ret = SapModel.SourceMass.GetMassSource(' + v_Name + ', ' + v_MassFromElements + ', ' + v_MassFromMasses + ', ' + v_MassFromLoads + ', ' + v_IsDefault + ', ' + v_NumberLoads + ', ' + v_LoadPat__ + ', ' + v_SF__ + ')\n';
@@ -2283,7 +2283,7 @@ function registerSAP2000Generators(pythonGenerator) {
   // PropLink.SetGap
   pythonGenerator.forBlock['sap_SapModel_PropLink_SetGap'] = function(block, generator) {
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var v_Fixed = "'" + (block.getFieldValue('Fixed') || '') + "'";
     var v_Ke = "'" + (block.getFieldValue('Ke') || '') + "'";
     var v_Nonlinear = "'" + (block.getFieldValue('Nonlinear') || '') + "'";
@@ -2309,7 +2309,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_Point = "'" + (block.getFieldValue('Point') || '') + "'";
     var v_PropName = "'" + (block.getFieldValue('PropName') || '') + "'";
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
-    var v_UserName = block.getFieldValue('UserName') || '0';
+    var v_UserName = "'" + (block.getFieldValue('UserName') || '') + "'";
     var code = '';
     code += 'ret = SapModel.AreaObj.AddByPoint(' + v_NumberPoints + ', ' + v_Point + ', ' + v_PropName + ', ' + v_Name + ', ' + v_UserName + ')\n';
     code += 'assert ret == 0, "AreaObj.AddByPoint failed: " + str(ret)\n';
@@ -2346,7 +2346,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // PropMaterial.AddMaterial
   pythonGenerator.forBlock['sap_SapModel_PropMaterial_AddMaterial'] = function(block, generator) {
-    var v_Region = block.getFieldValue('Region') || '0';
+    var v_Region = "'" + (block.getFieldValue('Region') || '') + "'";
     var v_Standard = "'" + (block.getFieldValue('Standard') || '') + "'";
     var v_Grade = "'" + (block.getFieldValue('Grade') || '') + "'";
     var v_Name = "'" + (block.getFieldValue('Name') || '') + "'";
@@ -2410,7 +2410,7 @@ function registerSAP2000Generators(pythonGenerator) {
 
   // SapModel.SetModelIsLocked
   pythonGenerator.forBlock['sap_SapModel_SetModelIsLocked'] = function(block, generator) {
-    var v_LockIt = block.getFieldValue('LockIt') || '0';
+    var v_LockIt = "'" + (block.getFieldValue('LockIt') || '') + "'";
     var code = '';
     code += 'ret = SapModel.SetModelIsLocked(' + v_LockIt + ')\n';
     code += 'assert ret == 0, "SapModel.SetModelIsLocked failed: " + str(ret)\n';
@@ -2453,7 +2453,7 @@ function registerSAP2000Generators(pythonGenerator) {
     var v_NumberItems = "'" + (block.getFieldValue('NumberItems') || '') + "'";
     var v_PatternName = "'" + (block.getFieldValue('PatternName') || '') + "'";
     var v_ItemType = block.getFieldValue('ItemType') || '0';
-    var v_DOF = block.getFieldValue('DOF') || '0';
+    var v_DOF = "'" + (block.getFieldValue('DOF') || '') + "'";
     var v_Value = "'" + (block.getFieldValue('Value') || '') + "'";
     var code = '';
     code += 'ret = SapModel.PointObj.GetLoadForce(' + v_Name + ', ' + v_NumberItems + ', ' + v_PatternName + ', ' + v_ItemType + ', ' + v_DOF + ', ' + v_Value + ')\n';

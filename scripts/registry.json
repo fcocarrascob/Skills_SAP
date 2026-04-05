@@ -7,11 +7,12 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-31T17:37:44.434636+00:00",
-      "verification_count": 150,
+      "last_verified": "2026-04-05T01:23:31.956250+00:00",
+      "verification_count": 152,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
-        "domo_elipsoidal_parametrico.py"
+        "domo_elipsoidal_parametrico.py",
+        "test_blockly_workflow_portico.py"
       ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
@@ -24,11 +25,12 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-31T17:37:56.084726+00:00",
-      "verification_count": 105,
+      "last_verified": "2026-04-05T01:23:31.992994+00:00",
+      "verification_count": 107,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
-        "domo_elipsoidal_parametrico.py"
+        "domo_elipsoidal_parametrico.py",
+        "test_blockly_workflow_portico.py"
       ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -41,11 +43,12 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-31T17:37:56.091834+00:00",
-      "verification_count": 66,
+      "last_verified": "2026-04-05T01:23:32.004371+00:00",
+      "verification_count": 68,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
       "used_in_scripts": [
-        "domo_elipsoidal_parametrico.py"
+        "domo_elipsoidal_parametrico.py",
+        "test_blockly_workflow_portico.py"
       ],
       "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
       "known_errors": [],
@@ -72,13 +75,16 @@
       "signature": "(Name, MatProp, T3, T2, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T14:50:33.555941+00:00",
-      "verification_count": 55,
+      "last_verified": "2026-04-05T01:23:32.015925+00:00",
+      "verification_count": 57,
       "wrapper_script": "func_PropFrame_SetRectangle",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "Name: str; MatProp: str (existing material); T3: float (depth/height [L]); T2: float (width [L]); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Common for concrete beams and columns."
+      "notes": "Returns ret_code directly (0=success). Common for concrete beams and columns.",
+      "verification_type": "auto"
     },
     "SapModel.PropFrame.SetCircle": {
       "category": "PropFrame",
@@ -146,10 +152,12 @@
       "signature": "(Units) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.413117+00:00",
-      "last_verified": "2026-03-31T17:37:44.442147+00:00",
-      "verification_count": 142,
+      "last_verified": "2026-04-05T01:23:31.982461+00:00",
+      "verification_count": 144,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "Units: int — eUnits enum (e.g. 6=kN_m_C)",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). Does not convert existing geometry.",
@@ -178,8 +186,8 @@
       "signature": "() -> count",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.415848+00:00",
-      "last_verified": "2026-03-31T17:37:44.453698+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-04-05T01:18:40.937689+00:00",
+      "verification_count": 11,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "No inputs. Returns integer count directly.",
@@ -223,13 +231,14 @@
       "signature": "() -> count",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-03-25T02:56:48.110579+00:00",
-      "verification_count": 10,
+      "last_verified": "2026-04-05T01:18:40.912965+00:00",
+      "verification_count": 11,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "No inputs. Returns integer count directly.",
       "known_errors": [],
-      "notes": "Returns integer directly (not a list)."
+      "notes": "Returns integer directly (not a list).",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.GetPoints": {
       "category": "Object_Model",
@@ -237,13 +246,16 @@
       "signature": "(Name, Point1, Point2) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-03-25T02:44:55.522108+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-04-05T01:23:32.044252+00:00",
+      "verification_count": 10,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "Name: str — frame name; Point1: str — (ByRef out) I-end point; Point2: str — (ByRef out) J-end point",
       "known_errors": [],
-      "notes": "ByRef layout: [Point1, Point2, ret_code]. Pass '', '' as placeholders."
+      "notes": "ByRef layout: [Point1, Point2, ret_code]. Pass '', '' as placeholders.",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.AddByCoord": {
       "category": "Object_Model",
@@ -251,10 +263,12 @@
       "signature": "(x1, y1, z1, x2, y2, z2, Name, PropName, UserName, CSys)",
       "verified": true,
       "first_verified": "2026-03-20T14:41:51.011155+00:00",
-      "last_verified": "2026-04-01T20:45:48.574977+00:00",
-      "verification_count": 52,
+      "last_verified": "2026-04-05T01:23:32.027626+00:00",
+      "verification_count": 54,
       "wrapper_script": "func_FrameObj_AddByCoord",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "",
@@ -372,10 +386,12 @@
       "signature": "(Name, MyType, SelfWTMultiplier, AddCase)",
       "verified": true,
       "first_verified": "2026-03-20T14:53:26.742703+00:00",
-      "last_verified": "2026-04-01T20:45:48.601437+00:00",
-      "verification_count": 24,
+      "last_verified": "2026-04-05T01:23:32.073299+00:00",
+      "verification_count": 26,
       "wrapper_script": "func_LoadPatterns_Add",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). No ByRef outputs. signature: (Name, MyType, SelfWTMultiplier, AddCase) → ret_code",
@@ -656,13 +672,16 @@
       "signature": "(Name, Value, ItemType)",
       "verified": true,
       "first_verified": "2026-03-20T15:16:30.702789+00:00",
-      "last_verified": "2026-03-28T04:42:56.992184+00:00",
-      "verification_count": 22,
+      "last_verified": "2026-04-05T01:23:32.059687+00:00",
+      "verification_count": 24,
       "wrapper_script": "func_PointObj_SetRestraint",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.LoadPatterns.GetNameList": {
       "category": "Load_Patterns",
@@ -685,8 +704,8 @@
       "signature": "(NumberNames, MyName) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:21:16.851260+00:00",
-      "last_verified": "2026-04-01T20:43:42.519571+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-04-05T01:18:40.860933+00:00",
+      "verification_count": 7,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "NumberNames: int — (ByRef out) count; MyName: str[] — (ByRef out) names",
@@ -700,13 +719,16 @@
       "signature": "(Name, LoadPat, MyType, Dir, Dist1, Dist2, Val1, Val2, CSys, RelDist, Replace, ItemType) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.647030+00:00",
-      "last_verified": "2026-03-28T04:23:39.627018+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-04-05T01:23:32.088430+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_FrameObj_SetLoadDistributed",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.PointObj.SetLoadForce": {
       "category": "Object_Model",
@@ -747,11 +769,12 @@
       "signature": "(FileName) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:54.993896+00:00",
-      "last_verified": "2026-04-01T20:45:48.625137+00:00",
-      "verification_count": 26,
+      "last_verified": "2026-04-05T01:23:32.100944+00:00",
+      "verification_count": 28,
       "wrapper_script": "",
       "used_in_scripts": [
-        "domo_elipsoidal_parametrico.py"
+        "domo_elipsoidal_parametrico.py",
+        "test_blockly_workflow_portico.py"
       ],
       "parameter_notes": "FileName: str — full path for save; pass '' to save to existing path",
       "known_errors": [],
@@ -764,13 +787,16 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.084527+00:00",
-      "last_verified": "2026-03-28T04:42:57.008442+00:00",
-      "verification_count": 15,
+      "last_verified": "2026-04-05T01:23:32.114988+00:00",
+      "verification_count": 17,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "No inputs. Runs all active load cases.",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Locks model after completion."
+      "notes": "Returns ret_code directly (0=success). Locks model after completion.",
+      "verification_type": "auto"
     },
     "SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput": {
       "category": "Analysis_Results",
@@ -778,10 +804,12 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.260504+00:00",
-      "last_verified": "2026-04-02T14:29:29.314764+00:00",
-      "verification_count": 19,
+      "last_verified": "2026-04-05T01:23:32.134505+00:00",
+      "verification_count": 21,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "No inputs. Call before selecting specific cases for results output.",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). Use before SetCaseSelectedForOutput.",
@@ -793,10 +821,12 @@
       "signature": "(Name, Selected) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.418469+00:00",
-      "last_verified": "2026-04-02T14:29:29.321916+00:00",
-      "verification_count": 19,
+      "last_verified": "2026-04-05T01:23:32.166748+00:00",
+      "verification_count": 21,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "Name: str — load case name; Selected: bool — True=select for output",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success).",
@@ -822,13 +852,16 @@
       "signature": "(Name, ItemTypeElm, NumberResults, Obj, ObjSta, Elm, ElmSta, LoadCase, StepType, StepNum, P, V2, V3, T, M2, M3) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.772256+00:00",
-      "last_verified": "2026-03-25T02:35:03.034682+00:00",
-      "verification_count": 4,
+      "last_verified": "2026-04-05T01:23:32.202413+00:00",
+      "verification_count": 6,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "test_blockly_workflow_portico.py"
+      ],
       "parameter_notes": "Name: str — frame name or 'All'; ItemTypeElm: int — 0=Object; all others are ByRef outputs",
       "known_errors": [],
-      "notes": "ByRef layout: [NumberResults, Obj[], ObjSta[], Elm[], ElmSta[], LoadCase[], StepType[], StepNum[], P[], V2[], V3[], T[], M2[], M3[], ret_code]."
+      "notes": "ByRef layout: [NumberResults, Obj[], ObjSta[], Elm[], ElmSta[], LoadCase[], StepType[], StepNum[], P[], V2[], V3[], T[], M2[], M3[], ret_code].",
+      "verification_type": "auto"
     },
     "SapModel.Results.JointReact": {
       "category": "Analysis_Results",
@@ -1984,8 +2017,8 @@
       "signature": "(NumberNames, MyName) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T13:39:20.427010+00:00",
-      "last_verified": "2026-03-31T14:57:50.383134+00:00",
-      "verification_count": 5,
+      "last_verified": "2026-04-05T01:18:40.802672+00:00",
+      "verification_count": 6,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "NumberNames: int — (ByRef out) count; MyName: str[] — (ByRef out) names",
@@ -2881,10 +2914,26 @@
       "parameter_notes": "Name: str — joint name or 'All'; NumberItems: int — (ByRef out) count; PatternName: str[] — (ByRef out); ItemType: int — 0=Object",
       "known_errors": [],
       "notes": "ByRef layout: [NumberItems, PatternName[], ItemType[], DOF[], Value[], CSys[], ret_code]."
+    },
+    "SapModel.X.Y": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-04-05T01:18:40.675558+00:00",
+      "last_verified": "2026-04-05T01:18:40.675558+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 200,
-    "total_verified": 200
+    "total_registered": 201,
+    "total_verified": 201,
+    "last_updated": "2026-04-05T01:23:32.203413+00:00"
   }
 }

@@ -1,6 +1,6 @@
 // ===========================================================
 // SAP2000 Block Definitions - Auto-generated
-// Generated: 2026-04-04 09:59
+// Generated: 2026-04-04 22:39
 // DO NOT EDIT MANUALLY - run blockly_generator.py to regenerate
 // ===========================================================
 
@@ -51,7 +51,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('A:'))
-          .appendField(new Blockly.FieldTextInput(''), 'A');
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'A');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Set isotropic mechanical properties (E, Poisson, thermal coeff)');
@@ -85,10 +85,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetRectangle')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -108,10 +108,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetCircle')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -128,10 +128,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetISection')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -163,10 +163,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetTube')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -232,7 +232,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MergeOff:'))
           .appendField(new Blockly.FieldTextInput(''), 'MergeOff');
@@ -299,7 +299,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PropName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Create a frame element between two existing points');
@@ -369,7 +369,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PropName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Add a frame element defined by endpoint coordinates');
@@ -441,7 +441,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'MatAng');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Thickness:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Thickness');
+          .appendField(new Blockly.FieldTextInput(''), 'Thickness');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Bending:'))
           .appendField(new Blockly.FieldTextInput(''), 'Bending');
@@ -493,7 +493,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PropName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Crea un objeto de área (shell) definiendo sus vértices por coordenadas. Acepta triángulos (3 pts) o quads (4 pts). Retor');
@@ -531,7 +531,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'SimpleSpringType');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LinkProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LinkProp');
+          .appendField(new Blockly.FieldTextInput(''), 'LinkProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Face:'))
           .appendField(new Blockly.FieldTextInput(''), 'Face');
@@ -552,7 +552,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Ang');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -604,7 +604,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Value');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DampRatio:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DampRatio');
+          .appendField(new Blockly.FieldTextInput(''), 'DampRatio');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Define a user-defined response spectrum function from period-value pairs');
@@ -630,7 +630,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Value');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DampRatio:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DampRatio');
+          .appendField(new Blockly.FieldTextInput(''), 'DampRatio');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Get the user-defined response spectrum function data');
@@ -664,7 +664,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberLoads');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadName');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Func:'))
           .appendField(new Blockly.FieldTextInput(''), 'Func');
@@ -693,7 +693,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberItems');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadName');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Func:'))
           .appendField(new Blockly.FieldTextInput(''), 'Func');
@@ -828,7 +828,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumAreas');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('AreaName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'AreaName');
+          .appendField(new Blockly.FieldTextInput(''), 'AreaName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('N1:'))
           .appendField(new Blockly.FieldTextInput(''), 'N1');
@@ -849,25 +849,25 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PointOnEdgeFromPoint');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ExtendCookieCutLines:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'ExtendCookieCutLines');
+          .appendField(new Blockly.FieldTextInput(''), 'ExtendCookieCutLines');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Rotation:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Rotation');
+          .appendField(new Blockly.FieldTextInput(''), 'Rotation');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MaxSizeGeneral:'))
           .appendField(new Blockly.FieldTextInput(''), 'MaxSizeGeneral');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LocalAxesOnEdge:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LocalAxesOnEdge');
+          .appendField(new Blockly.FieldTextInput(''), 'LocalAxesOnEdge');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LocalAxesOnFace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LocalAxesOnFace');
+          .appendField(new Blockly.FieldTextInput(''), 'LocalAxesOnFace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RestraintsOnEdge:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RestraintsOnEdge');
+          .appendField(new Blockly.FieldTextInput(''), 'RestraintsOnEdge');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RestraintsOnFace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RestraintsOnFace');
+          .appendField(new Blockly.FieldTextInput(''), 'RestraintsOnFace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Group:'))
           .appendField(new Blockly.FieldTextInput(''), 'Group');
@@ -920,7 +920,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'ZMax');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Deselect:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Deselect');
+          .appendField(new Blockly.FieldTextInput(''), 'Deselect');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('IncludeIntersections:'))
           .appendField(new Blockly.FieldTextInput(''), 'IncludeIntersections');
@@ -1012,7 +1012,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Get the DOF configuration of a body constraint');
@@ -1029,16 +1029,16 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitCompressionExists:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitCompressionExists');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitCompressionExists');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitCompression:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitCompression');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitCompression');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitTensionExists:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitTensionExists');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitTensionExists');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitTension:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitTension');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitTension');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -1058,16 +1058,16 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitCompressionExists:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitCompressionExists');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitCompressionExists');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitCompression:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitCompression');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitCompression');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitTensionExists:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitTensionExists');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitTensionExists');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LimitTension:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LimitTension');
+          .appendField(new Blockly.FieldTextInput(''), 'LimitTension');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Get the tension/compression limits for a frame object');
@@ -1141,7 +1141,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MyType:'))
           .appendField(new Blockly.FieldNumber(1, -Infinity, Infinity, 1), 'MyType');
@@ -1150,10 +1150,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldDropdown([["Local1 (1)", "1"], ["Local2 (2)", "2"], ["Local3 (3)", "3"], ["X (4)", "4"], ["Y (5)", "5"], ["Z (6)", "6"], ["GravityProjected (10)", "10"], ["GravityFull (11)", "11"]]), 'Dir');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Dist1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Dist1');
+          .appendField(new Blockly.FieldTextInput(''), 'Dist1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Dist2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Dist2');
+          .appendField(new Blockly.FieldTextInput(''), 'Dist2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Val1:'))
           .appendField(new Blockly.FieldTextInput(''), 'Val1');
@@ -1162,10 +1162,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Val2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RelDist:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RelDist');
+          .appendField(new Blockly.FieldTextInput(''), 'RelDist');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -1185,13 +1185,13 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Value:'))
           .appendField(new Blockly.FieldTextInput(''), 'Value');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -1208,7 +1208,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('View.RefreshView')
           .appendField(new Blockly.FieldLabel('Window:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Window');
+          .appendField(new Blockly.FieldTextInput(''), 'Window');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Zoom:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Zoom');
@@ -1292,10 +1292,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Obj');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Elm:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Elm');
+          .appendField(new Blockly.FieldTextInput(''), 'Elm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -1304,22 +1304,22 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'StepNum');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U1');
+          .appendField(new Blockly.FieldTextInput(''), 'U1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U2');
+          .appendField(new Blockly.FieldTextInput(''), 'U2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U3');
+          .appendField(new Blockly.FieldTextInput(''), 'U3');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R1');
+          .appendField(new Blockly.FieldTextInput(''), 'R1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R2');
+          .appendField(new Blockly.FieldTextInput(''), 'R2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R3');
+          .appendField(new Blockly.FieldTextInput(''), 'R3');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Extract joint displacement results (translations and rotations)');
@@ -1348,13 +1348,13 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'ObjSta');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Elm:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Elm');
+          .appendField(new Blockly.FieldTextInput(''), 'Elm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ElmSta:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'ElmSta');
+          .appendField(new Blockly.FieldTextInput(''), 'ElmSta');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -1404,10 +1404,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Obj');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Elm:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Elm');
+          .appendField(new Blockly.FieldTextInput(''), 'Elm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -1482,10 +1482,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberTables');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableKey[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableName[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableName[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableName[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ImportType[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'ImportType[]');
@@ -1508,10 +1508,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberTables');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableKey[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableName[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableName[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableName[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ImportType[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'ImportType[]');
@@ -1528,10 +1528,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetAllFieldsInTable')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('NumberFields:'))
           .appendField(new Blockly.FieldTextInput(''), 'NumberFields');
@@ -1543,7 +1543,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'FieldName[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Description[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Description[]');
+          .appendField(new Blockly.FieldTextInput(''), 'Description[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UnitsString[]:'))
           .appendField(new Blockly.FieldDropdown([["lb_in_F (1)", "1"], ["lb_ft_F (2)", "2"], ["kip_in_F (3)", "3"], ["kip_ft_F (4)", "4"], ["kN_mm_C (5)", "5"], ["kN_m_C (6)", "6"], ["kgf_mm_C (7)", "7"], ["kgf_m_C (8)", "8"], ["N_mm_C (9)", "9"], ["N_m_C (10)", "10"], ["Ton_mm_C (11)", "11"], ["Ton_m_C (12)", "12"], ["kN_cm_C (13)", "13"], ["kgf_cm_C (14)", "14"], ["N_cm_C (15)", "15"], ["Ton_cm_C (16)", "16"]]), 'UnitsString[]');
@@ -1566,7 +1566,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberTableKeys');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableKeyList[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKeyList[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKeyList[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('NotesList[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'NotesList[]');
@@ -1583,13 +1583,13 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForEditingArray')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('GroupName:'))
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeysIncluded[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeysIncluded[]');
@@ -1598,7 +1598,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberRecords');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableData[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableData[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableData[]');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Read a table as flat array for interactive editing. Returns TableVersion, FieldKeysIncluded[], NumberRecords, TableData[');
@@ -1624,10 +1624,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.SetTableForEditingArray')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeysIncluded[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeysIncluded[]');
@@ -1636,7 +1636,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberRecords');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableData[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableData[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableData[]');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Write edited table data (flat array) back for import via ApplyEditedTables. COM echoes back TableVersion, FieldKeysInclu');
@@ -1679,7 +1679,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForDisplayArray')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeyList[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeyList[]');
@@ -1688,7 +1688,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeysIncluded[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeysIncluded[]');
@@ -1697,7 +1697,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberRecords');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableData[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableData[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableData[]');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Read table data for display (read-only) as flat array. Allows specifying subset of fields via FieldKeyList.');
@@ -1711,7 +1711,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForDisplayCSVFile')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeyList[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeyList[]');
@@ -1720,7 +1720,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvFilePath:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvFilePath');
@@ -1740,7 +1740,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForDisplayCSVString')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeyList[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeyList[]');
@@ -1749,7 +1749,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvString:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvString');
@@ -1769,7 +1769,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForDisplayXMLString')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FieldKeyList[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'FieldKeyList[]');
@@ -1781,7 +1781,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'IncludeSchema');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('XMLTableData:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'XMLTableData');
@@ -1798,13 +1798,13 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForEditingCSVFile')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('GroupName:'))
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvFilePath:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvFilePath');
@@ -1824,13 +1824,13 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.GetTableForEditingCSVString')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('GroupName:'))
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvString:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvString');
@@ -1850,10 +1850,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.SetTableForEditingCSVFile')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvFilePath:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvFilePath');
@@ -1873,10 +1873,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.SetTableForEditingCSVString')
           .appendField(new Blockly.FieldLabel('TableKey:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKey');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKey');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableVersion:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableVersion');
+          .appendField(new Blockly.FieldTextInput(''), 'TableVersion');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('csvString:'))
           .appendField(new Blockly.FieldTextInput(''), 'csvString');
@@ -2214,19 +2214,19 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'ModeShapeRef');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableGroupOpt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableGroupOpt');
+          .appendField(new Blockly.FieldTextInput(''), 'TableGroupOpt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableGroupSingle:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableGroupSingle');
+          .appendField(new Blockly.FieldTextInput(''), 'TableGroupSingle');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FourDFloat:'))
           .appendField(new Blockly.FieldTextInput(''), 'FourDFloat');
@@ -2238,22 +2238,22 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'FourDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDInt');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Returns table output display options (18 ByRef params: BaseReaction coords, mode ranges, history options)');
@@ -2279,19 +2279,19 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'ModeShapeRef');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableGroupOpt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableGroupOpt');
+          .appendField(new Blockly.FieldTextInput(''), 'TableGroupOpt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TableGroupSingle:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableGroupSingle');
+          .appendField(new Blockly.FieldTextInput(''), 'TableGroupSingle');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwoDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwoDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'TwoDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FourDFloat:'))
           .appendField(new Blockly.FieldTextInput(''), 'FourDFloat');
@@ -2303,22 +2303,22 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'FourDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EightDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EightDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'EightDInt');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDFloat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDFloat');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDFloat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDFloatFig:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDFloatFig');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDFloatFig');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('TwelveDInt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TwelveDInt');
+          .appendField(new Blockly.FieldTextInput(''), 'TwelveDInt');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Sets table output display options (18 params: BaseReaction coords, mode ranges, history options)');
@@ -2332,10 +2332,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('DatabaseTables.ShowTablesInExcel')
           .appendField(new Blockly.FieldLabel('TableKeyList[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TableKeyList[]');
+          .appendField(new Blockly.FieldTextInput(''), 'TableKeyList[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('WindowHandle:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'WindowHandle');
+          .appendField(new Blockly.FieldTextInput(''), 'WindowHandle');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Export specified tables directly to Excel. Excel must be installed. Returns 0 on success.');
@@ -2370,7 +2370,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'FrameName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MyType:'))
           .appendField(new Blockly.FieldNumber(1, -Infinity, Infinity, 1), 'MyType');
@@ -2379,16 +2379,16 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldDropdown([["Local1 (1)", "1"], ["Local2 (2)", "2"], ["Local3 (3)", "3"], ["X (4)", "4"], ["Y (5)", "5"], ["Z (6)", "6"], ["GravityProjected (10)", "10"], ["GravityFull (11)", "11"]]), 'Dir');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RD1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RD1');
+          .appendField(new Blockly.FieldTextInput(''), 'RD1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RD2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RD2');
+          .appendField(new Blockly.FieldTextInput(''), 'RD2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Dist1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Dist1');
+          .appendField(new Blockly.FieldTextInput(''), 'Dist1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Dist2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Dist2');
+          .appendField(new Blockly.FieldTextInput(''), 'Dist2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Val1:'))
           .appendField(new Blockly.FieldTextInput(''), 'Val1');
@@ -2414,7 +2414,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MyType:'))
           .appendField(new Blockly.FieldNumber(1, -Infinity, Infinity, 1), 'MyType');
@@ -2423,16 +2423,16 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldDropdown([["Local1 (1)", "1"], ["Local2 (2)", "2"], ["Local3 (3)", "3"], ["X (4)", "4"], ["Y (5)", "5"], ["Z (6)", "6"], ["GravityProjected (10)", "10"], ["GravityFull (11)", "11"]]), 'Dir');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Dist:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Dist');
+          .appendField(new Blockly.FieldTextInput(''), 'Dist');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Val:'))
           .appendField(new Blockly.FieldTextInput(''), 'Val');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('RelDist:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'RelDist');
+          .appendField(new Blockly.FieldTextInput(''), 'RelDist');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2452,7 +2452,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Value:'))
           .appendField(new Blockly.FieldTextInput(''), 'Value');
@@ -2461,7 +2461,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldDropdown([["Local1 (1)", "1"], ["Local2 (2)", "2"], ["Local3 (3)", "3"], ["X (4)", "4"], ["Y (5)", "5"], ["Z (6)", "6"], ["GravityProjected (10)", "10"], ["GravityFull (11)", "11"]]), 'Dir');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2481,7 +2481,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberResults');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -2531,7 +2531,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('x:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'x');
@@ -2543,7 +2543,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'z');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Replace:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Replace');
+          .appendField(new Blockly.FieldCheckbox('TRUE'), 'Replace');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2572,7 +2572,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'StartValue');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EndValue:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EndValue');
+          .appendField(new Blockly.FieldTextInput(''), 'EndValue');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2601,7 +2601,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'StartValue');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EndValue:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EndValue');
+          .appendField(new Blockly.FieldTextInput(''), 'EndValue');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Retrieve end release and partial fixity assignments from frame objects');
@@ -2789,7 +2789,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Remove:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Remove');
+          .appendField(new Blockly.FieldTextInput(''), 'Remove');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2835,7 +2835,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'GroupName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Remove:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Remove');
+          .appendField(new Blockly.FieldTextInput(''), 'Remove');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('ItemType:'))
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
@@ -2918,13 +2918,13 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Obj');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Elm:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Elm');
+          .appendField(new Blockly.FieldTextInput(''), 'Elm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('PointElm:'))
           .appendField(new Blockly.FieldTextInput(''), 'PointElm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -3018,7 +3018,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberResults');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -3036,7 +3036,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'CircFreq');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EigenValue:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EigenValue');
+          .appendField(new Blockly.FieldTextInput(''), 'EigenValue');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Extract modal periods, frequencies, circular frequencies, and eigenvalues');
@@ -3053,7 +3053,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberResults');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -3065,13 +3065,13 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Period');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Ux:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Ux');
+          .appendField(new Blockly.FieldTextInput(''), 'Ux');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Uy:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Uy');
+          .appendField(new Blockly.FieldTextInput(''), 'Uy');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Uz:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Uz');
+          .appendField(new Blockly.FieldTextInput(''), 'Uz');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('SumUx:'))
           .appendField(new Blockly.FieldTextInput(''), 'SumUx');
@@ -3083,13 +3083,13 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'SumUz');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Rx:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Rx');
+          .appendField(new Blockly.FieldTextInput(''), 'Rx');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Ry:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Ry');
+          .appendField(new Blockly.FieldTextInput(''), 'Ry');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Rz:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Rz');
+          .appendField(new Blockly.FieldTextInput(''), 'Rz');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('SumRx:'))
           .appendField(new Blockly.FieldTextInput(''), 'SumRx');
@@ -3124,10 +3124,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Obj');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Elm:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Elm');
+          .appendField(new Blockly.FieldTextInput(''), 'Elm');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadCase:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadCase');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadCase');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('StepType:'))
           .appendField(new Blockly.FieldTextInput(''), 'StepType');
@@ -3136,22 +3136,22 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'StepNum');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U1');
+          .appendField(new Blockly.FieldTextInput(''), 'U1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U2');
+          .appendField(new Blockly.FieldTextInput(''), 'U2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('U3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U3');
+          .appendField(new Blockly.FieldTextInput(''), 'U3');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R1:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R1');
+          .appendField(new Blockly.FieldTextInput(''), 'R1');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R2');
+          .appendField(new Blockly.FieldTextInput(''), 'R2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('R3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'R3');
+          .appendField(new Blockly.FieldTextInput(''), 'R3');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Extract modal displacements (mode shapes) at point elements');
@@ -3165,7 +3165,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('Analyze.SetActiveDOF')
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Set active/inactive global degrees of freedom for analysis model');
@@ -3179,7 +3179,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('Analyze.GetActiveDOF')
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Retrieve active global degrees of freedom for analysis model');
@@ -3230,7 +3230,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Fixed:'))
           .appendField(new Blockly.FieldTextInput(''), 'Fixed');
@@ -3242,10 +3242,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Ce');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('dj2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'dj2');
+          .appendField(new Blockly.FieldTextInput(''), 'dj2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('dj3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'dj3');
+          .appendField(new Blockly.FieldTextInput(''), 'dj3');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('KeCoupled:'))
           .appendField(new Blockly.FieldTextInput(''), 'KeCoupled');
@@ -3268,7 +3268,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Fixed:'))
           .appendField(new Blockly.FieldTextInput(''), 'Fixed');
@@ -3280,10 +3280,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Ce');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DJ2:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DJ2');
+          .appendField(new Blockly.FieldTextInput(''), 'DJ2');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DJ3:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DJ3');
+          .appendField(new Blockly.FieldTextInput(''), 'DJ3');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Get linear link property parameters');
@@ -3312,7 +3312,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PropName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Create a two-joint link element between two existing point objects.');
@@ -3365,7 +3365,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'PropName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Create a link element by specifying I-End and J-End coordinates');
@@ -3434,7 +3434,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'MatAng');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Thickness:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Thickness');
+          .appendField(new Blockly.FieldTextInput(''), 'Thickness');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Bending:'))
           .appendField(new Blockly.FieldTextInput(''), 'Bending');
@@ -3460,10 +3460,10 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Fu');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EFy:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EFy');
+          .appendField(new Blockly.FieldTextInput(''), 'EFy');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('EFu:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'EFu');
+          .appendField(new Blockly.FieldTextInput(''), 'EFu');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('SSType:'))
           .appendField(new Blockly.FieldTextInput(''), 'SSType');
@@ -3525,7 +3525,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'FrictionAngle');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DilatationalAngle:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DilatationalAngle');
+          .appendField(new Blockly.FieldTextInput(''), 'DilatationalAngle');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Set concrete design properties (fc, lightweight flag, stress-strain model)');
@@ -3565,7 +3565,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'U');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('A:'))
-          .appendField(new Blockly.FieldTextInput(''), 'A');
+          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'A');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Retrieve isotropic mechanical properties (E, Poisson ratio, thermal expansion coefficient)');
@@ -3596,10 +3596,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetAngle')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -3625,10 +3625,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetChannel')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -3654,10 +3654,10 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.SetPipe')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -3677,13 +3677,13 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.GetRectangle')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FileName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'FileName');
+          .appendField(new Blockly.FieldTextInput(''), 'FileName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -3726,13 +3726,13 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropFrame.GetISection')
           .appendField(new Blockly.FieldLabel('Name:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Name');
+          .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('FileName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'FileName');
+          .appendField(new Blockly.FieldTextInput(''), 'FileName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('MatProp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'MatProp');
+          .appendField(new Blockly.FieldTextInput(''), 'MatProp');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('T3:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'T3');
@@ -3994,16 +3994,16 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('RespCombo.AddDesignDefaultCombos')
           .appendField(new Blockly.FieldLabel('DesignSteel:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DesignSteel');
+          .appendField(new Blockly.FieldTextInput(''), 'DesignSteel');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DesignConcrete:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DesignConcrete');
+          .appendField(new Blockly.FieldTextInput(''), 'DesignConcrete');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DesignAluminum:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DesignAluminum');
+          .appendField(new Blockly.FieldTextInput(''), 'DesignAluminum');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DesignColdFormed:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DesignColdFormed');
+          .appendField(new Blockly.FieldTextInput(''), 'DesignColdFormed');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Add default design combinations by material type');
@@ -4017,7 +4017,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('File.New2DFrame')
           .appendField(new Blockly.FieldLabel('TemplateName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'TemplateName');
+          .appendField(new Blockly.FieldTextInput(''), 'TemplateName');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('NumberStorys:'))
           .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'NumberStorys');
@@ -4066,7 +4066,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Damp:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Damp');
+          .appendField(new Blockly.FieldTextInput(''), 'Damp');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Set constant damping for a response spectrum case');
@@ -4186,7 +4186,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberLoads');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat[]');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('SF[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'SF[]');
@@ -4233,7 +4233,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'NumberLoads');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('LoadPat[]:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LoadPat[]');
+          .appendField(new Blockly.FieldTextInput(''), 'LoadPat[]');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('SF[]:'))
           .appendField(new Blockly.FieldTextInput(''), 'SF[]');
@@ -4425,7 +4425,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Fixed:'))
           .appendField(new Blockly.FieldTextInput(''), 'Fixed');
@@ -4478,7 +4478,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldTextInput(''), 'Name');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('UserName:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'UserName');
+          .appendField(new Blockly.FieldTextInput(''), 'UserName');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Add an area object by specifying existing point names');
@@ -4538,7 +4538,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('PropMaterial.AddMaterial')
           .appendField(new Blockly.FieldLabel('Region:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'Region');
+          .appendField(new Blockly.FieldTextInput(''), 'Region');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Standard:'))
           .appendField(new Blockly.FieldTextInput(''), 'Standard');
@@ -4652,7 +4652,7 @@ function registerSAP2000Blocks() {
       this.appendDummyInput()
           .appendField('SapModel.SetModelIsLocked')
           .appendField(new Blockly.FieldLabel('LockIt:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'LockIt');
+          .appendField(new Blockly.FieldTextInput(''), 'LockIt');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
       this.setTooltip('Lock or unlock the model');
@@ -4729,7 +4729,7 @@ function registerSAP2000Blocks() {
           .appendField(new Blockly.FieldDropdown([["Object (0)", "0"], ["Group (1)", "1"], ["SelectedObjects (2)", "2"]]), 'ItemType');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('DOF:'))
-          .appendField(new Blockly.FieldNumber(0, -Infinity, Infinity, 0.001), 'DOF');
+          .appendField(new Blockly.FieldTextInput(''), 'DOF');
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabel('Value:'))
           .appendField(new Blockly.FieldTextInput(''), 'Value');

@@ -262,10 +262,17 @@ class BlocklyBlockGenerator:
             pdef.param_type = "enum"; pdef.enum_key = "eShellType"; pdef.default = "1"
         elif "CombType" in pname or "ComboType" in pname:
             pdef.param_type = "enum"; pdef.enum_key = "eCombType"; pdef.default = "0"
+        # ── Known string params: check BEFORE numeric heuristics to avoid false matches ──
+        # e.g. "Name" starts with "n" (not in prefix list) but "LoadPat" starts with "l"
+        elif any(kw in name_lower for kw in ("name", "prop", "mat", "label",
+                                              "pattern", "loadpat", "case", "combo",
+                                              "group", "filename", "secname")):
+            pdef.param_type = "str"; pdef.default = ""
         elif any(name_lower.startswith(prefix) for prefix in
-                 ("x", "y", "z", "t2", "t3", "t", "e", "u", "r", "d", "w", "h", "l", "area", "vol")):
+                 ("x", "y", "z", "t2", "t3", "area", "vol")):
             pdef.param_type = "float"; pdef.default = "0"
-        elif name_lower in ("tf", "tw", "bftop", "bfbot", "t2b", "tfb", "hweb"):
+        elif name_lower in ("t", "t3", "t2", "tf", "tw", "bftop", "bfbot", "t2b", "tfb",
+                            "hweb", "e", "u", "a", "w", "h", "r", "d"):
             pdef.param_type = "float"; pdef.default = "0"
         elif any(kw in notes.lower() for kw in ("[l]", "depth", "width", "thickness",
                                                   "height", "length", "radius")):
@@ -274,9 +281,6 @@ class BlocklyBlockGenerator:
             pdef.param_type = "bool"; pdef.default = "true"
         elif name_lower in ("mytype", "type", "itype", "ntype"):
             pdef.param_type = "int"; pdef.default = "1"
-        elif any(kw in name_lower for kw in ("name", "prop", "mat", "label",
-                                              "pattern", "case", "combo", "group")):
-            pdef.param_type = "str"; pdef.default = ""
         else:
             pdef.param_type = "str"; pdef.default = ""
 

@@ -463,9 +463,24 @@ class BlocklyScripterApp(QMainWindow):
 
 
 def main():
-    app = QApplication(sys.argv)
+    import argparse
+    parser = argparse.ArgumentParser(description="SAP2000 Visual Scripter — Blockly")
+    parser.add_argument("--project", metavar="FILE.blockly",
+                        help="Open a .blockly project file on startup")
+    args, qt_args = parser.parse_known_args()
+
+    app = QApplication([sys.argv[0]] + qt_args)
     window = BlocklyScripterApp()
     window.show()
+
+    if args.project:
+        project_path = Path(args.project).resolve()
+        if project_path.exists():
+            # Delay load until Blockly JS is fully initialized (~1.5s)
+            QTimer.singleShot(2000, lambda: window._open_project(str(project_path)))
+        else:
+            print(f"[WARN] Proyecto no encontrado: {project_path}")
+
     sys.exit(app.exec())
 
 

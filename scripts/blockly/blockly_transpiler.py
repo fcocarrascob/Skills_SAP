@@ -105,8 +105,8 @@ class BlocklyTranspiler:
         if not match:
             return []
         raw = [p.strip() for p in match.group(1).split(",") if p.strip()]
-        # Filter out optional/internal params
-        skip = {"Color", "Notes", "GUID", "CSys"}
+        # Filter out optional/internal params (must stay in sync with blockly_generator.py)
+        skip = {"Color", "Notes", "GUID", "CSys", "Temp"}
         return [p for p in raw if p not in skip]
 
     def _parse_byref_outputs(self, notes: str) -> List[str]:
@@ -227,6 +227,7 @@ class BlocklyTranspiler:
             return f"# Bloque desconocido: {block_type}"
 
         comment = f"# [{index}] {meta.description or meta.func_path}"
+        trace = f'print("  [{index}] {meta.func_path}...")'
 
         # Build argument list from fields
         args = self._build_args(meta, fields)
@@ -235,7 +236,7 @@ class BlocklyTranspiler:
             # ByRef pattern
             args_str = ", ".join(args) if args else ""
             call = f"raw = {meta.func_path}({args_str})"
-            output_lines = [comment, call]
+            output_lines = [comment, trace, call]
             for j, out_name in enumerate(meta.byref_outputs):
                 safe = out_name.lower().replace(" ", "_")
                 output_lines.append(f"{safe} = raw[{j}]")
@@ -249,7 +250,7 @@ class BlocklyTranspiler:
             args_str = ", ".join(args) if args else ""
             call = f"ret = {meta.func_path}({args_str})"
             assertion = f'assert ret == 0, f"{meta.func_path} failed: {{ret}}"'
-            return f"{comment}\n{call}\n{assertion}"
+            return f"{comment}\n{trace}\n{call}\n{assertion}"
 
     def _build_args(self, meta: BlockMeta, fields: Dict[str, str]) -> List[str]:
         """Build Python argument list from block fields and block metadata."""
@@ -262,6 +263,12 @@ class BlocklyTranspiler:
                 value = fields.get(pname.upper(), "")
                 if not value:
                     value = fields.get(pname.lower(), "")
+
+            # File paths: bare filenames get sap_temp_dir prepended
+            if pname == "FileName" and value and "/" not in value and "\\" not in value:
+                safe = value.replace('"', '\\"')
+                args.append(f'sap_temp_dir + r"\\{safe}"')
+                continue
 
             # Determine if value should be quoted
             if self._looks_numeric(value):
