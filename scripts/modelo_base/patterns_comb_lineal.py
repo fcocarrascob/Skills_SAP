@@ -1,0 +1,357 @@
+# Script para crear patrones de carga y combinaciones en modelo SAP2000 actual
+
+from typing import Dict
+import comtypes.client
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Patrones de Carga
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ELoadPatternType: DEAD=1, SUPERDEAD=2, LIVE=3, REDUCELIVE=4, QUAKE=5,
+#                   WIND=6, SNOW=7, OTHER=8, MOVE=9, TEMP=10, ROOF=11
+ELOADTYPE: Dict[str, int] = {
+    "DEAD": 1,
+    "SUPERDEAD": 2,
+    "LIVE": 3,
+    "QUAKE": 5,
+    "WIND": 6,
+    "SNOW": 7,
+    "OTHER": 8,
+    "TEMP": 10,
+    "ROOF": 11,
+}
+
+LOAD_PATTERNS = [
+    {"name": "DEAD", "type": ELOADTYPE["DEAD"],  "self_wt": 1.2},
+    {"name": "LIVE", "type": ELOADTYPE["LIVE"],  "self_wt": 0.0},
+    {"name": "ROOF", "type": ELOADTYPE["ROOF"],  "self_wt": 0.0},
+    {"name": "SNOW", "type": ELOADTYPE["SNOW"],  "self_wt": 0.0},
+    {"name": "EQX",  "type": ELOADTYPE["QUAKE"], "self_wt": 0.0},
+    {"name": "EQY",  "type": ELOADTYPE["QUAKE"], "self_wt": 0.0},
+    {"name": "EQZ",  "type": ELOADTYPE["QUAKE"], "self_wt": 0.0},
+    {"name": "WINDX","type": ELOADTYPE["WIND"],  "self_wt": 0.0},
+    {"name": "WINDY","type": ELOADTYPE["WIND"],  "self_wt": 0.0},
+    {"name": "TEMP", "type": ELOADTYPE["TEMP"],  "self_wt": 0.0},
+    {"name": "SO",   "type": ELOADTYPE["OTHER"], "self_wt": 0.0},  # Sobrecargas de operación
+    {"name": "SA",   "type": ELOADTYPE["OTHER"], "self_wt": 0.0},  # Sobrecargas de almacenamiento
+]
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+#Combinaciones de Carga
+
+LRFD_COMBOS = [
+    # ── Caso 1: 1.4D ────────────────────────────────────────────────────
+    ("LRFD_1_+1.4D_+1.4T", [("DEAD", 1.4), ("TEMP", 1.4)]),
+    ("LRFD_1_+1.4D_-1.4T", [("DEAD", 1.4), ("TEMP", -1.4)]),
+
+    # ── Caso 2: 1.2D + 1.6L + 0.5(Lr o S o R) ─────────────────────────
+    # Opción Techo (R)
+    ("LRFD_2.R_+1.2D_+1.6L_+0.5R_+1.2T", [("DEAD", 1.2), ("LIVE", 1.6), ("ROOF", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_2.R_+1.2D_+1.6L_+0.5R_-1.2T", [("DEAD", 1.2), ("LIVE", 1.6), ("ROOF", 0.5), ("TEMP", -1.2)]),
+    # Opción Nieve (S)
+    ("LRFD_2.S_+1.2D_+1.6L_+0.5S_+1.2T", [("DEAD", 1.2), ("LIVE", 1.6), ("SNOW", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_2.S_+1.2D_+1.6L_+0.5S_-1.2T", [("DEAD", 1.2), ("LIVE", 1.6), ("SNOW", 0.5), ("TEMP", -1.2)]),
+
+    # ── Caso 3a: 1.2D + 1.6(Lr o S o R) + L ───────────────────────────
+    # Opción Techo (R)
+    ("LRFD_3a.R_+1.2D_+1.6R_+1.0L_+1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("LIVE", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_3a.R_+1.2D_+1.6R_+1.0L_-1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("LIVE", 1.0), ("TEMP", -1.2)]),
+    # Opción Nieve (S)
+    ("LRFD_3a.S_+1.2D_+1.6S_+1.0L_+1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("LIVE", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_3a.S_+1.2D_+1.6S_+1.0L_-1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("LIVE", 1.0), ("TEMP", -1.2)]),
+
+    # ── Caso 3b: 1.2D + 1.6(Lr o S o R) + 0.8W ────────────────────────
+    # Opción Techo (R) — WX
+    ("LRFD_3b.R1_+1.2D_+1.6R_+0.8WX_+1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDX", 0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.R2_+1.2D_+1.6R_+0.8WX_-1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDX", 0.8), ("TEMP", -1.2)]),
+    ("LRFD_3b.R3_+1.2D_+1.6R_-0.8WX_+1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDX", -0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.R4_+1.2D_+1.6R_-0.8WX_-1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDX", -0.8), ("TEMP", -1.2)]),
+    # Opción Techo (R) — WY
+    ("LRFD_3b.R5_+1.2D_+1.6R_+0.8WY_+1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDY", 0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.R6_+1.2D_+1.6R_+0.8WY_-1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDY", 0.8), ("TEMP", -1.2)]),
+    ("LRFD_3b.R7_+1.2D_+1.6R_-0.8WY_+1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDY", -0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.R8_+1.2D_+1.6R_-0.8WY_-1.2T", [("DEAD", 1.2), ("ROOF", 1.6), ("WINDY", -0.8), ("TEMP", -1.2)]),
+    # Opción Nieve (S) — WX
+    ("LRFD_3b.S1_+1.2D_+1.6S_+0.8WX_+1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDX", 0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.S2_+1.2D_+1.6S_+0.8WX_-1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDX", 0.8), ("TEMP", -1.2)]),
+    ("LRFD_3b.S3_+1.2D_+1.6S_-0.8WX_+1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDX", -0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.S4_+1.2D_+1.6S_-0.8WX_-1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDX", -0.8), ("TEMP", -1.2)]),
+    # Opción Nieve (S) — WY
+    ("LRFD_3b.S5_+1.2D_+1.6S_+0.8WY_+1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDY", 0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.S6_+1.2D_+1.6S_+0.8WY_-1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDY", 0.8), ("TEMP", -1.2)]),
+    ("LRFD_3b.S7_+1.2D_+1.6S_-0.8WY_+1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDY", -0.8), ("TEMP", 1.2)]),
+    ("LRFD_3b.S8_+1.2D_+1.6S_-0.8WY_-1.2T", [("DEAD", 1.2), ("SNOW", 1.6), ("WINDY", -0.8), ("TEMP", -1.2)]),
+
+    # ── Caso 4: 1.2D + 1.6W + L + 0.5(Lr o S o R) ─────────────────────
+    # Opción Techo (R) — WX
+    ("LRFD_4.R1_+1.2D_+1.6WX_+1.0L_+0.5R_+1.2T", [("DEAD", 1.2), ("WINDX", 1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.R2_+1.2D_+1.6WX_+1.0L_+0.5R_-1.2T", [("DEAD", 1.2), ("WINDX", 1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", -1.2)]),
+    ("LRFD_4.R3_+1.2D_-1.6WX_+1.0L_+0.5R_+1.2T", [("DEAD", 1.2), ("WINDX", -1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.R4_+1.2D_-1.6WX_+1.0L_+0.5R_-1.2T", [("DEAD", 1.2), ("WINDX", -1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", -1.2)]),
+    # Opción Techo (R) — WY
+    ("LRFD_4.R5_+1.2D_+1.6WY_+1.0L_+0.5R_+1.2T", [("DEAD", 1.2), ("WINDY", 1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.R6_+1.2D_+1.6WY_+1.0L_+0.5R_-1.2T", [("DEAD", 1.2), ("WINDY", 1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", -1.2)]),
+    ("LRFD_4.R7_+1.2D_-1.6WY_+1.0L_+0.5R_+1.2T", [("DEAD", 1.2), ("WINDY", -1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.R8_+1.2D_-1.6WY_+1.0L_+0.5R_-1.2T", [("DEAD", 1.2), ("WINDY", -1.6), ("LIVE", 1.0), ("ROOF", 0.5), ("TEMP", -1.2)]),
+    # Opción Nieve (S) — WX
+    ("LRFD_4.S1_+1.2D_+1.6WX_+1.0L_+0.5S_+1.2T", [("DEAD", 1.2), ("WINDX", 1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.S2_+1.2D_+1.6WX_+1.0L_+0.5S_-1.2T", [("DEAD", 1.2), ("WINDX", 1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", -1.2)]),
+    ("LRFD_4.S3_+1.2D_-1.6WX_+1.0L_+0.5S_+1.2T", [("DEAD", 1.2), ("WINDX", -1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.S4_+1.2D_-1.6WX_+1.0L_+0.5S_-1.2T", [("DEAD", 1.2), ("WINDX", -1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", -1.2)]),
+    # Opción Nieve (S) — WY
+    ("LRFD_4.S5_+1.2D_+1.6WY_+1.0L_+0.5S_+1.2T", [("DEAD", 1.2), ("WINDY", 1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.S6_+1.2D_+1.6WY_+1.0L_+0.5S_-1.2T", [("DEAD", 1.2), ("WINDY", 1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", -1.2)]),
+    ("LRFD_4.S7_+1.2D_-1.6WY_+1.0L_+0.5S_+1.2T", [("DEAD", 1.2), ("WINDY", -1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", 1.2)]),
+    ("LRFD_4.S8_+1.2D_-1.6WY_+1.0L_+0.5S_-1.2T", [("DEAD", 1.2), ("WINDY", -1.6), ("LIVE", 1.0), ("SNOW", 0.5), ("TEMP", -1.2)]),
+
+    # ── Caso 6: 0.9D + 1.6W ────────────────────────────────────────────
+    ("LRFD_6.1_+0.9D_+1.6WX_+0.9T", [("DEAD", 0.9), ("WINDX", 1.6), ("TEMP", 0.9)]),
+    ("LRFD_6.2_+0.9D_+1.6WX_-0.9T", [("DEAD", 0.9), ("WINDX", 1.6), ("TEMP", -0.9)]),
+    ("LRFD_6.3_+0.9D_-1.6WX_+0.9T", [("DEAD", 0.9), ("WINDX", -1.6), ("TEMP", 0.9)]),
+    ("LRFD_6.4_+0.9D_-1.6WX_-0.9T", [("DEAD", 0.9), ("WINDX", -1.6), ("TEMP", -0.9)]),
+    ("LRFD_6.5_+0.9D_+1.6WY_+0.9T", [("DEAD", 0.9), ("WINDY", 1.6), ("TEMP", 0.9)]),
+    ("LRFD_6.6_+0.9D_+1.6WY_-0.9T", [("DEAD", 0.9), ("WINDY", 1.6), ("TEMP", -0.9)]),
+    ("LRFD_6.7_+0.9D_-1.6WY_+0.9T", [("DEAD", 0.9), ("WINDY", -1.6), ("TEMP", 0.9)]),
+    ("LRFD_6.8_+0.9D_-1.6WY_-0.9T", [("DEAD", 0.9), ("WINDY", -1.6), ("TEMP", -0.9)]),
+
+    # ── LRFD NCh2369:2025 Industrial con SO/SA ──────────────────────────
+    # 1.2D + 0.25L + SO + SA + E
+    #EQX principal: +1.0, secundario: ±0.3
+    ("LRFD_NCh.1x_+1.2D_+0.25L_+1.0SO_+1.0SA_+1.0EQX_+0.3EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 1.0), ("EQY", 0.3), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.2x_+1.2D_+0.25L_+1.0SO_+1.0SA_-1.0EQX_+0.3EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -1.0), ("EQY", 0.3), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.3x_+1.2D_+0.25L_+1.0SO_+1.0SA_+1.0EQX_-0.3EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 1.0), ("EQY", -0.3), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.4x_+1.2D_+0.25L_+1.0SO_+1.0SA_-1.0EQX_-0.3EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -1.0), ("EQY", -0.3), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.5x_+1.2D_+0.25L_+1.0SO_+1.0SA_+1.0EQX_+0.3EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 1.0), ("EQY", 0.3), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.6x_+1.2D_+0.25L_+1.0SO_+1.0SA_-1.0EQX_+0.3EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -1.0), ("EQY", 0.3), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.7x_+1.2D_+0.25L_+1.0SO_+1.0SA_+1.0EQX_-0.3EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 1.0), ("EQY", -0.3), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.8x_+1.2D_+0.25L_+1.0SO_+1.0SA_-1.0EQX_-0.3EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -1.0), ("EQY", -0.3), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    #EQY principal: +1.0, secundario: ±0.3
+    ("LRFD_NCh.1y_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_+1.0EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", 1.0), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.2y_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_+1.0EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", 1.0), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.3y_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_-1.0EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", -1.0), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.4y_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_-1.0EQY_+0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", -1.0), ("EQZ", 0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.5y_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_+1.0EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", 1.0), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.6y_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_+1.0EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", 1.0), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.7y_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_-1.0EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", -1.0), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    ("LRFD_NCh.8y_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_-1.0EQY_-0.3EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", -1.0), ("EQZ", -0.3), ("TEMP", 1.2)]),
+    #EQZ principal: +1.0, secundario: ±0.3
+    ("LRFD_NCh.1z_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_+0.3EQY_+1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", 0.3), ("EQZ", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.2z_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_+0.3EQY_+1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", 0.3), ("EQZ", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.3z_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_-0.3EQY_+1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", -0.3), ("EQZ", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.4z_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_-0.3EQY_+1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", -0.3), ("EQZ", 1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.5z_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_+0.3EQY_-1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", 0.3), ("EQZ", -1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.6z_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_+0.3EQY_-1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", 0.3), ("EQZ", -1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.7z_+1.2D_+0.25L_+1.0SO_+1.0SA_+0.3EQX_-0.3EQY_-1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", 0.3), ("EQY", -0.3), ("EQZ", -1.0), ("TEMP", 1.2)]),
+    ("LRFD_NCh.8z_+1.2D_+0.25L_+1.0SO_+1.0SA_-0.3EQX_-0.3EQY_-1.0EQZ_+1.2T", [("DEAD", 1.2), ("LIVE", 0.25), ("SO", 1.0), ("SA", 1.0), ("EQX", -0.3), ("EQY", -0.3), ("EQZ", -1.0), ("TEMP", 1.2)]),
+
+    # 0.9D + SA + E
+    #EQX principal: +1.0, secundario: 0.3
+    ("LRFD_NCh.9x_+0.9D_+1.0SA_+1.0EQX_+0.3EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 1.0), ("EQY", 0.3), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.10x_+0.9D_+1.0SA_-1.0EQX_+0.3EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -1.0), ("EQY", 0.3), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.11x_+0.9D_+1.0SA_+1.0EQX_-0.3EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 1.0), ("EQY", -0.3), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.12x_+0.9D_+1.0SA_-1.0EQX_-0.3EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -1.0), ("EQY", -0.3), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.13x_+0.9D_+1.0SA_+1.0EQX_+0.3EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 1.0), ("EQY", 0.3), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.14x_+0.9D_+1.0SA_-1.0EQX_+0.3EQY_-0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -1.0), ("EQY", 0.3), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.15x_+0.9D_+1.0SA_+1.0EQX_-0.3EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 1.0), ("EQY", -0.3), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.16x_+0.9D_+1.0SA_-1.0EQX_-0.3EQY_-0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -1.0), ("EQY", -0.3), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    #EQY principal: +1.0, secundario: 0.3
+    ("LRFD_NCh.9y_+0.9D_+1.0SA_+0.3EQX_+1.0EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", 1.0), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.10y_+0.9D_+1.0SA_-0.3EQX_+1.0EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", 1.0), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.11y_+0.9D_+1.0SA_+0.3EQX_-1.0EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", -1.0), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.12y_+0.9D_+1.0SA_-0.3EQX_-1.0EQY_+0.3EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", -1.0), ("EQZ", 0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.13y_+0.9D_+1.0SA_+0.3EQX_+1.0EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", 1.0), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.14y_+0.9D_+1.0SA_-0.3EQX_+1.0EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", 1.0), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.15y_+0.9D_+1.0SA_+0.3EQX_-1.0EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", -1.0), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    ("LRFD_NCh.16y_+0.9D_+1.0SA_-0.3EQX_-1.0EQY_-0.3EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", -1.0), ("EQZ", -0.3), ("TEMP", 0.9)]),
+    #EQZ principal: +1.0, secundario: 0.3
+    ("LRFD_NCh.9z_+0.9D_+1.0SA_+0.3EQX_+0.3EQY_+1.0EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", 0.3), ("EQZ", 1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.10z_+0.9D_+1.0SA_-0.3EQX_+0.3EQY_+1.0EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", 0.3), ("EQZ", 1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.11z_+0.9D_+1.0SA_+0.3EQX_-0.3EQY_+1.0EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", -0.3), ("EQZ", 1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.12z_+0.9D_+1.0SA_-0.3EQX_-0.3EQY_+1.0EQZ_+0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", -0.3), ("EQZ", 1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.13z_+0.9D_+1.0SA_+0.3EQX_+0.3EQY_-1.0EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", 0.3), ("EQZ", -1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.14z_+0.9D_+1.0SA_-0.3EQX_+0.3EQY_-1.0EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", 0.3), ("EQZ", -1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.15z_+0.9D_+1.0SA_+0.3EQX_-0.3EQY_-1.0EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", 0.3), ("EQY", -0.3), ("EQZ", -1.0), ("TEMP", 0.9)]),
+    ("LRFD_NCh.16z_+0.9D_+1.0SA_-0.3EQX_-0.3EQY_-1.0EQZ_-0.9T", [("DEAD", 0.9), ("SA", 1.0), ("EQX", -0.3), ("EQY", -0.3), ("EQZ", -1.0), ("TEMP", 0.9)]),
+]
+
+ASD_COMBOS = [
+    # ── Caso 1: 1.0D ────────────────────────────────────────────────────
+    ("ASD_1_+1.0D_+1.0T", [("DEAD", 1.0), ("TEMP", 1.0)]),
+    ("ASD_1_+1.0D_-1.0T", [("DEAD", 1.0), ("TEMP", -1.0)]),
+
+    # ── Caso 2: 1.0D + 1.0L ────────────────────────────────────────────
+    ("ASD_2_+1.0D_+1.0L_+1.0T", [("DEAD", 1.0), ("LIVE", 1.0), ("TEMP", 1.0)]),
+    ("ASD_2_+1.0D_+1.0L_-1.0T", [("DEAD", 1.0), ("LIVE", 1.0), ("TEMP", -1.0)]),
+
+    # ── Caso 3: 1.0D + (Lr o S o R) ────────────────────────────────────
+    # Opción Techo (R)
+    ("ASD_3.R_+1.0D_+1.0R_+1.0T", [("DEAD", 1.0), ("ROOF", 1.0), ("TEMP", 1.0)]),
+    ("ASD_3.R_+1.0D_+1.0R_-1.0T", [("DEAD", 1.0), ("ROOF", 1.0), ("TEMP", -1.0)]),
+    # Opción Nieve (S)
+    ("ASD_3.S_+1.0D_+1.0S_+1.0T", [("DEAD", 1.0), ("SNOW", 1.0), ("TEMP", 1.0)]),
+    ("ASD_3.S_+1.0D_+1.0S_-1.0T", [("DEAD", 1.0), ("SNOW", 1.0), ("TEMP", -1.0)]),
+
+    # ── Caso 4: 1.0D + 0.75L + 0.75(Lr o S o R) ───────────────────────
+    # Opción Techo (R)
+    ("ASD_4.R_+1.0D_+0.75L_+0.75R_+1.0T", [("DEAD", 1.0), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", 1.0)]),
+    ("ASD_4.R_+1.0D_+0.75L_+0.75R_-1.0T", [("DEAD", 1.0), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", -1.0)]),
+    # Opción Nieve (S)
+    ("ASD_4.S_+1.0D_+0.75L_+0.75S_+1.0T", [("DEAD", 1.0), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", 1.0)]),
+    ("ASD_4.S_+1.0D_+0.75L_+0.75S_-1.0T", [("DEAD", 1.0), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", -1.0)]),
+
+    # ── Caso 5a: 1.0D + 1.0W ───────────────────────────────────────────
+    ("ASD_5a.1_+1.0D_+1.0WX_+1.0T", [("DEAD", 1.0), ("WINDX", 1.0), ("TEMP", 1.0)]),
+    ("ASD_5a.2_+1.0D_+1.0WX_-1.0T", [("DEAD", 1.0), ("WINDX", 1.0), ("TEMP", -1.0)]),
+    ("ASD_5a.3_+1.0D_-1.0WX_+1.0T", [("DEAD", 1.0), ("WINDX", -1.0), ("TEMP", 1.0)]),
+    ("ASD_5a.4_+1.0D_-1.0WX_-1.0T", [("DEAD", 1.0), ("WINDX", -1.0), ("TEMP", -1.0)]),
+    ("ASD_5a.5_+1.0D_+1.0WY_+1.0T", [("DEAD", 1.0), ("WINDY", 1.0), ("TEMP", 1.0)]),
+    ("ASD_5a.6_+1.0D_+1.0WY_-1.0T", [("DEAD", 1.0), ("WINDY", 1.0), ("TEMP", -1.0)]),
+    ("ASD_5a.7_+1.0D_-1.0WY_+1.0T", [("DEAD", 1.0), ("WINDY", -1.0), ("TEMP", 1.0)]),
+    ("ASD_5a.8_+1.0D_-1.0WY_-1.0T", [("DEAD", 1.0), ("WINDY", -1.0), ("TEMP", -1.0)]),
+
+    # ── Caso 6a: 1.0D + 0.75W + 0.75L + 0.75(Lr o S o R) ──────────────
+    # Opción Techo (R) — WX
+    ("ASD_6a.1_+1.0D_+0.75WX_+0.75L_+0.75R_+1.0T", [("DEAD", 1.0), ("WINDX", 0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.2_+1.0D_+0.75WX_+0.75L_+0.75R_-1.0T", [("DEAD", 1.0), ("WINDX", 0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", -1.0)]),
+    ("ASD_6a.3_+1.0D_-0.75WX_+0.75L_+0.75R_+1.0T", [("DEAD", 1.0), ("WINDX", -0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.4_+1.0D_-0.75WX_+0.75L_+0.75R_-1.0T", [("DEAD", 1.0), ("WINDX", -0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", -1.0)]),
+    # Opción Techo (R) — WY
+    ("ASD_6a.5_+1.0D_+0.75WY_+0.75L_+0.75R_+1.0T", [("DEAD", 1.0), ("WINDY", 0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.6_+1.0D_+0.75WY_+0.75L_+0.75R_-1.0T", [("DEAD", 1.0), ("WINDY", 0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", -1.0)]),
+    ("ASD_6a.7_+1.0D_-0.75WY_+0.75L_+0.75R_+1.0T", [("DEAD", 1.0), ("WINDY", -0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.8_+1.0D_-0.75WY_+0.75L_+0.75R_-1.0T", [("DEAD", 1.0), ("WINDY", -0.75), ("LIVE", 0.75), ("ROOF", 0.75), ("TEMP", -1.0)]),
+    # Opción Nieve (S) — WX
+    ("ASD_6a.9_+1.0D_+0.75WX_+0.75L_+0.75S_+1.0T", [("DEAD", 1.0), ("WINDX", 0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.10_+1.0D_+0.75WX_+0.75L_+0.75S_-1.0T", [("DEAD", 1.0), ("WINDX", 0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", -1.0)]),
+    ("ASD_6a.11_+1.0D_-0.75WX_+0.75L_+0.75S_+1.0T", [("DEAD", 1.0), ("WINDX", -0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.12_+1.0D_-0.75WX_+0.75L_+0.75S_-1.0T", [("DEAD", 1.0), ("WINDX", -0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", -1.0)]),
+    # Opción Nieve (S) — WY
+    ("ASD_6a.13_+1.0D_+0.75WY_+0.75L_+0.75S_+1.0T", [("DEAD", 1.0), ("WINDY", 0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.14_+1.0D_+0.75WY_+0.75L_+0.75S_-1.0T", [("DEAD", 1.0), ("WINDY", 0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", -1.0)]),
+    ("ASD_6a.15_+1.0D_-0.75WY_+0.75L_+0.75S_+1.0T", [("DEAD", 1.0), ("WINDY", -0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", 1.0)]),
+    ("ASD_6a.16_+1.0D_-0.75WY_+0.75L_+0.75S_-1.0T", [("DEAD", 1.0), ("WINDY", -0.75), ("LIVE", 0.75), ("SNOW", 0.75), ("TEMP", -1.0)]),
+
+    # ── Caso 7: 0.6D + 1.0W ────────────────────────────────────────────
+    ("ASD_7.1_+0.6D_+1.0WX_+0.6T", [("DEAD", 0.6), ("WINDX", 1.0), ("TEMP", 0.6)]),
+    ("ASD_7.2_+0.6D_+1.0WX_-0.6T", [("DEAD", 0.6), ("WINDX", 1.0), ("TEMP", -0.6)]),
+    ("ASD_7.3_+0.6D_-1.0WX_+0.6T", [("DEAD", 0.6), ("WINDX", -1.0), ("TEMP", 0.6)]),
+    ("ASD_7.4_+0.6D_-1.0WX_-0.6T", [("DEAD", 0.6), ("WINDX", -1.0), ("TEMP", -0.6)]),
+    ("ASD_7.5_+0.6D_+1.0WY_+0.6T", [("DEAD", 0.6), ("WINDY", 1.0), ("TEMP", 0.6)]),
+    ("ASD_7.6_+0.6D_+1.0WY_-0.6T", [("DEAD", 0.6), ("WINDY", 1.0), ("TEMP", -0.6)]),
+    ("ASD_7.7_+0.6D_-1.0WY_+0.6T", [("DEAD", 0.6), ("WINDY", -1.0), ("TEMP", 0.6)]),
+    ("ASD_7.8_+0.6D_-1.0WY_-0.6T", [("DEAD", 0.6), ("WINDY", -1.0), ("TEMP", -0.6)]),
+
+    # ── ASD NCh2369:2025 Industrial con SO/SA ───────────────────────────
+    # D + 0.25*0.75L + 0.75SO + 0.75SA + 0.7E
+    #EQX principal: +0.7, secundario: +0.21
+    ("ASD_NCh.1x_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.7EQX_+0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.7), ("EQY", 0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.2x_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.7EQX_+0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.7), ("EQY", 0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.3x_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.7EQX_-0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.7), ("EQY", -0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.4x_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.7EQX_-0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.7), ("EQY", -0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.5x_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.7EQX_+0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.7), ("EQY", 0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.6x_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.7EQX_+0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.7), ("EQY", 0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.7x_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.7EQX_-0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.7), ("EQY", -0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.8x_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.7EQX_-0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.7), ("EQY", -0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    #EQY principal: +0.7, secundario: +0.21
+    ("ASD_NCh.1y_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_+0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.2y_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_+0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.3y_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_-0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.4y_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_-0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.5y_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_+0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.6y_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_+0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.7y_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_-0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.8y_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_-0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    #EQZ principal: +0.7, secundario: +0.21
+    ("ASD_NCh.1z_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_+0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.2z_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_+0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.3z_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_-0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.4z_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_-0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.5z_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_+0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.6z_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_+0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.7z_+1.0D_+0.1875L_+0.75SO_+0.75SA_+0.21EQX_-0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.8z_+1.0D_+0.1875L_+0.75SO_+0.75SA_-0.21EQX_-0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("LIVE", 0.1875), ("SO", 0.75), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+
+    # 1.0D + 0.75SA + 0.7E
+    #EQX principal: +0.7, secundario: +0.21
+    ("ASD_NCh.9x_+1.0D_+0.75SA_+0.7EQX_+0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.7), ("EQY", 0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.10x_+1.0D_+0.75SA_-0.7EQX_+0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.7), ("EQY", 0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.11x_+1.0D_+0.75SA_+0.7EQX_-0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.7), ("EQY", -0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.12x_+1.0D_+0.75SA_-0.7EQX_-0.21EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.7), ("EQY", -0.21), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.13x_+1.0D_+0.75SA_+0.7EQX_+0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.7), ("EQY", 0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.14x_+1.0D_+0.75SA_-0.7EQX_+0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.7), ("EQY", 0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.15x_+1.0D_+0.75SA_+0.7EQX_-0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.7), ("EQY", -0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.16x_+1.0D_+0.75SA_-0.7EQX_-0.21EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.7), ("EQY", -0.21), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    #EQY principal: +0.7, secundario: +0.21
+    ("ASD_NCh.9y_+1.0D_+0.75SA_+0.21EQX_+0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.10y_+1.0D_+0.75SA_-0.21EQX_+0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.11y_+1.0D_+0.75SA_+0.21EQX_-0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.12y_+1.0D_+0.75SA_-0.21EQX_-0.7EQY_+0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.7), ("EQZ", 0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.13y_+1.0D_+0.75SA_+0.21EQX_+0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.14y_+1.0D_+0.75SA_-0.21EQX_+0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.15y_+1.0D_+0.75SA_+0.21EQX_-0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    ("ASD_NCh.16y_+1.0D_+0.75SA_-0.21EQX_-0.7EQY_-0.21EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.7), ("EQZ", -0.21), ("TEMP", 1.0)]),
+    #EQZ principal: +0.7, secundario: +0.21
+    ("ASD_NCh.9z_+1.0D_+0.75SA_+0.21EQX_+0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.10z_+1.0D_+0.75SA_-0.21EQX_+0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.11z_+1.0D_+0.75SA_+0.21EQX_-0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.12z_+1.0D_+0.75SA_-0.21EQX_-0.21EQY_+0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.21), ("EQZ", 0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.13z_+1.0D_+0.75SA_+0.21EQX_+0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", 0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.14z_+1.0D_+0.75SA_-0.21EQX_+0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", 0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.15z_+1.0D_+0.75SA_+0.21EQX_-0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", 0.21), ("EQY", -0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+    ("ASD_NCh.16z_+1.0D_+0.75SA_-0.21EQX_-0.21EQY_-0.7EQZ_+1.0T", [("DEAD", 1.0), ("SA", 0.75), ("EQX", -0.21), ("EQY", -0.21), ("EQZ", -0.7), ("TEMP", 1.0)]),
+
+]
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+def load_paterns(sap_model) -> None:
+    """Crea los patrones de carga en el modelo SAP2000 actual."""
+    for pattern in LOAD_PATTERNS:
+        sap_model.LoadPatterns.Add(
+            pattern["name"],
+            pattern["type"],
+            pattern["self_wt"],
+            True,
+        )
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+def create_combinations(sap_model) -> None:
+    """Crea combinaciones LRFD y ASD (Linear Add) en el modelo SAP2000 actual."""
+    for combo_name, items in LRFD_COMBOS + ASD_COMBOS:
+        sap_model.RespCombo.Add(combo_name, 0)  # 0 = Linear Add
+        for case_name, sf in items:
+            sap_model.RespCombo.SetCaseList(combo_name, 0, case_name, sf)
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+def create_envelopes(sap_model) -> None:
+    """Crea envolventes ENV_LRFD y ENV_ASD en el modelo SAP2000 actual."""
+    lrfd_names = [name for name, _ in LRFD_COMBOS]
+    sap_model.RespCombo.Add("ENV_LRFD", 1)  # 1 = Envelope
+    for name in lrfd_names:
+        sap_model.RespCombo.SetCaseList("ENV_LRFD", 1, name, 1.0)
+
+    asd_names = [name for name, _ in ASD_COMBOS]
+    sap_model.RespCombo.Add("ENV_ASD", 1)
+    for name in asd_names:
+        sap_model.RespCombo.SetCaseList("ENV_ASD", 1, name, 1.0)
+
+# ══════════════════════════════════════════════════════════════════════════════
+
+def main():
+    # Conectar a instancia activa de SAP2000
+    sap_object = comtypes.client.GetActiveObject("CSI.SAP2000.API.SapObject")
+    sap_model = sap_object.SapModel
+
+    load_paterns(sap_model)
+    create_combinations(sap_model)
+    create_envelopes(sap_model)
+
+if __name__ == "__main__":
+    main()
