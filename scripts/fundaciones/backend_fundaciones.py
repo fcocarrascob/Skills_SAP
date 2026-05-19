@@ -506,7 +506,15 @@ class FundacionesBackend:
                                 vuelo, section, nx, ny) -> list:
         """
         Crea el anillo perimetral de la zapata alrededor de la malla interior.
-        Genera 4 franjas (Sur, Norte, Oeste, Este) divididas + 4 esquinas sin dividir.
+
+        Genera cada sub-celda directamente con AddByCoord (sin EditArea.Divide)
+        para que todos los nombres queden registrados y el balasto se pueda
+        asignar a cada área individualmente:
+          - Franja Sur  : nx celdas (xl→xr dividido en nx, 1 fila de vuelo)
+          - Franja Norte: nx celdas
+          - Franja Oeste: ny celdas (1 columna de vuelo, yb→yt dividido en ny)
+          - Franja Este : ny celdas
+          - 4 Esquinas  : 1 celda cada una (vuelo×vuelo)
         """
         xl  = cx - inner_w / 2.0;  xr  = cx + inner_w / 2.0
         yb  = cy - inner_h / 2.0;  yt  = cy + inner_h / 2.0
@@ -527,24 +535,34 @@ class FundacionesBackend:
             print(f"  ⚠️ Error área {label}: {code}")
             return None
 
-        def _divide(name, n1, n2):
-            if not name or (n1 == 1 and n2 == 1):
-                return
-            try:
-                self.sap.EditArea.Divide(name, 1, 0, [], n1, n2)
-            except Exception as e:
-                print(f"  ⚠️ Error dividiendo {name}: {e}")
+        dx_inner = inner_w / nx
+        dy_inner = inner_h / ny
 
-        # Franjas laterales (subdivididas para compatibilidad de malla)
-        _divide(_add([xl,   xr,   xr,   xl  ], [yb_o, yb_o, yb,   yb  ], "Sur"),   nx, 1)
-        _divide(_add([xl,   xr,   xr,   xl  ], [yt,   yt,   yt_o, yt_o], "Norte"), nx, 1)
-        _divide(_add([xl_o, xl,   xl,   xl_o], [yb,   yb,   yt,   yt  ], "Oeste"), 1,  ny)
-        _divide(_add([xr,   xr_o, xr_o, xr  ], [yb,   yb,   yt,   yt  ], "Este"),  1,  ny)
+        # Franja Sur (nx celdas)
+        for i in range(nx):
+            x0 = xl + i * dx_inner;  x1 = x0 + dx_inner
+            _add([x0, x1, x1, x0], [yb_o, yb_o, yb,  yb ], f"Sur_{i}")
+
+        # Franja Norte (nx celdas)
+        for i in range(nx):
+            x0 = xl + i * dx_inner;  x1 = x0 + dx_inner
+            _add([x0, x1, x1, x0], [yt,   yt,  yt_o, yt_o], f"Norte_{i}")
+
+        # Franja Oeste (ny celdas)
+        for j in range(ny):
+            y0 = yb + j * dy_inner;  y1 = y0 + dy_inner
+            _add([xl_o, xl,  xl,  xl_o], [y0, y0, y1, y1], f"Oeste_{j}")
+
+        # Franja Este (ny celdas)
+        for j in range(ny):
+            y0 = yb + j * dy_inner;  y1 = y0 + dy_inner
+            _add([xr,  xr_o, xr_o, xr ], [y0, y0, y1, y1], f"Este_{j}")
+
         # Esquinas (sin subdividir)
-        _add([xl_o, xl,   xl,   xl_o], [yb_o, yb_o, yb,   yb  ], "SW")
-        _add([xr,   xr_o, xr_o, xr  ], [yb_o, yb_o, yb,   yb  ], "SE")
-        _add([xl_o, xl,   xl,   xl_o], [yt,   yt,   yt_o, yt_o], "NW")
-        _add([xr,   xr_o, xr_o, xr  ], [yt,   yt,   yt_o, yt_o], "NE")
+        _add([xl_o, xl,  xl,  xl_o], [yb_o, yb_o, yb,  yb ], "SW")
+        _add([xr,  xr_o, xr_o, xr ], [yb_o, yb_o, yb,  yb ], "SE")
+        _add([xl_o, xl,  xl,  xl_o], [yt,   yt,  yt_o, yt_o], "NW")
+        _add([xr,  xr_o, xr_o, xr ], [yt,   yt,  yt_o, yt_o], "NE")
 
         return areas
 
