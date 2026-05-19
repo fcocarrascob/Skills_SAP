@@ -52,6 +52,20 @@ from backend_modal_analysis import ModalAnalysisBackend
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# Utilidades de tabla
+# ══════════════════════════════════════════════════════════════════════════════
+
+class NumericItem(QTableWidgetItem):
+    """QTableWidgetItem que ordena por valor numérico (Qt.UserRole) en vez de texto."""
+
+    def __lt__(self, other: QTableWidgetItem) -> bool:
+        try:
+            return float(self.data(Qt.UserRole)) < float(other.data(Qt.UserRole))
+        except (TypeError, ValueError):
+            return super().__lt__(other)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
 # Workers — operaciones SAP2000 fuera del hilo GUI
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -571,9 +585,9 @@ class EstabilidadTab(QWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 return item
 
-            def _num_item(val: float, decimals: int = 6) -> QTableWidgetItem:
-                item = QTableWidgetItem(f"{val:.{decimals}e}")
-                item.setData(Qt.UserRole, val)   # valor numérico para ordenar
+            def _num_item(val: float, decimals: int = 6) -> NumericItem:
+                item = NumericItem(f"{val:.{decimals}e}")
+                item.setData(Qt.UserRole, val)
                 item.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
                 return item
 
@@ -663,7 +677,7 @@ class EstabilidadTab(QWidget):
                 item.setTextAlignment(Qt.AlignCenter)
                 return item
 
-            pct_item = QTableWidgetItem(f"{s['pct']:.1f}%")
+            pct_item = NumericItem(f"{s['pct']:.1f}%")
             pct_item.setData(Qt.UserRole, s["pct"])
             pct_item.setTextAlignment(Qt.AlignCenter)
             # Resaltar en rojo si hay levantamiento
