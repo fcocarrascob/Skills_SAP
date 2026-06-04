@@ -218,6 +218,54 @@ def combo_resultant(items, state_res: dict) -> dict:
     return v
 
 
+def combo_breakdown(items, state_res: dict):
+    """Desglosa una combinación término a término (para auditar el cálculo).
+
+    Args:
+        items: lista de (símbolo, factor).
+        state_res: salida de state_resultants.
+
+    Returns:
+        (terms, total):
+          terms = [{"symbol", "factor", "state": {fx..mz}, "contrib": {fx..mz}}]
+                  donde contrib[k] = factor × resultante-del-estado[k].
+          total = {fx..mz}  (== combo_resultant(items, state_res)).
+    """
+    terms = []
+    total = _empty_vector()
+    for sym, factor in items:
+        entry = state_res.get(sym)
+        sv = entry["vector"] if entry is not None else _empty_vector()
+        contrib = {k: factor * sv[k] for k in FORCE_KEYS}
+        for k in FORCE_KEYS:
+            total[k] += contrib[k]
+        terms.append({"symbol": sym, "factor": factor,
+                      "state": dict(sv), "contrib": contrib})
+    return terms, total
+
+
+def state_breakdown(estados: "EstadosCargaModel", by_name: dict, key: str):
+    """Composición de un estado: qué cargas nombradas lo suman.
+
+    Returns:
+        (rows, total):
+          rows = [{"name", "vector": {fx..mz} | None, "missing": bool}]
+                 vector None / missing True = nombre asignado pero sin carga.
+          total = {fx..mz}  (== state_resultants(...)[key]["vector"]).
+    """
+    rows = []
+    total = _empty_vector()
+    for name in estados.names(key):
+        v = by_name.get(name)
+        if v is None:
+            rows.append({"name": name, "vector": None, "missing": True})
+            continue
+        rows.append({"name": name, "vector": dict(v), "missing": False})
+        for k in FORCE_KEYS:
+            total[k] += v[k]
+    return rows, total
+
+
 def combo_resultants(combos, state_res: dict) -> list:
     """Aplica combo_resultant a una lista de combinaciones.
 
@@ -374,6 +422,22 @@ if __name__ == "__main__":
     crs = combo_resultants([("LRFD", "C1", [("D", 1.4)])], sr)
     assert crs[0]["method"] == "LRFD"
     assert abs(crs[0]["vector"]["fz"] - (-19.6)) < 1e-9
+
+    # ── Desglose de combinación (auditoría) ──────────────────────────────
+    terms, total = combo_breakdown([("D", 1.2), ("L", 1.6)], sr)
+    assert len(terms) == 2
+    term_L = next(t for t in terms if t["symbol"] == "L")
+    assert abs(term_L["contrib"]["fz"] - (-9.6)) < 1e-9   # 1.6 × -6
+    assert abs(total["fz"] - (-26.4)) < 1e-9              # 1.2·-14 + 1.6·-6
+
+    # ── Composición de estado (auditoría) ────────────────────────────────
+    d_rows, d_total = state_breakdown(est, by_name, "D")
+    assert [r["name"] for r in d_rows] == ["DEAD", "EquipD"]
+    assert abs(d_total["fz"] - (-14.0)) < 1e-9
+    # Nombre asignado sin carga aparece como missing
+    r_rows, r_total = state_breakdown(est, by_name, "R")
+    assert r_rows == [{"name": "LluviaSinCarga", "vector": None, "missing": True}]
+    assert r_total["fz"] == 0.0
 
     print("OK — backend_estados: todas las aserciones pasaron.")
     print(json.dumps(m.to_dict(), ensure_ascii=False, indent=2))

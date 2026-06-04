@@ -15,7 +15,7 @@ El proyecto (estados + cargas) se persiste en un único JSON.
 import sys
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QKeySequence, QBrush
+from PySide6.QtGui import QColor, QKeySequence, QBrush, QFont
 from PySide6.QtWidgets import (
     QApplication,
     QWidget,
@@ -34,6 +34,8 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QAbstractItemView,
     QMessageBox,
+    QDialog,
+    QTextEdit,
 )
 
 from config_estados import STATE_DEFINITIONS, DEFAULT_SAVE_FILE
@@ -41,6 +43,7 @@ from backend_estados import (
     EstadosCargaModel, LoadsModel, FORCE_KEYS,
     save_project, load_project, parse_force,
     loads_by_name, state_resultants, combo_resultants,
+    combo_breakdown, state_breakdown,
 )
 from combos_norma import COMBOS_BY_METHOD
 
@@ -445,6 +448,20 @@ class CargasTab(QWidget):
 # Pestaña 3 — Resultados (resumen por estado + combinaciones)
 # ══════════════════════════════════════════════════════════════════════════════
 
+class NumericItem(QTableWidgetItem):
+    """Celda que se ordena por su valor numérico (no por texto)."""
+
+    def __init__(self, value: float, text: str):
+        super().__init__(text)
+        self._value = float(value)
+        self.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
+
+    def __lt__(self, other):
+        if isinstance(other, NumericItem):
+            return self._value < other._value
+        return super().__lt__(other)
+
+
 def _make_readonly_table(headers: list) -> QTableWidget:
     t = QTableWidget(0, len(headers))
     t.setHorizontalHeaderLabels(headers)
@@ -452,14 +469,21 @@ def _make_readonly_table(headers: list) -> QTableWidget:
     t.setSelectionBehavior(QAbstractItemView.SelectRows)
     t.setAlternatingRowColors(True)
     t.verticalHeader().setVisible(False)
+    # Ordenamiento por click en encabezado (alterna mayor↔menor).
+    t.setSortingEnabled(True)
+    t.horizontalHeader().setSortIndicatorShown(True)
+    t.horizontalHeader().setToolTip(
+        "Click en un encabezado para ordenar (alterna mayor↔menor).")
     return t
 
 
-def _cell(text: str, numeric: bool = False) -> QTableWidgetItem:
-    it = QTableWidgetItem(text)
-    if numeric:
-        it.setTextAlignment(Qt.AlignRight | Qt.AlignVCenter)
-    return it
+def _cell(text: str) -> QTableWidgetItem:
+    return QTableWidgetItem(text)
+
+
+def _num_cell(value: float) -> NumericItem:
+    """Celda numérica: muestra el valor formateado y ordena por su magnitud."""
+    return NumericItem(value, _fmt_res(value))
 
 
 class ResultadosTab(QWidget):
@@ -472,6 +496,11 @@ class ResultadosTab(QWidget):
         super().__init__()
         self._estados = estados
         self._get_rows = get_rows   # callable -> lista de filas de carga
+
+        # Mapa nombre→items y estado del último cálculo (para los diálogos).
+        self._combo_items = {name: items for _, name, items in COMBOS_BY_METHOD}
+        self._sr = {}
+        self._by_name = {}
 
         root = QVBoxLayout(self)
         root.setContentsMargins(6, 6, 6, 6)
@@ -488,12 +517,16 @@ class ResultadosTab(QWidget):
         top.addStretch()
         root.addLayout(top)
 
+        _DBL = "Doble-click en una fila para ver el desglose del cálculo."
+
         # ── Resumen por estado ────────────────────────────────────────────
         grp_states = QGroupBox("Resumen por Estado (resultante sumada)")
         gl = QVBoxLayout(grp_states)
         self._t_states = _make_readonly_table(self.STATE_COLS)
         self._t_states.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self._t_states.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self._t_states.setToolTip(_DBL)
+        self._t_states.cellDoubleClicked.connect(self._on_state_dblclick)
         gl.addWidget(self._t_states)
         root.addWidget(grp_states, stretch=1)
 
@@ -505,6 +538,8 @@ class ResultadosTab(QWidget):
         hdr.setSectionResizeMode(QHeaderView.Stretch)
         hdr.setSectionResizeMode(1, QHeaderView.Interactive)
         self._t_combos.setColumnWidth(1, 320)
+        self._t_combos.setToolTip(_DBL)
+        self._t_combos.cellDoubleClicked.connect(self._on_combo_dblclick)
         cl.addWidget(self._t_combos)
         root.addWidget(grp_combos, stretch=2)
 
@@ -514,6 +549,9 @@ class ResultadosTab(QWidget):
         rows = self._get_rows()
         by_name = loads_by_name(rows)
         sr = state_resultants(self._estados, by_name)
+        # Guardar para los diálogos de auditoría (doble-click).
+        self._sr = sr
+        self._by_name = by_name
 
         # Nombres huérfanos (con carga pero sin estado asignado).
         assigned = set()
@@ -543,24 +581,225 @@ class ResultadosTab(QWidget):
         # Solo estados con al menos un nombre asignado.
         keys = [k for k in self._estados.keys() if sr[k]["n_names"] > 0]
         t = self._t_states
+        t.setSortingEnabled(False)
         t.setRowCount(len(keys))
         for i, key in enumerate(keys):
             vec = sr[key]["vector"]
             t.setItem(i, 0, _cell(key))
             t.setItem(i, 1, _cell(_STATE_DESC.get(key, "")))
-            t.setItem(i, 2, _cell(str(sr[key]["n_names"]), numeric=True))
+            t.setItem(i, 2, _num_cell(sr[key]["n_names"]))
             for j, fk in enumerate(FORCE_KEYS, start=3):
-                t.setItem(i, j, _cell(_fmt_res(vec[fk]), numeric=True))
+                t.setItem(i, j, _num_cell(vec[fk]))
+        t.setSortingEnabled(True)
 
     def _fill_combos(self, crs: list) -> None:
         t = self._t_combos
+        t.setSortingEnabled(False)
         t.setRowCount(len(crs))
         for i, c in enumerate(crs):
             vec = c["vector"]
             t.setItem(i, 0, _cell(c.get("method", "")))
             t.setItem(i, 1, _cell(c["name"]))
             for j, fk in enumerate(FORCE_KEYS, start=2):
-                t.setItem(i, j, _cell(_fmt_res(vec[fk]), numeric=True))
+                t.setItem(i, j, _num_cell(vec[fk]))
+        t.setSortingEnabled(True)
+
+    # ── Auditoría (doble-click) ──────────────────────────────────────────
+
+    def _on_combo_dblclick(self, row: int, _col: int) -> None:
+        item = self._t_combos.item(row, 1)
+        if item is None:
+            return
+        name = item.text()
+        items = self._combo_items.get(name)
+        if items is None:
+            return
+        method_item = self._t_combos.item(row, 0)
+        method = method_item.text() if method_item else ""
+        dlg = AuditDialog.for_combo(
+            self, name, method, items, self._sr, self._estados, self._by_name)
+        dlg.exec()
+
+    def _on_state_dblclick(self, row: int, _col: int) -> None:
+        item = self._t_states.item(row, 0)
+        if item is None:
+            return
+        key = item.text()
+        dlg = AuditDialog.for_state(self, key, self._estados, self._by_name)
+        dlg.exec()
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Diálogo de auditoría (doble-click en un resultado)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _signed_term(factor: float, sym: str) -> str:
+    sign = "+" if factor >= 0 else "−"
+    return f"{sign} {_fmt_num(abs(factor))}·{sym}"
+
+
+def _formula(items) -> str:
+    s = " ".join(_signed_term(f, sym) for sym, f in items)
+    return s[2:] if s.startswith("+ ") else s   # quitar "+ " inicial
+
+
+def _nonzero_str(vec: dict) -> str:
+    """Resume un vector mostrando solo componentes no nulas: 'Fz=-15, Mz=1'."""
+    parts = [f"{k.capitalize()}={_fmt_res(vec[k])}"
+             for k in FORCE_KEYS if abs(vec[k]) > 1e-12]
+    return ", ".join(parts) if parts else "0"
+
+
+def _detail_table(headers: list) -> QTableWidget:
+    t = QTableWidget(0, len(headers))
+    t.setHorizontalHeaderLabels(headers)
+    t.setEditTriggers(QAbstractItemView.NoEditTriggers)
+    t.setSelectionMode(QAbstractItemView.NoSelection)
+    t.verticalHeader().setVisible(False)
+    t.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+    t.horizontalHeader().setSectionResizeMode(0, QHeaderView.Interactive)
+    t.setColumnWidth(0, 170)
+    return t
+
+
+def _bold(item: QTableWidgetItem) -> QTableWidgetItem:
+    f = item.font()
+    f.setBold(True)
+    item.setFont(f)
+    return item
+
+
+class AuditDialog(QDialog):
+    """Muestra el desglose paso a paso de un resultado (combo o estado)."""
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.setWindowTitle("Auditoría de cálculo")
+        self.setModal(True)
+        self.resize(720, 560)
+        self._root = QVBoxLayout(self)
+        self._root.setSpacing(8)
+
+    # ── Construcción común ───────────────────────────────────────────────
+
+    def _header(self, text: str, bold: bool = False) -> None:
+        lbl = QLabel(text)
+        lbl.setWordWrap(True)
+        if bold:
+            lbl.setStyleSheet("font-weight:bold; font-size:13px;")
+        self._root.addWidget(lbl)
+
+    def _close_button(self) -> None:
+        row = QHBoxLayout()
+        row.addStretch()
+        b = QPushButton("Cerrar")
+        b.clicked.connect(self.accept)
+        row.addWidget(b)
+        self._root.addLayout(row)
+
+    # ── Fábricas ─────────────────────────────────────────────────────────
+
+    @classmethod
+    def for_combo(cls, parent, name, method, items, sr, estados, by_name):
+        dlg = cls(parent)
+        dlg._build_combo(name, method, items, sr, estados, by_name)
+        return dlg
+
+    @classmethod
+    def for_state(cls, parent, key, estados, by_name):
+        dlg = cls(parent)
+        dlg._build_state(key, estados, by_name)
+        return dlg
+
+    # ── Combo ────────────────────────────────────────────────────────────
+
+    def _build_combo(self, name, method, items, sr, estados, by_name):
+        self._header(f"Combinación:  {name}", bold=True)
+        self._header(f"Método:  {method}")
+        self._header(f"Fórmula:  {_formula(items)}")
+
+        terms, total = combo_breakdown(items, sr)
+
+        grp = QGroupBox("Aporte por estado  (factor × resultante del estado)")
+        gl = QVBoxLayout(grp)
+        t = _detail_table(["Término"] + _FORCE_HEADERS)
+        t.setRowCount(len(terms) + 1)
+        for i, term in enumerate(terms):
+            t.setItem(i, 0, _cell(f"{_fmt_num(term['factor'])} · {term['symbol']}"))
+            for j, fk in enumerate(FORCE_KEYS, start=1):
+                t.setItem(i, j, _num_cell(term["contrib"][fk]))
+        last = len(terms)
+        t.setItem(last, 0, _bold(_cell("TOTAL")))
+        for j, fk in enumerate(FORCE_KEYS, start=1):
+            t.setItem(last, j, _bold(_num_cell(total[fk])))
+        gl.addWidget(t)
+        self._root.addWidget(grp, stretch=1)
+
+        # Composición de los estados involucrados (símbolos del combo, sin duplicar).
+        grp2 = QGroupBox("Composición de estados  (cargas del nodo)")
+        g2 = QVBoxLayout(grp2)
+        txt = QTextEdit()
+        txt.setReadOnly(True)
+        txt.setFont(QFont("Consolas", 10))
+        seen = set()
+        lines = []
+        for sym, _factor in items:
+            if sym in seen:
+                continue
+            seen.add(sym)
+            lines.append(self._state_line(sym, estados, by_name))
+        txt.setPlainText("\n".join(lines))
+        g2.addWidget(txt)
+        self._root.addWidget(grp2, stretch=1)
+
+        self._close_button()
+
+    @staticmethod
+    def _state_line(sym, estados, by_name) -> str:
+        rows, total = state_breakdown(estados, by_name, sym)
+        if not rows:
+            return f"{sym} = (sin cargas asignadas)  →  0"
+        parts = []
+        for r in rows:
+            if r["missing"]:
+                parts.append(f"{r['name']}(sin carga)")
+            else:
+                parts.append(f"{r['name']}({_nonzero_str(r['vector'])})")
+        return f"{sym} = " + "  +  ".join(parts) + f"   →   {_nonzero_str(total)}"
+
+    # ── Estado ───────────────────────────────────────────────────────────
+
+    def _build_state(self, key, estados, by_name):
+        rows, total = state_breakdown(estados, by_name, key)
+        self._header(f"Estado:  {key} — {_STATE_DESC.get(key, '')}", bold=True)
+        self._header(f"Resultante:  {_nonzero_str(total)}")
+
+        grp = QGroupBox("Composición  (cargas nombradas que suman el estado)")
+        gl = QVBoxLayout(grp)
+        if not rows:
+            gl.addWidget(QLabel("(sin nombres asignados)"))
+        else:
+            t = _detail_table(["Carga (nombre)"] + _FORCE_HEADERS)
+            t.setRowCount(len(rows) + 1)
+            for i, r in enumerate(rows):
+                if r["missing"]:
+                    item = _cell(f"{r['name']}  (sin carga)")
+                    item.setForeground(QBrush(QColor(150, 150, 150)))
+                    t.setItem(i, 0, item)
+                    for j in range(1, len(_FORCE_HEADERS) + 1):
+                        t.setItem(i, j, _num_cell(0.0))
+                else:
+                    t.setItem(i, 0, _cell(r["name"]))
+                    for j, fk in enumerate(FORCE_KEYS, start=1):
+                        t.setItem(i, j, _num_cell(r["vector"][fk]))
+            last = len(rows)
+            t.setItem(last, 0, _bold(_cell("TOTAL")))
+            for j, fk in enumerate(FORCE_KEYS, start=1):
+                t.setItem(last, j, _bold(_num_cell(total[fk])))
+            gl.addWidget(t)
+        self._root.addWidget(grp, stretch=1)
+
+        self._close_button()
 
 
 # ══════════════════════════════════════════════════════════════════════════════

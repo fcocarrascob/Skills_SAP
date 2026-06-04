@@ -66,6 +66,17 @@ Se recalcula automáticamente al entrar (o con **Recalcular**):
   `Σ factor × resultante-de-cada-estado`.
 - Avisos: cargas con un `Load Pat` que no pertenece a ningún estado (huérfanas) y
   nombres asignados sin carga.
+- **Ordenar**: click en el encabezado de cualquier columna ordena las filas
+  (alterna mayor↔menor, con flecha indicadora). Las columnas de fuerza ordenan
+  por **valor numérico** — útil para hallar la combinación más desfavorable por
+  componente. El orden se conserva al recalcular.
+- **Auditar (doble-click)**: doble-click en una fila abre un diálogo con el
+  cálculo paso a paso.
+  - En una **combinación**: aporte término a término (`factor × resultante del
+    estado`) con fila TOTAL, más la composición de cada estado (qué cargas
+    nombradas lo suman).
+  - En una fila de **Resumen por Estado**: las cargas nombradas que componen ese
+    estado y su suma.
 
 Las combinaciones están **hardcodeadas** en `combos_norma.py`, generadas a partir
 del set canónico del proyecto (`modelo_base/patterns_comb_lineal.py`) remapeando
