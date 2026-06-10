@@ -131,10 +131,11 @@ pytest tests/ -v
 - **`scripts/CASE_COMBO.ipynb`** — Jupyter notebook for load case and combination management workflows
 
 ### In-Development Features
-- **`scripts/section_cut/`** — Section Cut automation (branch: `feat/section_cut`); research in `SECTION_CUTS_RESEARCH.md`. Section cuts compute resultant forces/moments across any plane — used for story shear, wall design forces, and free-body equilibrium checks. API: `SapModel.Definitions.SectionCuts.*`, results via `SapModel.Results.SectionCut.*`.
+- **`scripts/section_cut/`** — Section Cut automation (branch: `feat/section_cut`); research in `scripts/section_cut/SECTION_CUTS_RESEARCH.md`. Section cuts compute resultant forces/moments across any plane — used for story shear, wall design forces, and free-body equilibrium checks. API: `SapModel.Definitions.SectionCuts.*`, results via `SapModel.Results.SectionCut.*`. No implementation yet; the research document is thorough and serves as a complete design specification for implementation.
 
 ### Configuration
-- **`.vscode/mcp.json`** — MCP server configuration; Python venv path; auto-start settings
+- **`.vscode/mcp.json`** — MCP server configuration for GitHub Copilot; Python venv path; auto-start settings
+- **`.claude/settings.json`** — MCP server configuration for Claude Code (absolute path, no variables)
 - **`.claude/settings.local.json`** — Local Claude Code settings (permissions allowlist)
 - **`scripts/registry.json`** — Verified function catalog (DO NOT edit directly; use `register_verified_function` tool)
 
@@ -183,14 +184,45 @@ Each wrapper:
 
 ## GUI Applications
 
-Five standalone PySide6 applications in `scripts/`:
+Seven standalone PySide6 applications in `scripts/`:
 - **`modelo_base/`** — Model base generator (materials, load patterns, sections, spectra)
+- **`comb_cargas/`** — Load combination manager with full CRUD and normative combo templates
+- **`estados_carga/`** — Multi-tab standalone app for load state mapping and normative verification
+- **`fundaciones/`** — Foundation generator (parametric design)
 - **`placabase/`** — Parametric base plate generator (bolts, anchor chair, Winkler springs)
 - **`ring_areas/`** — Circular ring generator (parametric zones)
 - **`database_tables/`** — SAP2000 database table browser (read, edit, export CSV/XML)
 - **`post_proceso/`** — Results extractor (joint displacements, area shell forces)
 
-Each uses worker threads for async operation without blocking UI.
+Each uses worker threads for async operation without blocking UI. `estados_carga` is the most architecturally complete, with dedicated model layer, fixture-based verification, and reusable calculation functions.
+
+## Connecting MCP to Claude Code
+
+The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. To use them with **Claude Code**, you must declare the server in `.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "sap2000": {
+      "command": "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\.venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\mcp_server\\server.py"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+**Key differences from `.vscode/mcp.json`:**
+- Root key is `"mcpServers"` (not `"servers"`)
+- No `"type": "stdio"` field (Claude Code assumes stdio)
+- Use absolute paths, not `${workspaceFolder}` variables
+
+**Before calling MCP tools:**
+1. Ensure SAP2000 is running (for `connect_sap2000` to attach to it)
+2. Call `connect_sap2000` once per session to establish the COM bridge
+3. Use `run_sap_script` with **explicit `save_as=` parameter** to persist scripts (e.g., `save_as="my_script"`)
 
 ## Copilot Workflow (Agent: @sap2000-scripter)
 

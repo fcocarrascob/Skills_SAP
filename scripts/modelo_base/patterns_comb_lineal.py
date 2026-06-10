@@ -309,7 +309,7 @@ ASD_COMBOS = [
 
 # ══════════════════════════════════════════════════════════════════════════════
 
-def load_paterns(sap_model) -> None:
+def load_patterns(sap_model) -> None:
     """Crea los patrones de carga en el modelo SAP2000 actual."""
     for pattern in LOAD_PATTERNS:
         sap_model.LoadPatterns.Add(
@@ -349,7 +349,7 @@ def main():
     sap_object = comtypes.client.GetActiveObject("CSI.SAP2000.API.SapObject")
     sap_model = sap_object.SapModel
 
-    load_paterns(sap_model)
+    load_patterns(sap_model)
     create_combinations(sap_model)
     create_envelopes(sap_model)
 
