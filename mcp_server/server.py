@@ -8,7 +8,15 @@ Transport: stdio (launched by VS Code via mcp.json).
 """
 
 import logging
+import sys
+from pathlib import Path
+
 from mcp.server.fastmcp import FastMCP
+
+# Add mcp_server directory to path so imports work from any cwd
+_mcp_server_dir = Path(__file__).parent
+if str(_mcp_server_dir) not in sys.path:
+    sys.path.insert(0, str(_mcp_server_dir))
 
 from sap_bridge import bridge
 from sap_executor import execute_function, run_script
