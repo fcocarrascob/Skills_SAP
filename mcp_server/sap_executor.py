@@ -270,6 +270,8 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
     script_finished = threading.Event()
 
     def _run():
+        import comtypes
+        comtypes.CoInitialize()
         old_stdout = sys.stdout
         old_stderr = sys.stderr
         try:
@@ -281,6 +283,7 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
+            comtypes.CoUninitialize()
             script_finished.set()
 
     # Pre-validate syntax before spawning thread
