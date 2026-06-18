@@ -124,10 +124,7 @@ pytest tests/ -v
 - **`scripts/database_tables/README.md`** — Database Tables module backend + GUI API
 
 ### Examples & Notebooks
-- **`scripts/example_1001_simple_beam.py`** — End-to-end verification (beam analysis with hand-calculated comparison)
-- **`scripts/example_ring_areas_parametric.py`** — Parametric geometry (circular ring with 3 zones)
-- **`scripts/modelo_complejo_mixto.py`** — Complex industrial model (columns, beams, braces, slabs, seismic analysis)
-- **`scripts/domo_elipsoidal_parametrico_py.py`** — Double-curved dome geometry
+- **`scripts/ejemplos/`** — 7 complete example scripts (simple beam, ring areas, dome, industrial building, multi-tower, complex geometry, bolt plates)
 - **`scripts/CASE_COMBO.ipynb`** — Jupyter notebook for load case and combination management workflows
 
 ### In-Development Features
@@ -184,7 +181,7 @@ Each wrapper:
 
 ## GUI Applications
 
-Seven standalone PySide6 applications in `scripts/`:
+Eight standalone PySide6 applications in `scripts/`:
 - **`modelo_base/`** — Model base generator (materials, load patterns, sections, spectra)
 - **`comb_cargas/`** — Load combination manager with full CRUD and normative combo templates
 - **`estados_carga/`** — Multi-tab standalone app for load state mapping and normative verification
@@ -194,89 +191,28 @@ Seven standalone PySide6 applications in `scripts/`:
 - **`database_tables/`** — SAP2000 database table browser (read, edit, export CSV/XML)
 - **`post_proceso/`** — Results extractor (joint displacements, area shell forces)
 
-Each uses worker threads for async operation without blocking UI. `estados_carga` is the most architecturally complete, with dedicated model layer, fixture-based verification, and reusable calculation functions.
+Additional tooling directories: `mesh/` (reusable mesh backends), `columnas/`, `steel_connections/`, `section_cut/` (in development).
+
+Each GUI uses worker threads for async operation without blocking UI. `estados_carga` is the most architecturally complete, with dedicated model layer, fixture-based verification, and reusable calculation functions.
 
 ## Connecting MCP to Claude Code
 
-The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. To use them with **Claude Code**, you must declare the server in `.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "sap2000": {
-      "command": "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\.venv\\Scripts\\python.exe",
-      "args": [
-        "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\mcp_server\\server.py"
-      ],
-      "env": {}
-    }
-  }
-}
-```
-
-**Key differences from `.vscode/mcp.json`:**
-- Root key is `"mcpServers"` (not `"servers"`)
-- No `"type": "stdio"` field (Claude Code assumes stdio)
-- Use absolute paths, not `${workspaceFolder}` variables
+The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. For Claude Code, the server is declared in `.claude/settings.json` with absolute paths (no `${workspaceFolder}`), root key `"mcpServers"` (not `"servers"`), and no `"type": "stdio"` field.
 
 **Before calling MCP tools:**
 1. Ensure SAP2000 is running (for `connect_sap2000` to attach to it)
 2. Call `connect_sap2000` once per session to establish the COM bridge
 3. Use `run_sap_script` with **explicit `save_as=` parameter** to persist scripts (e.g., `save_as="my_script"`)
 
-## Copilot Workflow (Agent: @sap2000-scripter)
+## Script Workflow
 
-When using the agent, follow this sequence:
-
-1. **Research (conditional)** — Triggered if script uses unverified API functions, complex analysis, or parametric geometry. Uses Explore subagent.
-
-2. **Plan** — Decompose into 9 phases; identify which functions are verified vs. unverified; consult registry.
-
-3. **Code Generation** — Generate script following Universal Pattern; use wrappers as templates.
-
-4. **Execution** — Run `run_sap_script`; check return codes.
-
-5. **Verification** — Confirm output in `result` dict; compare against hand calculations if applicable.
-
-6. **Registration** — Call `register_verified_function` for any new functions discovered.
-
-7. **Save** — Script auto-saves on success via `save_script`.
-
-8. **GUI Offer** — Agent offers to generate standalone GUI if workflow is complete.
-
-## Common Queries
-
-### "How do I find a verified function?"
-
-```python
-# Query registry for specific function
-query_function_registry(function_path="SapModel.FrameObj.AddByCoord")
-
-# Search by keyword
-query_function_registry(query="beam")
-
-# Get summary
-query_function_registry()
-```
-
-### "What's the ByRef layout for X function?"
-
-1. Check `scripts/registry.json` for the function
-2. Look at `verified` entry and consult `wrapper_script` path
-3. Load the wrapper with `load_script(name)`
-4. Study how return values are unpacked
-
-### "How do I add a new API function to the registry?"
-
-1. Write script using the function via `run_sap_script`
-2. After success, call `register_verified_function` with full metadata
-3. Include category, description, wrapper script path, ByRef layout
-
-### "What imports are allowed in scripts?"
-
-Allowed: `math`, `json`, `datetime`, `decimal`, `fractions`, `collections`, `itertools`, `functools`, `typing`
-
-Blocked: `os`, `subprocess`, `sys`, `shutil`, `pathlib`, `socket`, `http`, `urllib`, `importlib`, `ctypes`, `pickle`
+1. **Research** — `query_function_registry` to find verified functions and wrappers
+2. **Plan** — Decompose into 9 Universal Pattern phases; identify verified vs. unverified functions
+3. **Code** — Generate script; copy wrapper patterns verbatim when available
+4. **Execute** — `run_sap_script`; assert all return codes
+5. **Verify** — Check `result` dict; compare against hand calculations if applicable
+6. **Register** — `register_verified_function` for any new functions (only after success)
+7. **Save** — Use `save_as=` parameter to persist scripts
 
 ## References
 
