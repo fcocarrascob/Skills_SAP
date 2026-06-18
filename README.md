@@ -97,6 +97,34 @@ pip install PySide6
 
 El servidor MCP se autoconfigura via `.vscode/mcp.json`. Al abrir el workspace y usar Copilot, el server se inicia automáticamente — no requiere configuración manual.
 
+### Configuración en Claude Code
+
+Para usar las herramientas MCP desde Claude Code, crear `.claude/settings.json` en la raíz del proyecto con rutas absolutas:
+
+```json
+{
+  "mcpServers": {
+    "sap2000": {
+      "command": "<ruta-al-proyecto>/.venv/Scripts/python.exe",
+      "args": [
+        "<ruta-al-proyecto>/mcp_server/server.py"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+**Diferencias con VS Code:**
+- Root key es `"mcpServers"` (no `"servers"`)
+- No incluir `"type": "stdio"` (Claude Code lo asume)
+- Usar rutas absolutas — `${workspaceFolder}` no está disponible
+
+**Uso:**
+1. Asegurarse de que SAP2000 esté abierto
+2. Llamar `connect_sap2000` una vez por sesión para establecer el bridge COM
+3. Las 12 herramientas MCP quedan disponibles automáticamente
+
 ---
 
 ## Ejemplos de Aplicación
