@@ -7,7 +7,7 @@ Pasos automáticos:
   2. Abre la GUI de Blockly con el proyecto portico_2d.blockly pre-cargado
 
 Uso:
-    cd c:\\Users\\fcoca\\Desktop\\Ingenieria\\Proyectos_Python\\Skills_SAP
+    cd /path/to/Skills_SAP
     .venv\\Scripts\\Activate.ps1
     python scripts/blockly/launch_portico_blockly.py
 """
