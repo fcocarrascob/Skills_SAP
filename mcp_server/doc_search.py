@@ -56,9 +56,24 @@ class DocIndex:
     def __init__(self):
         self._sections: list[dict] = []
         self._loaded = False
+        self._api_dir_mtime = None
+
+    def _reload_if_changed(self):
+        """Reload the index if API directory contents have changed."""
+        try:
+            current_mtime = max(
+                (f.stat().st_mtime for f in API_DIR.glob("*.md")),
+                default=0,
+            )
+            if self._api_dir_mtime is None or current_mtime != self._api_dir_mtime:
+                self._loaded = False
+                self._api_dir_mtime = current_mtime
+        except Exception:
+            pass
 
     def _load(self):
         """Parse all API/*.md files into sections."""
+        self._reload_if_changed()
         if self._loaded:
             return
 

@@ -8,7 +8,15 @@ Transport: stdio (launched by VS Code via mcp.json).
 """
 
 import logging
+import sys
+from pathlib import Path
+
 from mcp.server.fastmcp import FastMCP
+
+# Add mcp_server directory to path so imports work from any cwd
+_mcp_server_dir = Path(__file__).parent
+if str(_mcp_server_dir) not in sys.path:
+    sys.path.insert(0, str(_mcp_server_dir))
 
 from sap_bridge import bridge
 from sap_executor import execute_function, run_script
@@ -34,13 +42,14 @@ mcp = FastMCP(
 @mcp.tool()
 def connect_sap2000(
     program_path: str | None = None,
-    attach_to_existing: bool = False,
+    attach_to_existing: bool = True,
 ) -> dict:
     """Connect to a local SAP2000 instance.
 
-    Use attach_to_existing=True to connect to an already-running SAP2000.
+    By default, attaches to an already-running SAP2000 instance.
+    Set attach_to_existing=False to launch a new instance instead.
     When program_path is provided, SAP2000 is launched from that path.
-    When both are omitted, the latest installed version is launched.
+    When attach_to_existing=False and program_path is None, the latest installed version is launched.
 
     Returns connection status, SAP2000 version, and active model info.
     """

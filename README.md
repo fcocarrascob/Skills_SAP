@@ -14,10 +14,10 @@ Permite generar modelos estructurales, asignar cargas, ejecutar análisis y extr
 ## Características Principales
 
 - **MCP Bridge** — Servidor MCP que conecta GitHub Copilot con SAP2000 vía COM automation
-- **97 funciones API verificadas** — Registry con firmas, parámetros ByRef y wrappers testeados
-- **38+ wrapper scripts** — Funciones individuales documentadas y verificadas contra SAP2000 real
+- **212 funciones API verificadas** — Registry con firmas, parámetros ByRef y wrappers testeados
+- **127 wrapper scripts** — Funciones individuales documentadas y verificadas contra SAP2000 real
 - **Scripts parametrizados** — Modelos completos generados programáticamente (vigas, domos, naves, placas base)
-- **5 aplicaciones GUI standalone** — Interfaces PySide6 con worker threads para operación asíncrona
+- **8 aplicaciones GUI standalone** — Interfaces PySide6 con worker threads para operación asíncrona
 - **Sandbox seguro** — Ejecución aislada de scripts con restricciones de imports y timeout
 - **Documentación API completa** — 25 archivos markdown cubriendo toda la API de SAP2000
 
@@ -99,119 +99,19 @@ El servidor MCP se autoconfigura via `.vscode/mcp.json`. Al abrir el workspace y
 
 ---
 
-## Scripts de Ejemplo — Galería de Logros
+## Ejemplos de Aplicación
 
-Cada script fue generado conversacionalmente con Copilot, ejecutado y verificado contra SAP2000 real.
+Scripts completos en [`scripts/ejemplos/`](scripts/ejemplos/), generados conversacionalmente con Copilot y verificados contra SAP2000 real.
 
-### 🔩 Viga Simple — Verificación End-to-End
-
-**Script:** [`example_1001_simple_beam.py`](scripts/example_1001_simple_beam.py)
-
-Verificación completa de una viga simplemente apoyada con carga uniforme. Crea el modelo desde cero, ejecuta el análisis y compara resultados numéricos contra valores calculados a mano.
-
-| Parámetro | Valor |
-|-----------|-------|
-| Luz | 10 m |
-| Carga uniforme | 24 kN/m |
-| Material | Acero E=200 GPa |
-| Sección | Rectangular 0.5×0.2 m |
-| Momento máximo teórico | 300 kN·m |
-| Reacción teórica | 120 kN |
-| Deflexión teórica | 46.9 mm |
-
-**Logro:** El script verifica automáticamente que los resultados de SAP2000 coinciden con la solución analítica. Funciona como test de regresión de la API completa (materiales → secciones → geometría → cargas → análisis → resultados).
-
-<!-- TODO: Agregar screenshot del modelo en SAP2000 -->
-
----
-
-### 🔘 Anillo Circular Parametrizado — Generación de Malla
-
-**Script:** [`example_ring_areas_parametric.py`](scripts/example_ring_areas_parametric.py)
-
-Genera un anillo circular (placa anular) con 3 zonas concéntricas de shell, cada una con espesor independiente. La geometría se construye generando puntos en coordenadas polares y conectándolos como quads.
-
-| Parámetro | Valor |
-|-----------|-------|
-| Radio interior | 1.0 m |
-| Radio exterior | 5.0 m |
-| Zonas concéntricas | 3 con espesores independientes |
-| Segmentos angulares | Configurable (calidad de malla) |
-| Elementos generados | Quads de 4 nodos por zona |
-
-**Logro:** Demuestra generación de geometría curva compleja mediante discretización paramétrica. El patrón de zonas concéntricas con propiedades variables es aplicable a fundaciones circulares, tanques y silos.
-
-<!-- TODO: Agregar screenshot del anillo en SAP2000 -->
-
----
-
-### 🔧 Placa Base con Pernos de Anclaje
-
-**Script:** [`example_placabase_parametric.py`](scripts/example_placabase_parametric.py)
-
-Generador paramétrico de placa base completo: placa, pernos de anclaje, silla opcional (anchor chair), body constraints, TC limits (tension-only en pernos) y resortes de balasto Winkler.
-
-| Parámetro | Valor |
-|-----------|-------|
-| Pernos | Configurables: 4, 6 u 8 pernos |
-| Diámetro de perno | 25 mm (configurable) |
-| Silla de anclaje | Opcional, paramétrica |
-| Body constraints | Conectan pernos con región circular |
-| TC Limits | Pernos solo-tracción (compresión=0) |
-| Resorte de balasto | Aplicado en Z=0 sobre áreas |
-| Mallado | Refinamiento automático en intersecciones |
-
-**Logro:** Modelo de ingeniería completo listo para análisis. Combina 7+ funciones API diferentes (áreas, frames, constraints, springs, TC limits, mallado). Demuestra workflow real de diseño de conexiones.
-
-<!-- TODO: Agregar screenshot de la placa base en SAP2000 -->
-
----
-
-### 🏛️ Domo Elipsoidal Parametrizado
-
-**Script:** [`domo_elipsoidal_parametrico_py.py`](scripts/domo_elipsoidal_parametrico_py.py)
-
-Genera un domo elipsoidal 3D con geometría de doble curvatura. Construye la superficie discretizando en anillos meridionales y segmentos circunferenciales, usando quads para el cuerpo y triángulos en el polo superior.
-
-| Parámetro | Valor |
-|-----------|-------|
-| Semi-eje X | 5.0 m |
-| Semi-eje Y | 3.5 m (elíptico) |
-| Altura | 2.0 m |
-| Anillos meridionales | 8 |
-| Segmentos circunferenciales | 20 |
-| Espesor shell | 0.15 m |
-| Total de elementos | 160 (140 quads + 20 triángulos) |
-
-**Logro:** Geometría de doble curvatura generada completamente por código. El patrón de discretización (quads + triángulos polares) es reutilizable para cualquier superficie de revolución. Material de concreto con propiedades isotrópicas.
-
-<!-- TODO: Agregar screenshot del domo en SAP2000 -->
-
----
-
-### 🏭 Nave Industrial Mixta — Modelo Complejo
-
-**Script:** [`modelo_complejo_mixto.py`](scripts/modelo_complejo_mixto.py)
-
-Modelo estructural completo de nave industrial que combina múltiples tipos de elementos para ejercitar toda la API verificada. Incluye análisis sísmico con espectro de respuesta NCh2745.
-
-| Componente | Detalle |
-|------------|---------|
-| Columnas | 6 (5 rectangulares HA + 1 circular) |
-| Vigas | 7 (6 rectangulares HA + 1 perfil I acero) |
-| Arriostres | 2 diagonales tension-only (Cruz de San Andrés) |
-| Losas | 2 losas FEM malladas 3×2 |
-| Fundación | Losa corrida con resortes Winkler |
-| Apoyos | Articulados (pinned) en bases |
-| Diafragma | Rígido en nivel de piso (Z=4m) |
-| Patrones de carga | PP, CM, CV, SX, SY, VIENTO |
-| Espectro | NCh2745 Zona 3, Suelo II |
-| Casos espectrales | RS_SX (U1) y RS_SY (U2) |
-| Combinaciones | COMB1, COMB2_SX, COMB3_SY, ENV_ULS |
-
-**Logro:** El script más complejo del repositorio. Demuestra que la API automatizada puede generar un modelo de ingeniería realista con análisis sísmico normativo, múltiples materiales, elementos mixtos y combinaciones de carga LRFD — todo en un solo script ejecutado conversacionalmente.
-
-<!-- TODO: Agregar screenshot de la nave en SAP2000 -->
+| Script | Descripción |
+|--------|-------------|
+| [`example_1001_simple_beam.py`](scripts/ejemplos/example_1001_simple_beam.py) | Viga simplemente apoyada con verificación analítica (M, V, δ) |
+| [`example_ring_areas_parametric.py`](scripts/ejemplos/example_ring_areas_parametric.py) | Anillo circular con 3 zonas concéntricas de espesor variable |
+| [`domo_elipsoidal_parametrico_py.py`](scripts/ejemplos/domo_elipsoidal_parametrico_py.py) | Domo elipsoidal 3D — doble curvatura (quads + triángulos polares) |
+| [`modelo_complejo_mixto.py`](scripts/ejemplos/modelo_complejo_mixto.py) | Nave industrial mixta HA+acero con análisis sísmico NCh2745 |
+| [`mega_modelo_multi_torre.py`](scripts/ejemplos/mega_modelo_multi_torre.py) | Modelo multi-torre a gran escala |
+| [`complex_geometry_showcase.py`](scripts/ejemplos/complex_geometry_showcase.py) | Showcase de geometría compleja parametrizada |
+| [`test_bolt_plates_inline_py.py`](scripts/ejemplos/test_bolt_plates_inline_py.py) | Placa base con pernos de anclaje y balasto Winkler |
 
 ---
 
@@ -259,11 +159,29 @@ Extracción de resultados de análisis: desplazamientos de nodos (`JointDispl`) 
 
 <!-- TODO: Agregar screenshot de GUI post_proceso -->
 
+### Combinaciones de Carga
+
+**Archivos:** [`scripts/comb_cargas/`](scripts/comb_cargas/)
+
+Gestor de combinaciones de carga con CRUD completo y templates de combinaciones normativas (LRFD, ASD, NCh). Permite crear, editar y eliminar combinaciones directamente en el modelo activo.
+
+### Estados de Carga
+
+**Archivos:** [`scripts/estados_carga/`](scripts/estados_carga/)
+
+Aplicación multi-tab para mapeo y verificación de estados de carga. Arquitectura completa con capa de modelo dedicada, verificación basada en fixtures y funciones de cálculo reutilizables.
+
+### Fundaciones
+
+**Archivos:** [`scripts/fundaciones/`](scripts/fundaciones/)
+
+Generador paramétrico de fundaciones. Diseño automatizado con conexión directa a SAP2000 para crear geometría, asignar propiedades y aplicar cargas.
+
 ---
 
 ## Registry de Funciones Verificadas
 
-El framework mantiene un registro de **97 funciones API** verificadas contra SAP2000 real. Cada entrada incluye:
+El framework mantiene un registro de **212 funciones API** verificadas contra SAP2000 real. Cada entrada incluye:
 
 - **Firma completa** con tipos de parámetros
 - **Layout ByRef** — posición de cada parámetro de salida en el tuple retornado
@@ -275,21 +193,26 @@ Categorías cubiertas:
 | Categoría | Funciones | Ejemplo |
 |-----------|-----------|---------|
 | **File** | 2 | `NewBlank`, `Save`, `OpenFile` |
-| **Materials** | 3 | `SetMaterial`, `SetMPIsotropic`, `SetWeightAndMass` |
-| **Frame Properties** | 4 | `SetRectangle`, `SetCircle`, `SetISection`, `SetTube` |
-| **Area Properties** | 1 | `SetShell_1` |
-| **Points** | 3 | `AddCartesian`, `Count`, `GetCoordCartesian` |
-| **Frames** | 6 | `AddByPoint`, `AddByCoord`, `SetSection`, `SetTCLimits` |
-| **Areas** | 3 | `AddByCoord`, `Count`, `SetSpring` |
-| **Load Patterns** | 3 | `Add`, `GetNameList`, `SetSelfWTMultiplier` |
-| **Load Cases** | 3+ | `ResponseSpectrum.SetCase/SetLoads/GetLoads` |
-| **Combinations** | 4 | `Add`, `SetCaseList`, `GetCaseList`, `GetNameList` |
-| **Analysis** | 1 | `RunAnalysis` |
-| **Results** | 4 | `JointDispl`, `JointReact`, `FrameForce`, `AreaForceShell` |
-| **Database Tables** | 37 | Lectura, escritura, edición, exportación |
-| **Selection** | 3 | `ClearSelection`, `CoordinateRange`, `GetSelected` |
-| **Constraints** | 2 | `SetBody`, `GetBody` |
-| **Design** | 2 | `StartDesign` (acero y concreto) |
+| **PropMaterial** | 10 | `SetMaterial`, `SetMPIsotropic`, `SetWeightAndMass` |
+| **PropFrame** | 13 | `SetRectangle`, `SetCircle`, `SetISection`, `SetTube` |
+| **PropArea** | 3 | `SetShell_1`, `GetNameList` |
+| **Object_Model** | 22 | `AddCartesian`, `Count`, `GetCoordCartesian` |
+| **FrameObj** | 2 | `AddByPoint`, `AddByCoord` |
+| **AreaObj** | 1 | `AddByCoord` |
+| **Properties** | 3 | `SetSection`, `SetTCLimits`, `SetSpring` |
+| **Load_Patterns** | 4 | `Add`, `GetNameList`, `SetSelfWTMultiplier` |
+| **Load_Cases** | 5 | `ResponseSpectrum.SetCase/SetLoads/GetLoads` |
+| **RespCombo** | 10 | `Add`, `SetCaseList`, `GetCaseList`, `GetNameList` |
+| **Analyze** | 3 | `RunAnalysis`, `GetActiveDOF`, `SetActiveDOF` |
+| **Analysis_Results** | 5 | `JointDispl`, `JointReact`, `FrameForce`, `AreaForceShell` |
+| **Database_Tables** | 37 | Lectura, escritura, edición, exportación |
+| **Select** | 1 | `CoordinateRange` |
+| **Constraints** | 3 | `SetBody`, `GetBody`, `SetDiaphragm` |
+| **Design** | 9 | `StartDesign`, `GetCode`, `SetCode`, `SetComboStrength` |
+| **Groups** | 2 | `AddGroup`, `SetGroupAssign` |
+| **Edit** | 1 | `Divide` |
+| **Functions** | 1 | `FuncRS.SetUser` |
+| **Mass_Source** | 4 | `SetDefault`, `SetMassSource` |
 
 ---
 
@@ -297,26 +220,34 @@ Categorías cubiertas:
 
 ```
 Skills_SAP/
-├── mcp_server/           # Servidor MCP (Python)
-│   ├── server.py         #   Entry point — 12 herramientas MCP
-│   ├── sap_bridge.py     #   Conexión COM singleton
-│   ├── sap_executor.py   #   Sandbox de ejecución
-│   ├── script_library.py #   Persistencia de scripts
-│   ├── doc_search.py     #   Buscador de documentación API
-│   ├── function_registry.py  # Registry de funciones verificadas
-│   └── tests/            #   Tests unitarios e integración
+├── mcp_server/              # Servidor MCP (Python)
+│   ├── server.py            #   Entry point — 12 herramientas MCP
+│   ├── sap_bridge.py        #   Conexión COM singleton
+│   ├── sap_executor.py      #   Sandbox de ejecución
+│   ├── script_library.py    #   Persistencia de scripts
+│   ├── doc_search.py        #   Buscador de documentación API
+│   ├── function_registry.py #   Registry de funciones verificadas
+│   └── tests/               #   Tests unitarios e integración
 │
-├── scripts/              # Scripts y aplicaciones
-│   ├── wrappers/         #   38+ wrappers de funciones individuales
-│   ├── templates/        #   Templates base (backend + GUI)
-│   ├── modelo_base/      #   GUI: Modelo base estandarizado
-│   ├── placabase/        #   GUI: Placa base paramétrica
-│   ├── ring_areas/       #   GUI: Anillo circular
-│   ├── database_tables/  #   GUI: Explorador de tablas
-│   ├── post_proceso/     #   GUI: Estabilidad + shells
-│   └── registry.json     #   Registry de 97 funciones verificadas
+├── scripts/                 # Scripts y aplicaciones
+│   ├── ejemplos/            #   7 scripts de ejemplo completos
+│   ├── wrappers/            #   127 wrappers de funciones individuales
+│   ├── templates/           #   Templates base (backend + GUI)
+│   ├── mesh/                #   Backends de generación de malla
+│   ├── modelo_base/         #   GUI: Modelo base estandarizado
+│   ├── placabase/           #   GUI: Placa base paramétrica
+│   ├── ring_areas/          #   GUI: Anillo circular
+│   ├── database_tables/     #   GUI: Explorador de tablas
+│   ├── post_proceso/        #   GUI: Estabilidad + shells
+│   ├── comb_cargas/         #   GUI: Combinaciones de carga
+│   ├── estados_carga/       #   GUI: Estados de carga
+│   ├── fundaciones/         #   GUI: Fundaciones paramétricas
+│   ├── columnas/            #   Generador de columnas
+│   ├── steel_connections/   #   Conexiones de acero
+│   ├── section_cut/         #   Section Cuts (en desarrollo)
+│   └── registry.json        #   Registry de 212 funciones verificadas
 │
-├── API/                  # Documentación API SAP2000 (25 archivos .md)
+├── API/                     # Documentación API SAP2000 (25 archivos .md)
 │
 └── .github/
     ├── copilot-instructions.md   # Instrucciones para Copilot

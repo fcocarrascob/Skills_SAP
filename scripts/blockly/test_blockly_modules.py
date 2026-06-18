@@ -9,7 +9,7 @@ Cubre:
   3. BlocklyScriptExecutor — conexión COM y ejecución de scripts
 
 Uso:
-    cd c:\\Users\\fcoca\\Desktop\\Ingenieria\\Proyectos_Python\\Skills_SAP
+    cd /path/to/Skills_SAP
     .venv\\Scripts\\Activate.ps1
     python scripts/blockly/test_blockly_modules.py
 

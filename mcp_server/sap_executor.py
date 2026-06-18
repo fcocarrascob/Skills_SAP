@@ -267,8 +267,11 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
 
     exec_error = [None]
     start_time = time.perf_counter()
+    script_finished = threading.Event()
 
     def _run():
+        import comtypes
+        comtypes.CoInitialize()
         old_stdout = sys.stdout
         old_stderr = sys.stderr
         try:
@@ -280,6 +283,8 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
         finally:
             sys.stdout = old_stdout
             sys.stderr = old_stderr
+            comtypes.CoUninitialize()
+            script_finished.set()
 
     # Pre-validate syntax before spawning thread
     try:
@@ -297,14 +302,19 @@ def run_script(script: str, description: str = "", save_as: str | None = None) -
 
     thread = threading.Thread(target=_run, daemon=True)
     thread.start()
-    thread.join(timeout=SCRIPT_TIMEOUT_S)
+    finished = script_finished.wait(timeout=SCRIPT_TIMEOUT_S)
 
     elapsed = time.perf_counter() - start_time
 
-    if thread.is_alive():
+    if not finished:
+        logger.warning(
+            "Script timed out after %ds. Thread continues in background (unable to forcibly kill it in Python). "
+            "The SAP2000 model may be corrupted by concurrent modifications. Monitor the COM connection status.",
+            SCRIPT_TIMEOUT_S,
+        )
         return {
             "success": False,
-            "error": f"Script timed out after {SCRIPT_TIMEOUT_S}s.",
+            "error": f"Script timed out after {SCRIPT_TIMEOUT_S}s. Background thread is still running and may corrupt the model.",
             "stdout": captured_stdout.getvalue(),
             "stderr": captured_stderr.getvalue(),
             "result": sandbox_globals.get("result", {}),

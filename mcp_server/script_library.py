@@ -150,14 +150,14 @@ def load_script(name: str) -> dict:
 
     meta = _parse_header(file_path) or {}
 
-    # Strip the header block to get just the script code
+    # Strip the header block to get just the script code.
+    # Header is all leading lines that are either comments or blank.
+    # Code starts at the first non-comment, non-blank line.
     lines = content.split("\n")
-    code_start = 0
+    code_start = len(lines)
     for i, line in enumerate(lines):
-        if not line.startswith("#") and line.strip() != "":
-            code_start = i
-            break
-        if line.strip() == "" and i > 0 and not lines[i - 1].startswith("#"):
+        stripped = line.strip()
+        if stripped and not stripped.startswith("#"):
             code_start = i
             break
 

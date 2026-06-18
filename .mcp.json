@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sap2000": {
+      "command": "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\.venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\Users\\francisco.carrasco\\Python\\APP_sap2000\\Skills_SAP\\mcp_server\\server.py"
+      ],
+      "env": {}
+    }
+  }
+}
