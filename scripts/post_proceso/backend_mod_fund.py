@@ -6,19 +6,22 @@ estructural analizado en SAP2000.
 
 Flujo:
   1. check_analysis_done      — verifica modelo bloqueado (análisis completado)
-  2. get_restricted_joints    — nodos con al menos un DOF restringido
-     get_load_cases_no_modal  — load cases del modelo, excluye tipo MODAL (3)
-     get_frame_sections       — secciones de Frame disponibles
-     get_joint_reactions      — reacciones nodales por load case
-  3. build_foundation_model   — desbloquea, crea pilas hacia Z-,
-                                borra estructura superior, asigna reacciones
+  2. get_restricted_joints    — nodos con al menos un DOF restringido,
+                                incluyendo coordenadas y valores de restraint
+     get_load_combinations    — Load Combinations (RespCombo) definidos en el modelo
+     get_joint_reactions      — reacciones nodales por Load Combination
+  3. build_foundation_model   — crea modelo nuevo en blanco, recrea nodos
+                                de apoyo en sus coordenadas originales,
+                                crea un Load Pattern por cada combo y asigna
+                                las reacciones (×-1) como Joint Loads
 
 Dependencias: comtypes, stdlib
 Sin imports de mcp_server/ ni módulos internos del framework.
 
 Notas sobre firmas COM (verificadas contra wrappers del registry):
-  FrameObj.AddByCoord(x1, y1, z1, x2, y2, z2, Name_byref, PropName, UserName)
-    → [FrameName, ret_code]
+  PointObj.AddCartesian(X, Y, Z, Name_byref, UserName)
+    → [Name, ret_code]
+  PointObj.SetRestraint(Name, Value[6]) → ret_code
   PointObj.SetLoadForce(Name, LoadPat, Value[6], Replace, CSys)
     → [Value_echoed[], ret_code]
   LoadPatterns.Add(Name, MyType, SelfWtMult, AddCase) → ret_code
@@ -26,8 +29,8 @@ Notas sobre firmas COM (verificadas contra wrappers del registry):
       LC, StepType, StepNum, F1, F2, F3, M1, M2, M3) → [14 ByRef outs + ret_code]
   PointObj.GetCoordCartesian(Name, X, Y, Z, CSys) → [X, Y, Z, ret_code]
   PointObj.GetRestraint(Name, Value[]) → [values[6], ret_code]
-  LoadCases.GetTypeOAPI(Name, CaseType, SubType) → [CaseType, SubType, ret_code]
-    CaseType == 3 → Modal
+  RespCombo.GetNameList(Count, Names[]) → [Count, Names[], ret_code]
+  Results.Setup.SetComboSelectedForOutput(Name) → ret_code
 """
 
 import os
@@ -45,11 +48,10 @@ class ModFundBackend:
 
     Uso típico:
         1. check_analysis_done()
-        2. get_restricted_joints()  +  get_load_cases_no_modal()
-           +  get_frame_sections()
-        3. get_joint_reactions(joint_names, case_names)
-        4. build_foundation_model(joint_names, reactions_rows,
-                                  section_name, pile_depth)
+        2. get_restricted_joints()
+           get_load_combinations()
+        3. get_joint_reactions(joint_names, combo_names)
+        4. build_foundation_model(joints_data, reactions_rows)
     """
 
     def __init__(self, connection):
@@ -77,9 +79,19 @@ class ModFundBackend:
     # ── Step 2a: Nodos restringidos ───────────────────────────────────────────
 
     def get_restricted_joints(self) -> dict:
-        """Obtiene todos los PointObj con al menos un DOF restringido.
+        """Obtiene joints con al menos un DOF restringido.
 
-        GetRestraint(Name, []) → [values[6_bools], ret_code]
+        Por cada joint devuelve nombre, coordenadas cartesianas globales
+        y vector de restraints [6 bools], necesarios para recrearlos en
+        el modelo de fundación.
+
+        Returns:
+            {
+              success: bool,
+              joints: list[{name, x, y, z, restraints: [6 bools]}],
+              joint_names: list[str],
+              count: int
+            }
         """
         SapModel = self.sap_model
 
@@ -90,67 +102,61 @@ class ModFundBackend:
         n = raw[0]
         all_names = list(raw[1])[:n]
 
-        restrained = []
+        joints = []
         for name in all_names:
             raw_r = SapModel.PointObj.GetRestraint(name, [])
             if raw_r[-1] != 0:
                 continue
-            values = list(raw_r[0])
-            if any(values):
-                restrained.append(name)
+            restraints = list(raw_r[0])
+            if not any(restraints):
+                continue
 
-        return {"success": True, "joint_names": restrained, "count": len(restrained)}
+            raw_c = SapModel.PointObj.GetCoordCartesian(
+                name, 0.0, 0.0, 0.0, "Global"
+            )
+            if raw_c[-1] != 0:
+                continue
 
-    # ── Step 2b: Load cases sin MODAL ─────────────────────────────────────────
+            joints.append({
+                "name":       name,
+                "x":          float(raw_c[0]),
+                "y":          float(raw_c[1]),
+                "z":          float(raw_c[2]),
+                "restraints": restraints,
+            })
 
-    def get_load_cases_no_modal(self) -> dict:
-        """Obtiene load cases del modelo excluyendo tipo Modal (CaseType == 3).
+        return {
+            "success":     True,
+            "joints":      joints,
+            "joint_names": [j["name"] for j in joints],
+            "count":       len(joints),
+        }
 
-        LoadCases.GetTypeOAPI(Name, CaseType, SubType)
-            → [CaseType, SubType, ret_code]
+    # ── Step 2b: Load Combinations ────────────────────────────────────────────
+
+    def get_load_combinations(self) -> dict:
+        """Obtiene los Load Combinations (RespCombo) definidos en el modelo.
+
+        RespCombo.GetNameList(Count, Names[]) → [Count, Names[], ret_code]
         """
         SapModel = self.sap_model
 
-        raw = SapModel.LoadCases.GetNameList(0, [])
+        raw = SapModel.RespCombo.GetNameList(0, [])
         ret = raw[-1]
-        assert ret == 0, f"LoadCases.GetNameList failed: {ret}"
-
-        n = raw[0]
-        all_names = list(raw[1])[:n]
-
-        non_modal = []
-        for name in all_names:
-            try:
-                raw_t = SapModel.LoadCases.GetTypeOAPI(name, 0, 0)
-                if raw_t[-1] == 0 and raw_t[0] == 3:
-                    continue  # Modal → excluir
-            except Exception:
-                pass  # Si la consulta falla, incluir el caso por defecto
-            non_modal.append(name)
-
-        return {"success": True, "case_names": non_modal, "count": len(non_modal)}
-
-    # ── Step 2c: Secciones de frame disponibles ───────────────────────────────
-
-    def get_frame_sections(self) -> dict:
-        """Obtiene las secciones de Frame (PropFrame) definidas en el modelo."""
-        SapModel = self.sap_model
-
-        raw = SapModel.PropFrame.GetNameList(0, [])
-        ret = raw[-1]
-        assert ret == 0, f"PropFrame.GetNameList failed: {ret}"
+        assert ret == 0, f"RespCombo.GetNameList failed: {ret}"
 
         n = raw[0]
         names = list(raw[1])[:n]
-        return {"success": True, "section_names": names, "count": n}
+        return {"success": True, "combo_names": names, "count": n}
 
-    # ── Step 2d: Reacciones nodales ───────────────────────────────────────────
+    # ── Step 2c: Reacciones nodales por combo ─────────────────────────────────
 
     def get_joint_reactions(
-        self, joint_names: List[str], case_names: List[str]
+        self, joint_names: List[str], combo_names: List[str]
     ) -> dict:
-        """Extrae Joint Reactions para los joints y load cases dados.
+        """Extrae Joint Reactions para los joints y Load Combinations dados.
 
+        Selecciona los combos para output usando SetComboSelectedForOutput.
         Itera por cada joint llamando Results.JointReact con ItemTypeElm=0.
 
         Returns:
@@ -161,15 +167,15 @@ class ModFundBackend:
 
         if not joint_names:
             return {"success": False, "error": "No hay nodos con restricciones."}
-        if not case_names:
-            return {"success": False, "error": "No hay load cases en el modelo."}
+        if not combo_names:
+            return {"success": False, "error": "No hay Load Combinations en el modelo."}
 
         ret = SapModel.Results.Setup.DeselectAllCasesAndCombosForOutput()
         assert ret == 0, f"DeselectAllCasesAndCombosForOutput failed: {ret}"
 
-        for case in case_names:
-            ret = SapModel.Results.Setup.SetCaseSelectedForOutput(case)
-            assert ret == 0, f"SetCaseSelectedForOutput({case!r}) failed: {ret}"
+        for combo in combo_names:
+            ret = SapModel.Results.Setup.SetComboSelectedForOutput(combo)
+            assert ret == 0, f"SetComboSelectedForOutput({combo!r}) failed: {ret}"
 
         rows = []
         skipped = []
@@ -189,8 +195,8 @@ class ModFundBackend:
                 continue
 
             n_rows = raw[0]
-            load_cases = list(raw[3]);  step_types = list(raw[4])
-            step_nums  = list(raw[5])
+            load_cases  = list(raw[3]);  step_types = list(raw[4])
+            step_nums   = list(raw[5])
             F1 = list(raw[6]);  F2 = list(raw[7]);  F3 = list(raw[8])
             M1 = list(raw[9]);  M2 = list(raw[10]); M3 = list(raw[11])
 
@@ -213,84 +219,67 @@ class ModFundBackend:
 
     def build_foundation_model(
         self,
-        joint_names: List[str],
+        joints_data: List[dict],
         reactions_rows: List[dict],
-        section_name: str,
-        pile_depth: float,
     ) -> dict:
         """
-        Construye el modelo de fundación en el modelo SAP2000 abierto.
+        Crea un modelo SAP2000 nuevo en blanco con los nodos de apoyo y las
+        reacciones del modelo original aplicadas como Joint Loads.
 
         Secuencia:
-          1. Desbloquea el modelo  (SetModelIsLocked False)
-          2. Registra FrameObj y AreaObj actualmente existentes
-          3. Crea FrameObj tipo pila por cada joint restringido hacia Z-
-             usando FrameObj.AddByCoord
-          4. Elimina los frames y áreas originales
-             (FrameObj.Delete / AreaObj.Delete)
-          5. Crea load patterns "RF_<case>" (LoadPatterns.Add, type 8=Other)
-          6. Asigna reacciones como fuerzas nodales (PointObj.SetLoadForce)
-             con la misma magnitud y signo que reporta JointReact.
-             Para casos multiestep se usa la fila "Max" si existe.
+          1. Guarda el path del modelo actual (para nombrar el archivo FUND)
+          2. Crea modelo nuevo en blanco (File.NewBlank)
+          3. Recrea cada nodo restringido en su posición original
+             (PointObj.AddCartesian + PointObj.SetRestraint)
+          4. Construye lookup (joint, combo) → reacciones
+             Para combos multi-step, prioriza la fila "Max"
+          5. Crea un Load Pattern por cada combo (type 8=Other, sin self-weight)
+          6. Asigna las reacciones × -1 como fuerzas nodales
+             (PointObj.SetLoadForce)
+          7. Guarda como <nombre_original>_FUND.sdb
+
+        Args:
+            joints_data:    lista de dicts {name, x, y, z, restraints}
+                            devuelta por get_restricted_joints()
+            reactions_rows: lista de dicts devuelta por get_joint_reactions()
 
         Returns:
-            {success, created_frames, deleted_frames, deleted_areas,
-             created_patterns, assigned_forces}
+            {success, created_joints, created_patterns,
+             assigned_forces, saved_path}
         """
         SapModel = self.sap_model
 
-        # 1 ── Desbloquear
-        ret = SapModel.SetModelIsLocked(False)
-        assert ret == 0, f"SetModelIsLocked(False) failed: {ret}"
+        # 1 ── Guardar path del modelo original antes de crear el nuevo
+        try:
+            model_path = str(SapModel.GetModelFilename())
+        except Exception:
+            model_path = ""
 
-        # 2 ── Registrar elementos existentes antes de crear nuevos
-        raw_fr = SapModel.FrameObj.GetNameList(0, [])
-        existing_frames = list(raw_fr[1])[:raw_fr[0]] if raw_fr[-1] == 0 else []
+        # 2 ── Crear modelo nuevo en blanco
+        ret = SapModel.File.NewBlank()
+        assert ret == 0, f"File.NewBlank failed: {ret}"
 
-        raw_ar = SapModel.AreaObj.GetNameList(0, [])
-        existing_areas = list(raw_ar[1])[:raw_ar[0]] if raw_ar[-1] == 0 else []
-
-        # 3 ── Crear frames tipo pila hacia Z-
-        created_frames = []
-        for joint in joint_names:
-            # GetCoordCartesian(Name, X, Y, Z, CSys) → [X, Y, Z, ret_code]
-            raw_c = SapModel.PointObj.GetCoordCartesian(
-                joint, 0.0, 0.0, 0.0, "Global"
+        # 3 ── Recrear nodos de apoyo en sus coordenadas originales
+        #       AddCartesian(X, Y, Z, Name_byref, UserName) → [Name, ret_code]
+        joint_name_map: dict = {}
+        for jdata in joints_data:
+            raw_pt = SapModel.PointObj.AddCartesian(
+                jdata["x"], jdata["y"], jdata["z"], "", jdata["name"]
             )
-            assert raw_c[-1] == 0, (
-                f"GetCoordCartesian({joint!r}) failed: {raw_c[-1]}"
+            assert raw_pt[-1] == 0, (
+                f"PointObj.AddCartesian for joint {jdata['name']!r} failed: {raw_pt[-1]}"
             )
-            x, y, z = float(raw_c[0]), float(raw_c[1]), float(raw_c[2])
+            new_name = raw_pt[0]
+            joint_name_map[jdata["name"]] = new_name
 
-            # Punto inferior: misma posición XY, z - profundidad
-            zj = z - abs(pile_depth)
-
-            # AddByCoord(x1,y1,z1, x2,y2,z2, Name_byref="", PropName, UserName="")
-            # → [FrameName, ret_code]
-            raw_f = SapModel.FrameObj.AddByCoord(
-                x, y, z, x, y, zj, "", section_name, ""
+            raw_rs = SapModel.PointObj.SetRestraint(new_name, jdata["restraints"])
+            rc_rs = raw_rs[-1] if isinstance(raw_rs, (list, tuple)) else raw_rs
+            assert rc_rs == 0, (
+                f"PointObj.SetRestraint for joint {new_name!r} failed: {rc_rs}"
             )
-            assert raw_f[-1] == 0, (
-                f"FrameObj.AddByCoord at joint {joint!r} ({x},{y},{z}) "
-                f"failed: {raw_f[-1]}"
-            )
-            created_frames.append(raw_f[0])
 
-        # 4 ── Eliminar estructura superior
-        deleted_frames = 0
-        for fr_name in existing_frames:
-            ret_d = SapModel.FrameObj.Delete(fr_name, 0)
-            if ret_d == 0:
-                deleted_frames += 1
-
-        deleted_areas = 0
-        for ar_name in existing_areas:
-            ret_d = SapModel.AreaObj.Delete(ar_name, 0)
-            if ret_d == 0:
-                deleted_areas += 1
-
-        # 5a ── Lookup (joint, load_case) → mejor reacción
-        #        Para envolventes con "Max"/"Min", tomar "Max" si existe.
+        # 4 ── Lookup (joint_original, combo) → mejor reacción
+        #       Para envolventes con "Max"/"Min", priorizar "Max"
         reactions_lookup: dict = {}
         for row in reactions_rows:
             key = (row["joint"], row["load_case"])
@@ -299,56 +288,54 @@ class ModFundBackend:
                     k: row[k] for k in ("F1", "F2", "F3", "M1", "M2", "M3")
                 }
 
-        case_names = sorted({row["load_case"] for row in reactions_rows})
+        combo_names = sorted({row["load_case"] for row in reactions_rows})
 
-        # 5b ── Crear load patterns con el mismo nombre que el load case
-        #        (8=Other, sin self-weight). Si ya existe, Add retorna error
-        #        ignorable; se usa el nombre original de todas formas.
+        # 5 ── Crear Load Patterns (uno por combo, type 8=Other, sin self-weight)
+        #       Si Add retorna error porque ya existe, se ignora.
         created_patterns = []
-        for case in case_names:
-            ret_add = SapModel.LoadPatterns.Add(case, 8, 0, True)
+        for combo in combo_names:
+            ret_add = SapModel.LoadPatterns.Add(combo, 8, 0, True)
             if ret_add == 0:
-                created_patterns.append(case)
+                created_patterns.append(combo)
 
-        # 5c ── Asignar fuerzas nodales
-        #        SetLoadForce(Name, LoadPat, Value[6], Replace, CSys)
-        #        → [Value_echoed[], ret_code]
+        # 6 ── Asignar fuerzas nodales: reacciones × -1
+        #       SetLoadForce(Name, LoadPat, Value[6], Replace, CSys)
+        #       → [Value_echoed[], ret_code]
         assigned = 0
-        for joint in joint_names:
-            for case in case_names:
-                key = (joint, case)
+        for jdata in joints_data:
+            orig_name = jdata["name"]
+            new_name  = joint_name_map.get(orig_name, orig_name)
+            for combo in combo_names:
+                key = (orig_name, combo)
                 if key not in reactions_lookup:
                     continue
                 R = reactions_lookup[key]
                 force_vals = [
-                    R["F1"], R["F2"], R["F3"],
-                    R["M1"], R["M2"], R["M3"],
+                    -R["F1"], -R["F2"], -R["F3"],
+                    -R["M1"], -R["M2"], -R["M3"],
                 ]
                 raw_sf = SapModel.PointObj.SetLoadForce(
-                    joint, case, force_vals, True, "Global"
+                    new_name, combo, force_vals, True, "Global"
                 )
                 if raw_sf[-1] == 0:
                     assigned += 1
 
-        # 6 ── Guardar como <nombre_original>_FUND.sdb
+        # 7 ── Guardar como <nombre_original>_FUND.sdb
         saved_path = ""
-        try:
-            model_path = str(SapModel.GetModelFilename())
-            if model_path:
-                base, ext = os.path.splitext(model_path)
-                new_path = base + "_FUND" + (ext if ext else ".sdb")
+        if model_path:
+            base, ext = os.path.splitext(model_path)
+            new_path = base + "_FUND" + (ext if ext else ".sdb")
+            try:
                 ret_save = SapModel.File.Save(new_path)
                 if ret_save == 0:
                     saved_path = new_path
-        except Exception:
-            pass  # no bloquear si el guardado falla
+            except Exception:
+                pass
 
         return {
-            "success": True,
-            "created_frames": len(created_frames),
-            "deleted_frames": deleted_frames,
-            "deleted_areas": deleted_areas,
+            "success":          True,
+            "created_joints":   len(joints_data),
             "created_patterns": created_patterns,
-            "assigned_forces": assigned,
-            "saved_path": saved_path,
+            "assigned_forces":  assigned,
+            "saved_path":       saved_path,
         }
