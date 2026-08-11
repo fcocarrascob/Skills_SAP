@@ -1,16 +1,18 @@
 ﻿---
 name: sap2000-api
 description: >-
-  Referencia técnica para la API de SAP2000 via COM bridge.
-  Convenciones, patrones de scripts, function registry, y errores comunes.
-  Para el workflow completo de scripting, usar el agente @sap2000-scripter.
+  Referencia técnica para la API de SAP2000 via COM bridge: convención ByRef,
+  variables pre-inyectadas, templates de script, function registry, wrappers,
+  enumeraciones y errores comunes. Usar al escribir, ejecutar o depurar
+  cualquier script de SAP2000 con las herramientas MCP (run_sap_script,
+  query_function_registry, load_script, search_api_docs).
 ---
 
 # SAP2000 API — Referencia Técnica
 
 Esta skill contiene la referencia técnica para crear scripts de SAP2000.
-Para el **workflow completo** (research → código → ejecución → verificación),
-usar el agente `@sap2000-scripter`.
+El workflow completo (research → plan → código → ejecución → verificación →
+registro → guardado) está en [Workflow de Scripting](#workflow-de-scripting).
 
 ## Variables Pre-inyectadas
 
@@ -232,7 +234,7 @@ ret = SapModel.PropFrame.SetModifiers("R1", ModValue)
 | `IndexError` | Layout ByRef incorrecto | Verificar wrapper: `raw[0]` vs `raw[-1]` |
 | `AssertionError` | Validación falló | Leer mensaje del assert, ajustar parámetros |
 
-> Para reglas operacionales completas (DO/DON'T), ver el agente `@sap2000-scripter`.
+> Para reglas operacionales completas (DO/DON'T), ver `CLAUDE.md` en la raíz del repo.
 
 ## Jerarquía de Objetos
 
@@ -292,6 +294,71 @@ SapObject (cOAPI)
         ├── All()
         └── ClearSelection()
 ```
+
+## Workflow de Scripting
+
+### 1. Plan
+
+Descomponer la tarea en fases siguiendo el **Patrón Universal**: Inicialización →
+Materiales → Secciones → Geometría → Restricciones → Cargas → Análisis →
+Resultados → Verificación. Para cada fase, listar las funciones API necesarias y
+consultar `query_function_registry` para cada una, marcando su estado:
+
+| Estado | Significado | Riesgo |
+|--------|-------------|--------|
+| 🟢 | Existe wrapper verificado | Ninguno — copiar la llamada verbatim |
+| 🟡 | `verified=true` sin wrapper | Medio — la firma no está confirmada al detalle |
+| 🔴 | No está en el registry | Alto — buscar en `search_api_docs`, primer uso |
+
+**Clasificación de complejidad** (determina cómo ejecutar):
+
+| Nivel | Criterio | Ejecución |
+|-------|----------|-----------|
+| SIMPLE | ≤3 fases, ≤5 funciones, 0 helpers | Script único |
+| MEDIA | 4–6 fases, ≤15 funciones, ≤2 helpers | Script único |
+| ALTA | >6 fases, >15 funciones, >2 helpers, o alguna 🔴 | Por bloques con checkpoint |
+
+Presentar el plan y pedir aprobación antes de generar código para complejidad
+MEDIA y ALTA.
+
+### 2. Conexión
+
+`get_model_info` para verificar el estado. Si no hay conexión → `connect_sap2000`.
+Confirmar versión y modelo activo antes de continuar.
+
+### 3. Research por función
+
+Para CADA función API, en este orden de prioridad:
+
+1. `query_function_registry(function_path="SapModel.X.Y")` → si tiene
+   `wrapper_script`, cargarlo con `load_script` y **copiar la llamada verbatim**.
+2. `list_scripts(query="...")` → buscar scripts existentes con patrones reutilizables.
+3. `search_api_docs(query="...")` → **solo fallback**. Los API docs describen la
+   interfaz VBA y pueden diferir del comportamiento COM en Python.
+
+### 4. Generar y ejecutar
+
+Cada fase del plan → un bloque comentado del script. Helpers geométricos al
+inicio. Asserts intermedios por fase. Ejecutar con `run_sap_script`.
+
+Para complejidad ALTA, ejecutar por bloques, guardando checkpoint `.sdb` en cada uno:
+Bloque 1 (init + materiales + secciones) → Bloque 2 (geometría + helpers) →
+Bloque 3 (cargas + análisis + resultados). Si un bloque falla 2 veces, pausar y
+preguntar en vez de seguir reintentando.
+
+### 5. Verificar
+
+Analizar `result`, `stdout` y `return_value`. Si `success=false`, analizar el
+error y corregir el script — nunca reintentar el mismo script sin modificarlo.
+
+### 6. Registrar y guardar
+
+El auto-registro (`verification_type="auto"`) ya ocurre solo en cada
+`run_sap_script` exitoso. Llamar `register_verified_function` manualmente solo
+para funciones nuevas que aporten metadata rica (firma, notas ByRef, wrapper),
+elevándolas a `manual` o `wrapper`.
+
+Persistir el script con `run_sap_script(script, save_as="nombre.py")`.
 
 ## Archivos de Referencia
 

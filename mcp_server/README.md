@@ -1,7 +1,7 @@
 # SAP2000 MCP Server
 
-MCP (Model Context Protocol) server that bridges Copilot to a local SAP2000
-instance via COM. Allows Copilot to generate, execute, and verify SAP2000 API
+MCP (Model Context Protocol) server that bridges Claude Code to a local SAP2000
+instance via COM. Allows the agent to generate, execute, and verify SAP2000 API
 scripts.
 
 ## Requirements
@@ -21,10 +21,11 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Automatic (via VS Code)
+### Automatic
 
-The MCP server is configured in `.vscode/mcp.json` and starts automatically
-when Copilot needs it. No manual action required.
+The server is registered at user scope (`claude mcp add sap2000 -s user -- ...`)
+and starts automatically over stdio when a tool is invoked. No manual action
+required.
 
 ### Manual (for testing)
 

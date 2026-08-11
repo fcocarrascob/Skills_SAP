@@ -7,13 +7,13 @@
 
 **Framework de automatización de SAP2000 mediante Python, COM bridge y Model Context Protocol (MCP).**
 
-Permite generar modelos estructurales, asignar cargas, ejecutar análisis y extraer resultados de forma programática — todo orquestado desde VS Code con GitHub Copilot como interfaz conversacional.
+Permite generar modelos estructurales, asignar cargas, ejecutar análisis y extraer resultados de forma programática — todo orquestado desde Claude Code como interfaz conversacional.
 
 ---
 
 ## Características Principales
 
-- **MCP Bridge** — Servidor MCP que conecta GitHub Copilot con SAP2000 vía COM automation
+- **MCP Bridge** — Servidor MCP que conecta Claude Code con SAP2000 vía COM automation
 - **212 funciones API verificadas** — Registry con firmas, parámetros ByRef y wrappers testeados
 - **127 wrapper scripts** — Funciones individuales documentadas y verificadas contra SAP2000 real
 - **Scripts parametrizados** — Modelos completos generados programáticamente (vigas, domos, naves, placas base)
@@ -27,7 +27,7 @@ Permite generar modelos estructurales, asignar cargas, ejecutar análisis y extr
 
 ```mermaid
 graph LR
-    A["👤 Usuario"] --> B["🤖 GitHub Copilot"]
+    A["👤 Usuario"] --> B["🤖 Claude Code"]
     B -->|MCP Protocol| C["🐍 MCP Server<br/>(Python)"]
     C -->|COM Automation| D["🏗️ SAP2000"]
     
@@ -43,8 +43,8 @@ graph LR
 
 ### Flujo de Trabajo
 
-1. El usuario describe lo que necesita en lenguaje natural a **Copilot**
-2. Copilot consulta el **MCP Server** para buscar documentación y funciones verificadas
+1. El usuario describe lo que necesita en lenguaje natural a **Claude Code**
+2. Claude Code consulta el **MCP Server** para buscar documentación y funciones verificadas
 3. El MCP Server genera y ejecuta scripts en un **sandbox aislado**
 4. SAP2000 procesa los comandos vía **COM automation** y retorna resultados
 5. El script se guarda automáticamente en la **biblioteca de scripts**
@@ -93,32 +93,24 @@ pip install -r mcp_server/requirements.txt
 pip install PySide6
 ```
 
-### Configuración en VS Code
-
-El servidor MCP se autoconfigura via `.vscode/mcp.json`. Al abrir el workspace y usar Copilot, el server se inicia automáticamente — no requiere configuración manual.
-
 ### Configuración en Claude Code
 
-Para usar las herramientas MCP desde Claude Code, crear `.claude/settings.json` en la raíz del proyecto con rutas absolutas:
+Registrar el servidor MCP a **user scope**, para que esté disponible en cualquier
+sesión y no solo dentro de este repositorio:
 
-```json
-{
-  "mcpServers": {
-    "sap2000": {
-      "command": "<ruta-al-proyecto>/.venv/Scripts/python.exe",
-      "args": [
-        "<ruta-al-proyecto>/mcp_server/server.py"
-      ],
-      "env": {}
-    }
-  }
-}
+```powershell
+claude mcp add sap2000 -s user -- <ruta-al-proyecto>\.venv\Scripts\python.exe <ruta-al-proyecto>\mcp_server\server.py
 ```
 
-**Diferencias con VS Code:**
-- Root key es `"mcpServers"` (no `"servers"`)
-- No incluir `"type": "stdio"` (Claude Code lo asume)
-- Usar rutas absolutas — `${workspaceFolder}` no está disponible
+Queda guardado en `~/.claude.json` y se inicia automáticamente (stdio) al invocar
+cualquier herramienta MCP. Verificar con `claude mcp list`.
+
+> Las rutas deben ser absolutas: `${workspaceFolder}` no está disponible.
+> Por eso `.mcp.json` y `.claude/settings.json` se dejan sin entrada `mcpServers`.
+
+La skill [`sap2000-api`](.claude/skills/sap2000-api/SKILL.md) se carga
+automáticamente al trabajar con scripts de SAP2000 y aporta la convención ByRef,
+los templates y el workflow de scripting.
 
 **Uso:**
 1. Asegurarse de que SAP2000 esté abierto
@@ -129,7 +121,7 @@ Para usar las herramientas MCP desde Claude Code, crear `.claude/settings.json` 
 
 ## Ejemplos de Aplicación
 
-Scripts completos en [`scripts/ejemplos/`](scripts/ejemplos/), generados conversacionalmente con Copilot y verificados contra SAP2000 real.
+Scripts completos en [`scripts/ejemplos/`](scripts/ejemplos/), generados conversacionalmente con Claude Code y verificados contra SAP2000 real.
 
 | Script | Descripción |
 |--------|-------------|
@@ -145,7 +137,7 @@ Scripts completos en [`scripts/ejemplos/`](scripts/ejemplos/), generados convers
 
 ## Aplicaciones GUI Standalone
 
-Interfaces gráficas completas construidas con PySide6, operables sin VS Code ni Copilot. Cada GUI se conecta directamente a SAP2000 via COM.
+Interfaces gráficas completas construidas con PySide6, operables sin Claude Code ni VS Code. Cada GUI se conecta directamente a SAP2000 via COM.
 
 ### Modelo Base Estandarizado
 
@@ -277,17 +269,19 @@ Skills_SAP/
 │
 ├── API/                     # Documentación API SAP2000 (25 archivos .md)
 │
-└── .github/
-    ├── copilot-instructions.md   # Instrucciones para Copilot
-    ├── agents/                    # Agente SAP2000 Scripter
-    └── skills/                    # Skill de referencia API
+└── .claude/
+    ├── settings.json            # Settings de proyecto (Claude Code)
+    └── skills/
+        └── sap2000-api/         # Skill: referencia API + workflow de scripting
+            ├── SKILL.md
+            └── references/      # Enums, patrones, templates, guía GUI
 ```
 
 ---
 
 ## Herramientas MCP Disponibles
 
-El servidor expone 12 herramientas que Copilot puede invocar:
+El servidor expone 12 herramientas invocables desde Claude Code:
 
 | Herramienta | Descripción |
 |-------------|-------------|
@@ -310,7 +304,7 @@ El servidor expone 12 herramientas que Copilot puede invocar:
 
 - **Python 3.10+** — Lenguaje principal
 - **comtypes** — Interfaz COM para SAP2000
-- **MCP (Model Context Protocol)** — Protocolo de comunicación con Copilot
+- **MCP (Model Context Protocol)** — Protocolo de comunicación con Claude Code
 - **FastMCP** — SDK para servidor MCP
 - **PySide6** — Framework GUI (aplicaciones standalone)
 - **SAP2000 API** — API COM de CSI para análisis estructural

@@ -4,15 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Skills_SAP** is a SAP2000 automation framework that bridges GitHub Copilot to SAP2000 structural analysis software via Model Context Protocol (MCP) and COM automation. It enables engineers to generate structural models, assign loads, run analyses, and extract results programmatically through conversational AI.
+**Skills_SAP** is a SAP2000 automation framework that bridges Claude Code to SAP2000 structural analysis software via Model Context Protocol (MCP) and COM automation. It enables engineers to generate structural models, assign loads, run analyses, and extract results programmatically through conversational AI.
 
-Architecture: User → GitHub Copilot → MCP Server (Python) → SAP2000 COM objects → Results
+Architecture: User → Claude Code → MCP Server (Python) → SAP2000 COM objects → Results
 
 ## Core Architecture
 
 ### MCP Server Layer (`mcp_server/`)
 
-The server exposes 12 MCP tools that Copilot invokes. Key modules:
+The server exposes 12 MCP tools. Key modules:
 
 - **`server.py`** — FastMCP entry point; registers all tools with `.mcp.tool()` decorator
 - **`sap_bridge.py`** — Singleton COM connection manager to SAP2000; handles connection/disconnection and version detection
@@ -67,7 +67,7 @@ ret_code = raw[-1]    # return code (ALWAYS last)
 assert ret_code == 0, f"AddCartesian failed: {ret_code}"
 ```
 
-Verified layouts in `scripts/registry.json` and documented in `.github/skills/sap2000-api/references/enum-reference.md`.
+Verified layouts in `scripts/registry.json` and documented in `.claude/skills/sap2000-api/references/enum-reference.md`.
 
 ## Development Commands
 
@@ -91,7 +91,7 @@ pip install -r mcp_server/requirements.txt
 python mcp_server/server.py
 ```
 
-**Automatic (via VS Code):** Configured in `.vscode/mcp.json`; server auto-starts when Copilot invokes MCP tools.
+**Automatic:** The server is registered at user scope (see [Connecting MCP to Claude Code](#connecting-mcp-to-claude-code)) and auto-starts over stdio when an MCP tool is invoked.
 
 ### Running Scripts
 
@@ -99,8 +99,8 @@ Scripts are executed via `run_sap_script` MCP tool. Example wrappers in `scripts
 
 To test a wrapper manually (requires SAP2000 running):
 ```python
-# Within VS Code with MCP bridge:
-# Use: run_sap_script tool with code from scripts/wrappers/func_FrameObj_AddByCoord.py
+# Use the run_sap_script tool with the code from
+# scripts/wrappers/func_FrameObj_AddByCoord.py
 ```
 
 ### Testing
@@ -115,10 +115,8 @@ pytest tests/ -v
 
 ### Documentation
 - **`README.md`** — Project overview, architecture diagram, component summary
-- **`.github/copilot-instructions.md`** — Copilot-facing instructions; tool mapping; when to use agent vs. skill
-- **`.github/agents/sap2000-scripter.agent.md`** — Copilot agent workflow (research → plan → code → execute → verify → save)
-- **`.github/skills/sap2000-api/SKILL.md`** — API technical reference (ByRef layouts, templates, registry patterns)
-- **`.github/skills/sap2000-api/references/common-workflows.md`** — Step-by-step patterns (simple beam, portal frame, verification problem)
+- **`.claude/skills/sap2000-api/SKILL.md`** — Agent skill; API technical reference (ByRef layouts, templates, registry patterns) plus the scripting workflow (plan → research → execute → verify → register). Auto-loaded when working on SAP2000 scripts
+- **`.claude/skills/sap2000-api/references/common-workflows.md`** — Step-by-step patterns (simple beam, portal frame, verification problem)
 - **`scripts/README.md`** — Script library usage
 - **`scripts/wrappers/README.md`** — Wrapper script naming and format
 - **`scripts/database_tables/README.md`** — Database Tables module backend + GUI API
@@ -131,9 +129,9 @@ pytest tests/ -v
 - **`scripts/section_cut/`** — Section Cut automation (branch: `feat/section_cut`); research in `scripts/section_cut/SECTION_CUTS_RESEARCH.md`. Section cuts compute resultant forces/moments across any plane — used for story shear, wall design forces, and free-body equilibrium checks. API: `SapModel.Definitions.SectionCuts.*`, results via `SapModel.Results.SectionCut.*`. No implementation yet; the research document is thorough and serves as a complete design specification for implementation.
 
 ### Configuration
-- **`.vscode/mcp.json`** — MCP server configuration for GitHub Copilot; Python venv path; auto-start settings
-- **`.claude/settings.json`** — MCP server configuration for Claude Code (absolute path, no variables)
-- **`.claude/settings.local.json`** — Local Claude Code settings (permissions allowlist)
+- **`.vscode/settings.json`** — Points VS Code at the project venv (`.venv/Scripts/python.exe`)
+- **`.claude/settings.json`** — Project-level Claude Code settings (the MCP server lives at user scope, not here)
+- **`.claude/settings.local.json`** — Local Claude Code settings (permissions allowlist); gitignored
 - **`scripts/registry.json`** — Verified function catalog (DO NOT edit directly; use `register_verified_function` tool)
 
 ## Key Conventions & Rules
@@ -197,7 +195,7 @@ Each GUI uses worker threads for async operation without blocking UI. `estados_c
 
 ## Connecting MCP to Claude Code
 
-The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. For Claude Code, the server is registered at **user scope** (`claude mcp add sap2000 -s user -- <venv>\Scripts\python.exe mcp_server\server.py`), stored in `~/.claude.json`, so it's available in every project/session rather than only this repo. `.mcp.json` and `.claude/settings.json` are intentionally left without an `mcpServers` entry.
+The server is registered at **user scope** (`claude mcp add sap2000 -s user -- <venv>\Scripts\python.exe mcp_server\server.py`), stored in `~/.claude.json`, so it's available in every project/session rather than only this repo. `.mcp.json` and `.claude/settings.json` are intentionally left without an `mcpServers` entry.
 
 **Before calling MCP tools:**
 1. Ensure SAP2000 is running (for `connect_sap2000` to attach to it)

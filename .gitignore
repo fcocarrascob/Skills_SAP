@@ -27,4 +27,4 @@ Thumbs.db
 *.bak
 
 plans/
-.github/prompts/
+.claude/settings.local.json

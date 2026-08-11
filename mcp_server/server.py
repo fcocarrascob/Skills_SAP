@@ -1,10 +1,10 @@
 """
 SAP2000 MCP Server — Entry point.
 
-Exposes tools to Copilot so it can connect to SAP2000, inspect the model,
+Exposes tools to the MCP client so it can connect to SAP2000, inspect the model,
 and (in later steps) execute functions and scripts.
 
-Transport: stdio (launched by VS Code via mcp.json).
+Transport: stdio (launched by the MCP client).
 """
 
 import logging
