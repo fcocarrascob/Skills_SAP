@@ -197,7 +197,7 @@ Each GUI uses worker threads for async operation without blocking UI. `estados_c
 
 ## Connecting MCP to Claude Code
 
-The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. For Claude Code, the server is declared in `.claude/settings.json` with absolute paths (no `${workspaceFolder}`), root key `"mcpServers"` (not `"servers"`), and no `"type": "stdio"` field.
+The 12 MCP tools are exposed to GitHub Copilot via `.vscode/mcp.json`. For Claude Code, the server is registered at **user scope** (`claude mcp add sap2000 -s user -- <venv>\Scripts\python.exe mcp_server\server.py`), stored in `~/.claude.json`, so it's available in every project/session rather than only this repo. `.mcp.json` and `.claude/settings.json` are intentionally left without an `mcpServers` entry.
 
 **Before calling MCP tools:**
 1. Ensure SAP2000 is running (for `connect_sap2000` to attach to it)
