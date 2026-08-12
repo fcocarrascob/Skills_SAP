@@ -128,9 +128,19 @@ def _spectrum_shape(ar: float, sp, T: float,
 def _r_star(T: float, R: float, t1: float) -> float:
     """Calcula R* (factor de reducción corregido por período corto).
 
-    NCh2369: Para períodos cortos, R se interpola linealmente
-    desde 1.5 hasta R en el rango [0, 0.16·R·T1].
+    NCh2369:2025, Ec. (1b): R* vale 1 si R = 1; para R ≠ 1 vale R si
+    T* ≥ Cr·T1 (con Cr = 0,16·R) y se interpola linealmente desde 1,5
+    hasta R en el rango [0, Cr·T1].
+
+    La rama R ≤ 1 → R* = 1 está impresa en la Ec. (1b) de la 3.ª edición
+    y es la que gobierna el espectro de referencia (R = 1) con que la
+    cláusula 6 calcula desplazamientos: sin ella, la interpolación
+    arranca en 1,5 y divide el espectro por hasta 1,5 en T → 0 — un 33 %
+    menos de demanda, del lado inseguro. Mismo fix que
+    nch2369-spectrum.ts (struct_pad), verificado allá contra el PDF.
     """
+    if R <= 1:
+        return 1.0
     limit = 0.16 * R * t1
     if limit <= 0 or T >= limit:
         return R

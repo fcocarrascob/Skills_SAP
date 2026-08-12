@@ -7,14 +7,15 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-06-26T16:04:33.148268+00:00",
-      "verification_count": 157,
+      "last_verified": "2026-08-12T03:54:23.904088+00:00",
+      "verification_count": 163,
       "wrapper_script": "func_File_NewBlank",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "No parameters. Call InitializeNewModel() before this.",
       "known_errors": [],
@@ -27,14 +28,15 @@
       "signature": "(Name, MatType, Color, Notes, GUID) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-06-26T16:02:04.386752+00:00",
-      "verification_count": 111,
+      "last_verified": "2026-08-12T03:54:23.907447+00:00",
+      "verification_count": 117,
       "wrapper_script": "func_PropMaterial_SetMaterial",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "Name: str; MatType: int (1=Steel, 2=Concrete, 3=NoDesign, 4=Aluminum, 5=ColdFormed, 6=Rebar, 7=Tendon); Color: int (-1=default); Notes: str; GUID: str",
       "known_errors": [],
@@ -47,14 +49,15 @@
       "signature": "(Name, E, U, A, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-06-26T16:02:04.394365+00:00",
-      "verification_count": 72,
+      "last_verified": "2026-08-12T03:54:23.910446+00:00",
+      "verification_count": 78,
       "wrapper_script": "func_PropMaterial_SetMPIsotropic",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "Name: str (existing material); E: float (modulus of elasticity [F/L^2]); U: float (Poisson ratio); A: float (thermal expansion coeff [1/T]); Temp: float (default=0)",
       "known_errors": [],
@@ -67,12 +70,13 @@
       "signature": "(Name, MyType, Value, Temp) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-06-12T14:58:04.902281+00:00",
-      "verification_count": 15,
+      "last_verified": "2026-08-12T03:54:23.914647+00:00",
+      "verification_count": 20,
       "wrapper_script": "func_PropMaterial_SetWeightAndMass",
       "used_in_scripts": [
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_build"
       ],
       "parameter_notes": "Name: str (existing material); MyType: int (1=weight per unit volume [F/L^3], 2=mass per unit volume [M/L^3]); Value: float; Temp: float (default=0)",
       "known_errors": [],
@@ -119,13 +123,16 @@
       "signature": "(Name, MatProp, T3, T2, TF, TW, T2B, TFB, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-28T14:02:34.666668+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-08-12T03:54:23.918895+00:00",
+      "verification_count": 12,
       "wrapper_script": "func_PropFrame_SetISection",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "Name: str; MatProp: str; T3: float (overall depth); T2: float (top flange width); TF: float (top flange thickness); TW: float (web thickness); T2B: float (bottom flange width); TFB: float (bottom flange thickness); Color: int; Notes: str; GUID: str",
       "known_errors": [],
-      "notes": "Supports asymmetric I-sections (different top/bottom flanges). For symmetric use equal T2=T2B and TF=TFB."
+      "notes": "Supports asymmetric I-sections (different top/bottom flanges). For symmetric use equal T2=T2B and TF=TFB.",
+      "verification_type": "auto"
     },
     "SapModel.PropFrame.SetTube": {
       "category": "PropFrame",
@@ -133,13 +140,16 @@
       "signature": "(Name, MatProp, T3, T2, TF, TW, Color, Notes, GUID) → ret_code",
       "verified": true,
       "first_verified": "2026-03-20T00:00:00+00:00",
-      "last_verified": "2026-03-25T02:44:55.414894+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-08-12T03:54:23.923071+00:00",
+      "verification_count": 10,
       "wrapper_script": "func_PropFrame_SetTube",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "Name: str; MatProp: str; T3: float (outer depth [L]); T2: float (outer width [L]); TF: float (flange/top+bottom wall thickness [L]); TW: float (web/left+right wall thickness [L]); Color: int; Notes: str; GUID: str",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Common for HSS braces, columns, and truss elements."
+      "notes": "Returns ret_code directly (0=success). Common for HSS braces, columns, and truss elements.",
+      "verification_type": "auto"
     },
     "SapModel.InitializeNewModel": {
       "category": "File",
@@ -147,13 +157,14 @@
       "signature": "(Units) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.405814+00:00",
-      "last_verified": "2026-06-26T16:02:04.378346+00:00",
-      "verification_count": 154,
+      "last_verified": "2026-08-12T03:54:23.900419+00:00",
+      "verification_count": 160,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_build"
       ],
       "parameter_notes": "Units: int — eUnits enum (e.g. 6=kN_m_C)",
       "known_errors": [],
@@ -185,13 +196,14 @@
       "signature": "(X, Y, Z, Name, UserName, CSys, MergeOff, MergeNumber)",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.414684+00:00",
-      "last_verified": "2026-06-26T16:04:33.153896+00:00",
-      "verification_count": 27,
+      "last_verified": "2026-08-12T03:54:23.931271+00:00",
+      "verification_count": 32,
       "wrapper_script": "func_PointObj_AddCartesian",
       "used_in_scripts": [
         "test_bolt_plates_inline.py",
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_build"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -219,8 +231,8 @@
       "signature": "(Name, X, Y, Z, CSys) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:41:19.418373+00:00",
-      "last_verified": "2026-08-10T14:11:55.898766+00:00",
-      "verification_count": 23,
+      "last_verified": "2026-08-12T02:14:37.466668+00:00",
+      "verification_count": 24,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "Name: str — point name; X/Y/Z: float — (ByRef out) coordinates; CSys: str — coordinate system (default 'Global')",
@@ -234,12 +246,13 @@
       "signature": "(Point1, Point2, Name, PropName, UserName)",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.555457+00:00",
-      "last_verified": "2026-06-12T14:58:04.923422+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-08-12T03:54:23.935145+00:00",
+      "verification_count": 13,
       "wrapper_script": "func_FrameObj_AddByPoint",
       "used_in_scripts": [
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_build"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -267,8 +280,8 @@
       "signature": "(Name, Point1, Point2) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:41:35.560733+00:00",
-      "last_verified": "2026-08-06T14:50:29.012926+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-08-12T02:14:37.470344+00:00",
+      "verification_count": 17,
       "wrapper_script": "",
       "used_in_scripts": [
         "test_blockly_workflow_portico.py"
@@ -419,13 +432,14 @@
       "signature": "(Name, MyType, SelfWTMultiplier, AddCase)",
       "verified": true,
       "first_verified": "2026-03-20T14:53:26.742703+00:00",
-      "last_verified": "2026-06-26T16:04:33.161137+00:00",
-      "verification_count": 30,
+      "last_verified": "2026-08-12T03:54:23.950989+00:00",
+      "verification_count": 34,
       "wrapper_script": "func_LoadPatterns_Add",
       "used_in_scripts": [
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -438,13 +452,16 @@
       "signature": "(Name, NumberItems, Period, Value, DampRatio)",
       "verified": true,
       "first_verified": "2026-03-20T14:54:31.007923+00:00",
-      "last_verified": "2026-03-25T02:44:55.622939+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-08-12T03:54:23.997855+00:00",
+      "verification_count": 15,
       "wrapper_script": "func_Func_FuncRS_SetUser",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": "Returns ByRef outputs (Period[], Value[], ret_code) — extract last element as ret_code. DampRatio=0.05 for 5% damping."
+      "notes": "Returns ByRef outputs (Period[], Value[], ret_code) — extract last element as ret_code. DampRatio=0.05 for 5% damping.",
+      "verification_type": "auto"
     },
     "SapModel.Func.FuncRS.GetUser": {
       "category": "Functions",
@@ -452,13 +469,14 @@
       "signature": "(Name, NumberItems, Period, Value, DampRatio) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:54:31.010358+00:00",
-      "last_verified": "2026-03-25T02:44:55.632498+00:00",
-      "verification_count": 5,
+      "last_verified": "2026-08-12T02:15:05.864257+00:00",
+      "verification_count": 7,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "Name: str — function name; NumberItems: int — (ByRef out) number of data points; Period: float[] — (ByRef out); Value: float[] — (ByRef out) spectral accelerations; DampRatio: float — (ByRef out) damping ratio",
       "known_errors": [],
-      "notes": "ByRef layout: [NumberItems, Period[], Value[], DampRatio, ret_code]."
+      "notes": "ByRef layout: [NumberItems, Period[], Value[], DampRatio, ret_code].",
+      "verification_type": "auto"
     },
     "SapModel.LoadCases.ResponseSpectrum.SetCase": {
       "category": "Load_Cases",
@@ -466,13 +484,16 @@
       "signature": "(Name) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:55:20.313675+00:00",
-      "last_verified": "2026-03-28T14:09:52.152005+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-08-12T03:54:24.001648+00:00",
+      "verification_count": 12,
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "Name: str — name of the response spectrum load case to initialize",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Creates the RS load case if it does not exist."
+      "notes": "Returns ret_code directly (0=success). Creates the RS load case if it does not exist.",
+      "verification_type": "auto"
     },
     "SapModel.LoadCases.ResponseSpectrum.SetLoads": {
       "category": "Load_Cases",
@@ -480,13 +501,16 @@
       "signature": "(Name, NumberLoads, LoadName, Func, SF, CSys, Ang)",
       "verified": true,
       "first_verified": "2026-03-20T14:55:20.315413+00:00",
-      "last_verified": "2026-03-25T02:44:55.648574+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-08-12T03:54:24.020764+00:00",
+      "verification_count": 14,
       "wrapper_script": "func_LoadCases_ResponseSpectrum_SetLoads",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": "Returns ByRef outputs (LoadName[], Func[], SF[], CSys[], Ang[], ret_code) — extract last element as ret_code. Prerequisites: RS function and RS load case must exist."
+      "notes": "Returns ByRef outputs (LoadName[], Func[], SF[], CSys[], Ang[], ret_code) — extract last element as ret_code. Prerequisites: RS function and RS load case must exist.",
+      "verification_type": "auto"
     },
     "SapModel.LoadCases.ResponseSpectrum.GetLoads": {
       "category": "Load_Cases",
@@ -494,13 +518,14 @@
       "signature": "(Name, NumberItems, LoadName, Func, SF, CSys, Ang) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:55:20.318246+00:00",
-      "last_verified": "2026-03-20T14:55:20.318246+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-08-12T02:14:23.127949+00:00",
+      "verification_count": 2,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "Name: str — RS case name; NumberItems: int — (ByRef out) count; LoadName: str[] — (ByRef out); Func: str[] — (ByRef out) RS function names; SF: float[] — (ByRef out) scale factors; CSys: str[] — (ByRef out); Ang: float[] — (ByRef out)",
       "known_errors": [],
-      "notes": "ByRef layout: [NumberItems, LoadName[], Func[], SF[], CSys[], Ang[], ret_code]."
+      "notes": "ByRef layout: [NumberItems, LoadName[], Func[], SF[], CSys[], Ang[], ret_code].",
+      "verification_type": "auto"
     },
     "SapModel.LoadCases.GetNameList": {
       "category": "Load_Cases",
@@ -508,8 +533,8 @@
       "signature": "(NumberNames, MyName, MyType) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T14:55:20.318246+00:00",
-      "last_verified": "2026-08-10T14:16:37.967365+00:00",
-      "verification_count": 13,
+      "last_verified": "2026-08-12T02:13:55.420203+00:00",
+      "verification_count": 14,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "NumberNames: int — (ByRef out) count; MyName: str[] — (ByRef out) case names; MyType: int[] — (ByRef out) case type values",
@@ -711,13 +736,14 @@
       "signature": "(Name, Value, ItemType)",
       "verified": true,
       "first_verified": "2026-03-20T15:16:30.702789+00:00",
-      "last_verified": "2026-06-26T16:04:33.153896+00:00",
-      "verification_count": 29,
+      "last_verified": "2026-08-12T03:54:23.946954+00:00",
+      "verification_count": 34,
       "wrapper_script": "func_PointObj_SetRestraint",
       "used_in_scripts": [
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -777,12 +803,13 @@
       "signature": "(Name, LoadPat, Value, Replace, CSys, ItemType) -> [Value[], ret_code]",
       "verified": true,
       "first_verified": "2026-03-20T16:26:25.649221+00:00",
-      "last_verified": "2026-06-26T16:04:33.169969+00:00",
-      "verification_count": 11,
+      "last_verified": "2026-08-12T03:54:23.954861+00:00",
+      "verification_count": 15,
       "wrapper_script": "func_PointObj_SetLoadForce",
       "used_in_scripts": [
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_build"
       ],
       "parameter_notes": "",
       "known_errors": [],
@@ -813,14 +840,15 @@
       "signature": "(FileName) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:54.993896+00:00",
-      "last_verified": "2026-06-26T16:04:33.172597+00:00",
-      "verification_count": 38,
+      "last_verified": "2026-08-12T03:54:23.970698+00:00",
+      "verification_count": 50,
       "wrapper_script": "",
       "used_in_scripts": [
         "domo_elipsoidal_parametrico.py",
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "FileName: str — full path for save; pass '' to save to existing path",
       "known_errors": [],
@@ -833,13 +861,14 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.084527+00:00",
-      "last_verified": "2026-06-26T16:03:20.640853+00:00",
-      "verification_count": 26,
+      "last_verified": "2026-08-12T03:54:23.975002+00:00",
+      "verification_count": 42,
       "wrapper_script": "",
       "used_in_scripts": [
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build"
       ],
       "parameter_notes": "No inputs. Runs all active load cases.",
       "known_errors": [],
@@ -852,13 +881,15 @@
       "signature": "() -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.260504+00:00",
-      "last_verified": "2026-08-10T14:17:24.058997+00:00",
-      "verification_count": 33,
+      "last_verified": "2026-08-12T03:54:23.979104+00:00",
+      "verification_count": 48,
       "wrapper_script": "",
       "used_in_scripts": [
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build",
+        "case9_torre_extract"
       ],
       "parameter_notes": "No inputs. Call before selecting specific cases for results output.",
       "known_errors": [],
@@ -871,13 +902,15 @@
       "signature": "(Name, Selected) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.418469+00:00",
-      "last_verified": "2026-08-10T14:17:24.065179+00:00",
-      "verification_count": 32,
+      "last_verified": "2026-08-12T03:54:23.983061+00:00",
+      "verification_count": 47,
       "wrapper_script": "",
       "used_in_scripts": [
         "fund_foundation_script_v1",
         "fund_foundation_v2",
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_build",
+        "case9_torre_extract"
       ],
       "parameter_notes": "Name: str — load case name; Selected: bool — True=select for output",
       "known_errors": [],
@@ -890,12 +923,13 @@
       "signature": "(Name, ItemTypeElm, NumberResults, Obj, Elm, LoadCase, StepType, StepNum, U1, U2, U3, R1, R2, R3) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.594410+00:00",
-      "last_verified": "2026-08-06T14:52:54.127929+00:00",
-      "verification_count": 18,
+      "last_verified": "2026-08-12T01:56:13.726844+00:00",
+      "verification_count": 23,
       "wrapper_script": "",
       "used_in_scripts": [
         "fund_foundation_script_v1",
-        "fund_foundation_v2"
+        "fund_foundation_v2",
+        "case9_torre_extract"
       ],
       "parameter_notes": "Name: str — joint name or 'All'; ItemTypeElm: int — 0=Object, 1=Element; all others are ByRef outputs",
       "known_errors": [],
@@ -908,11 +942,12 @@
       "signature": "(Name, ItemTypeElm, NumberResults, Obj, ObjSta, Elm, ElmSta, LoadCase, StepType, StepNum, P, V2, V3, T, M2, M3) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-20T16:27:55.772256+00:00",
-      "last_verified": "2026-08-06T14:55:08.232967+00:00",
-      "verification_count": 8,
+      "last_verified": "2026-08-12T01:56:13.730662+00:00",
+      "verification_count": 16,
       "wrapper_script": "",
       "used_in_scripts": [
-        "test_blockly_workflow_portico.py"
+        "test_blockly_workflow_portico.py",
+        "case9_torre_extract"
       ],
       "parameter_notes": "Name: str — frame name or 'All'; ItemTypeElm: int — 0=Object; all others are ByRef outputs",
       "known_errors": [],
@@ -1547,10 +1582,13 @@
       "signature": "(NumberResults, LoadCase, StepType, StepNum, Fx, Fy, Fz, Mx, My, Mz, gx, gy, gz) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:00:45.144453+00:00",
-      "last_verified": "2026-06-17T22:38:21.000124+00:00",
-      "verification_count": 9,
+      "last_verified": "2026-08-12T03:54:24.028817+00:00",
+      "verification_count": 17,
       "wrapper_script": "func_Results_BaseReact",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_extract",
+        "case9_torre_build"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "",
@@ -1576,13 +1614,16 @@
       "signature": "(Name, ii, jj, StartValue, EndValue, ItemType) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:07:28.941598+00:00",
-      "last_verified": "2026-03-28T04:08:07.415062+00:00",
-      "verification_count": 3,
+      "last_verified": "2026-08-12T03:54:23.942999+00:00",
+      "verification_count": 8,
       "wrapper_script": "func_FrameObj_SetReleases",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.GetReleases": {
       "category": "Object_Model",
@@ -1590,8 +1631,8 @@
       "signature": "(Name, ii, jj, StartValue, EndValue) -> [ii[], jj[], StartValue[], EndValue[], ret_code]",
       "verified": true,
       "first_verified": "2026-03-28T04:07:28.946601+00:00",
-      "last_verified": "2026-08-06T14:58:14.962514+00:00",
-      "verification_count": 7,
+      "last_verified": "2026-08-12T02:14:37.479553+00:00",
+      "verification_count": 8,
       "wrapper_script": "func_FrameObj_GetReleases",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -1633,13 +1674,16 @@
       "signature": "(Name, Ang, ItemType) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:09:19.718326+00:00",
-      "last_verified": "2026-03-28T04:09:24.223297+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-08-12T03:54:23.939041+00:00",
+      "verification_count": 6,
       "wrapper_script": "func_FrameObj_SetLocalAxes",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "",
       "known_errors": [],
-      "notes": ""
+      "notes": "",
+      "verification_type": "auto"
     },
     "SapModel.FrameObj.GetLocalAxes": {
       "category": "Object_Model",
@@ -1647,8 +1691,8 @@
       "signature": "(Name, Ang, Advanced) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:09:19.721836+00:00",
-      "last_verified": "2026-08-06T14:50:18.493045+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-08-12T02:14:37.474708+00:00",
+      "verification_count": 3,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "Name: str — frame name; Ang: float — (ByRef out) local axis angle [deg]; Advanced: bool — (ByRef out) advanced axis definition",
@@ -1794,8 +1838,8 @@
       "signature": "(NumberNames, MyName) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:31:30.471158+00:00",
-      "last_verified": "2026-08-10T14:11:55.893721+00:00",
-      "verification_count": 31,
+      "last_verified": "2026-08-12T02:14:23.131852+00:00",
+      "verification_count": 32,
       "wrapper_script": "",
       "used_in_scripts": [],
       "parameter_notes": "NumberNames: int — (ByRef out) count; MyName: str[] — (ByRef out) array of names",
@@ -1809,10 +1853,13 @@
       "signature": "(NumberResults, LoadCase, StepType, StepNum, Period, Frequency, CircFreq, EigenValue) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:31:30.557556+00:00",
-      "last_verified": "2026-08-10T14:17:24.070107+00:00",
-      "verification_count": 6,
+      "last_verified": "2026-08-12T03:54:23.986912+00:00",
+      "verification_count": 16,
       "wrapper_script": "func_Results_ModalPeriod",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build",
+        "case9_torre_extract"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "",
@@ -1824,10 +1871,13 @@
       "signature": "(NumberResults, LoadCase, StepType, StepNum, Period, Ux, Uy, Uz, SumUx, SumUy, SumUz, Rx, Ry, Rz, SumRx, SumRy, SumRz) -> ret_code",
       "verified": true,
       "first_verified": "2026-03-28T04:34:17.380737+00:00",
-      "last_verified": "2026-06-17T22:42:34.462353+00:00",
-      "verification_count": 3,
+      "last_verified": "2026-08-12T03:54:23.990649+00:00",
+      "verification_count": 11,
       "wrapper_script": "func_Results_ModalParticipatingMassRatios",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build",
+        "case9_torre_extract"
+      ],
       "parameter_notes": "",
       "known_errors": [],
       "notes": "",
@@ -1881,8 +1931,8 @@
       "signature": "(NumberItems, CaseName, Status) -> [NumberItems, CaseName[], Status[], ret_code]",
       "verified": true,
       "first_verified": "2026-03-28T04:42:56.997694+00:00",
-      "last_verified": "2026-06-17T22:41:56.180191+00:00",
-      "verification_count": 12,
+      "last_verified": "2026-08-12T00:51:40.272878+00:00",
+      "verification_count": 17,
       "wrapper_script": "func_Analyze_GetCaseStatus",
       "used_in_scripts": [],
       "parameter_notes": "",
@@ -2450,13 +2500,16 @@
       "signature": "(Name, Damp)",
       "verified": true,
       "first_verified": "2026-03-28T14:09:52.157594+00:00",
-      "last_verified": "2026-03-28T14:13:03.329942+00:00",
-      "verification_count": 2,
+      "last_verified": "2026-08-12T03:54:24.024986+00:00",
+      "verification_count": 8,
       "wrapper_script": "func_LoadCases_ResponseSpectrum_SetDampConstant",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "Name: str — RS load case name; Damp: float — modal damping ratio (e.g. 0.05 = 5%)",
       "known_errors": [],
-      "notes": "Returns ret_code directly (0=success). Requires RS case created via SetCase first."
+      "notes": "Returns ret_code directly (0=success). Requires RS case created via SetCase first.",
+      "verification_type": "auto"
     },
     "SapModel.LoadCases.Count": {
       "category": "Load_Cases",
@@ -2548,13 +2601,16 @@
       "signature": "(Name, MassFromElements, MassFromMasses, MassFromLoads, IsDefault, NumberLoads, LoadPat[], SF[])",
       "verified": true,
       "first_verified": "2026-03-28T14:37:28.413968+00:00",
-      "last_verified": "2026-03-28T14:38:52.370382+00:00",
-      "verification_count": 5,
+      "last_verified": "2026-08-12T03:54:23.958647+00:00",
+      "verification_count": 12,
       "wrapper_script": "func_SourceMass_SetMassSource",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "Name: str, MassFromElements: bool, MassFromMasses: bool, MassFromLoads: bool, IsDefault: bool, NumberLoads: int, LoadPat: str[], SF: float[]",
       "known_errors": [],
-      "notes": "Returns [LoadPat[], SF[], ret_code] — ByRef echo. Use raw[-1] for return code. Verified 2026-03-28."
+      "notes": "Returns [LoadPat[], SF[], ret_code] — ByRef echo. Use raw[-1] for return code. Verified 2026-03-28.",
+      "verification_type": "auto"
     },
     "SapModel.SourceMass.Count": {
       "category": "Mass_Source",
@@ -2576,8 +2632,8 @@
       "signature": "(Name, MassFromElements, MassFromMasses, MassFromLoads, IsDefault, NumberLoads, LoadPat[], SF[])",
       "verified": true,
       "first_verified": "2026-03-28T14:38:02.604059+00:00",
-      "last_verified": "2026-08-06T14:58:14.949097+00:00",
-      "verification_count": 3,
+      "last_verified": "2026-08-12T00:51:40.264745+00:00",
+      "verification_count": 7,
       "wrapper_script": "func_SourceMass_GetMassSource",
       "used_in_scripts": [],
       "parameter_notes": "Name: str — Existing mass source name. Pass dummy values for ByRef outputs.",
@@ -2930,11 +2986,13 @@
       "signature": "(LockIt) -> ret_code",
       "verified": true,
       "first_verified": "2026-04-01T20:45:48.544329+00:00",
-      "last_verified": "2026-04-01T20:45:48.544329+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-08-12T03:54:23.994260+00:00",
+      "verification_count": 10,
       "verification_type": "auto",
       "wrapper_script": "",
-      "used_in_scripts": [],
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
       "parameter_notes": "LockIt: bool — True=lock, False=unlock",
       "known_errors": [],
       "notes": "Returns ret_code directly (0=success). Unlocking deletes analysis results."
@@ -2945,8 +3003,8 @@
       "signature": "(NumberNames, MyName) -> ret_code",
       "verified": true,
       "first_verified": "2026-04-01T20:45:48.551438+00:00",
-      "last_verified": "2026-08-10T14:16:37.980373+00:00",
-      "verification_count": 16,
+      "last_verified": "2026-08-12T02:14:23.135569+00:00",
+      "verification_count": 18,
       "verification_type": "auto",
       "wrapper_script": "",
       "used_in_scripts": [],
@@ -3238,8 +3296,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-08-06T14:49:31.161598+00:00",
-      "last_verified": "2026-08-06T14:49:31.161598+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-08-12T01:39:58.980810+00:00",
+      "verification_count": 2,
       "verification_type": "auto",
       "wrapper_script": "",
       "used_in_scripts": [],
@@ -3418,8 +3476,8 @@
       "signature": "",
       "verified": true,
       "first_verified": "2026-08-06T14:58:14.944589+00:00",
-      "last_verified": "2026-08-06T14:58:14.944589+00:00",
-      "verification_count": 1,
+      "last_verified": "2026-08-12T00:50:26.687941+00:00",
+      "verification_count": 2,
       "verification_type": "auto",
       "wrapper_script": "",
       "used_in_scripts": [],
@@ -3471,11 +3529,173 @@
       "parameter_notes": "",
       "known_errors": [],
       "notes": ""
+    },
+    "SapModel.PropFrame.SetGeneral": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:47:55.365668+00:00",
+      "last_verified": "2026-08-12T02:22:19.111926+00:00",
+      "verification_count": 5,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PointObj.SetMass": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:47:55.386112+00:00",
+      "last_verified": "2026-08-12T00:47:55.386112+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.LoadCases.ModalEigen.SetNumberModes": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:47:55.394248+00:00",
+      "last_verified": "2026-08-12T03:54:23.966724+00:00",
+      "verification_count": 5,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.LoadCases.ResponseSpectrum.SetModalCase": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:49:23.475244+00:00",
+      "last_verified": "2026-08-12T03:54:24.005357+00:00",
+      "verification_count": 6,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.LoadCases.ResponseSpectrum.SetModalComb_1": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:49:23.483699+00:00",
+      "last_verified": "2026-08-12T03:54:24.009016+00:00",
+      "verification_count": 6,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.SourceMass.SetDefault": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T00:51:40.261290+00:00",
+      "last_verified": "2026-08-12T00:51:40.261290+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.LoadCases.ModalEigen.SetCase": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T01:43:05.623759+00:00",
+      "last_verified": "2026-08-12T03:54:23.962856+00:00",
+      "verification_count": 4,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.Func.GetNameList": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T02:13:45.337063+00:00",
+      "last_verified": "2026-08-12T02:13:45.337063+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.LoadCases.ResponseSpectrum.GetDampConstant": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T02:14:23.123096+00:00",
+      "last_verified": "2026-08-12T02:14:23.123096+00:00",
+      "verification_count": 1,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
+    },
+    "SapModel.PropFrame.SetModifiers": {
+      "category": "",
+      "description": "",
+      "signature": "",
+      "verified": true,
+      "first_verified": "2026-08-12T03:52:53.466201+00:00",
+      "last_verified": "2026-08-12T03:54:23.927339+00:00",
+      "verification_count": 2,
+      "verification_type": "auto",
+      "wrapper_script": "",
+      "used_in_scripts": [
+        "case9_torre_build"
+      ],
+      "parameter_notes": "",
+      "known_errors": [],
+      "notes": ""
     }
   },
   "summary": {
-    "total_registered": 231,
-    "total_verified": 231,
-    "last_updated": "2026-08-11T16:33:37.202625+00:00"
+    "total_registered": 241,
+    "total_verified": 241,
+    "last_updated": "2026-08-12T03:54:24.028862+00:00"
   }
 }
